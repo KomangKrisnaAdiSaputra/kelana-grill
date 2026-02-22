@@ -140,11 +140,15 @@ export default function LandingPage() {
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-              <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg transition">
-                Sewa Sekarang
-              </button>
-
-              <button className="bg-white/90 hover:bg-white px-8 py-4 rounded-2xl font-semibold shadow transition">
+              <a
+                href="https://wa.me/6281337467442"
+                target="_blank"
+                className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg transition"
+              >
+                Booking Sekarang
+              </a>
+              <button className="bg-white/90 hover:bg-gray-100 px-8 py-4 rounded-2xl font-semibold shadow transition cursor-pointer"
+                onClick={() => handleScroll("paket")}>
                 Lihat Paket
               </button>
             </div>
@@ -245,8 +249,9 @@ export default function LandingPage() {
               Pilihan Paket Grill
             </h2>
             <p className="mt-4 text-gray-600 max-w-xl mx-auto">
-              Pilih paket sesuai kebutuhan acara Anda. Semua sudah termasuk
-              peralatan lengkap dan siap pakai.
+              Pilih paket sesuai kebutuhan acara Anda.
+              {/* Semua sudah termasuk */}
+              {/* peralatan lengkap dan siap pakai. */}
             </p>
           </div>
 
@@ -254,36 +259,43 @@ export default function LandingPage() {
 
             {[
               {
-                title: "Basic",
-                price: "150K",
-                desc: "Cocok untuk acara kecil",
+                title: "Grill 1",
+                price: 50000,
+                desc: "",
                 features: [
-                  "1 Set Grill Standar",
-                  "Arang Premium",
-                  "Alat Jepit & Kuas",
+                  "Kompor dan Gas",
+                  "Pan Grill Bulat",
+                  "2 Set Mangkok",
+                  "2 Set Sumpit",
+                  "Set Kuas",
+                  "Capitan",
                 ],
               },
               {
-                title: "Family",
-                price: "250K",
-                desc: "Pilihan paling populer",
+                title: "Grill 2",
+                price: 50000,
+                desc: "",
                 highlight: true,
                 features: [
-                  "Grill Ukuran Besar",
-                  "Arang Premium",
-                  "Meja Lipat",
-                  "Peralatan Lengkap",
+                  "Kompor dan Gas",
+                  "Pan Grill Kotak",
+                  "2 Set Mangkok",
+                  "2 Set Sumpit",
+                  "Set Kuas",
+                  "Capitan",
                 ],
               },
               {
-                title: "Party",
-                price: "400K",
-                desc: "Untuk acara besar & komunitas",
+                title: "Suki",
+                price: 50000,
+                desc: "",
                 features: [
-                  "2 Set Grill",
-                  "Arang Premium",
-                  "Peralatan Lengkap",
-                  "Cocok untuk 20+ Orang",
+                  "Kompor dan Gas",
+                  "Panci Suki 2 Sekat",
+                  "4 Set Mangkok",
+                  "4 Set Sendok",
+                  "4 Set Sumpit",
+                  "2 Set Sendok Kuah dan Capitan",
                 ],
               },
             ].map((item, i) => (
@@ -316,9 +328,9 @@ export default function LandingPage() {
 
                 <div className="mt-6">
                   <span className="text-4xl font-bold text-gray-900">
-                    Rp {item.price}
+                    Rp {new Intl.NumberFormat("id-ID").format(item.price)}
                   </span>
-                  <span className="text-gray-500 text-sm"> / event</span>
+                  {/* <span className="text-gray-500 text-sm"> / event</span> */}
                 </div>
 
                 <ul className="mt-8 space-y-3 text-gray-600 text-sm">
@@ -330,16 +342,22 @@ export default function LandingPage() {
                   ))}
                 </ul>
 
-                <button
-                  className={`
-              mt-10 w-full py-3 rounded-xl font-semibold transition
-              ${item.highlight
-                      ? "bg-yellow-500 hover:bg-yellow-600 text-white"
-                      : "bg-gray-900 hover:bg-black text-white"}
-            `}
+                <a
+                  href={`https://wa.me/6281337467442?text=${encodeURIComponent(`Halo, saya ingin memesan Paket ${item.title}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  Pilih Paket
-                </button>
+                  <button
+                    className={`
+      mt-10 w-full py-3 rounded-xl font-semibold transition cursor-pointer
+      ${item.highlight
+                        ? "bg-yellow-500 hover:bg-yellow-600 text-white"
+                        : "bg-gray-900 hover:bg-gray-800 text-white shadow-lg"}
+    `}
+                  >
+                    Pilih Paket
+                  </button>
+                </a>
               </motion.div>
             ))}
           </div>
@@ -377,12 +395,12 @@ export default function LandingPage() {
             <div className="space-y-6">
               <div className="bg-gray-50 p-6 rounded-2xl">
                 <h3 className="font-semibold text-gray-900">WhatsApp</h3>
-                <p className="text-gray-600 mt-2">08xxxxxxxxxx</p>
+                <p className="text-gray-600 mt-2">081337467442</p>
               </div>
 
               <div className="bg-gray-50 p-6 rounded-2xl">
                 <h3 className="font-semibold text-gray-900">Email</h3>
-                <p className="text-gray-600 mt-2">info@kelanagrill.com</p>
+                <p className="text-gray-600 mt-2">kelanagrill@gmail.com</p>
               </div>
 
               <div className="bg-gray-50 p-6 rounded-2xl">
@@ -410,7 +428,7 @@ export default function LandingPage() {
               </p>
 
               <a
-                href="https://wa.me/628xxxxxxxxxx"
+                href="https://wa.me/6281337467442"
                 target="_blank"
                 className="inline-block mt-8 bg-white text-orange-500 font-semibold px-8 py-4 rounded-2xl shadow hover:bg-gray-100 transition"
               >
@@ -485,7 +503,7 @@ export default function LandingPage() {
             </p>
 
             <a
-              href="https://wa.me/628xxxxxxxxxx"
+              href="https://wa.me/6281337467442"
               target="_blank"
               className="inline-block mt-6 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-5 py-2 rounded-xl transition"
             >
@@ -495,7 +513,7 @@ export default function LandingPage() {
 
           {/* MENU */}
           <div>
-            <h4 className="font-semibold text-white mb-6">Navigasi</h4>
+            <h4 className="font-semibold text-white mb-6">Menu</h4>
             <ul className="space-y-4 text-sm">
               <li>
                 <button
@@ -521,8 +539,8 @@ export default function LandingPage() {
             <h4 className="font-semibold text-white mb-6">Kontak</h4>
 
             <div className="space-y-4 text-sm text-gray-400">
-              <p>📱 WhatsApp: 08xxxxxxxxxx</p>
-              <p>📧 Email: info@kelanagrill.com</p>
+              <p>📱 WhatsApp: 081337467442</p>
+              <p>📧 Email: kelanagrill@gmail.com</p>
               <p>🕒 Setiap Hari 08.00 - 20.00</p>
             </div>
 
@@ -530,7 +548,7 @@ export default function LandingPage() {
             <div className="flex gap-4 mt-6">
 
               <a
-                href="https://instagram.com/username"
+                href="https://instagram.com/kelanagrill"
                 target="_blank"
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-pink-500 hover:text-white transition"
               >
@@ -538,7 +556,7 @@ export default function LandingPage() {
               </a>
 
               <a
-                href="https://facebook.com/username"
+                href="https://facebook.com/kelana.grill"
                 target="_blank"
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-blue-600 hover:text-white transition"
               >
@@ -546,7 +564,7 @@ export default function LandingPage() {
               </a>
 
               <a
-                href="https://tiktok.com/@username"
+                href="https://tiktok.com/@kelana.grill"
                 target="_blank"
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-white hover:text-black transition"
               >

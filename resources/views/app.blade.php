@@ -32,7 +32,7 @@
         }
     </style>
 
-    <title inertia>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Kelana Grill') }}</title>
 
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -40,6 +40,22 @@
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta name="bingbot" content="index, follow">
+    <meta name="keyword"
+        content="Sewa Grill, Rental Grill, Sewa Alat BBQ, Sewa Peralatan Pesta, Sewa Grill Murah, Rental Alat BBQ, Sewa Grill Bali">
+    <meta name="description"
+        content="Sewa alat BBQ lengkap, bersih, dan siap pakai untuk acara keluarga, komunitas, maupun kantor.">
+
+    <meta property="og:type" content="content">
+    <meta property="og:title" content="Kelana Grill - Sewa Alat BBQ">
+    <meta property="og:description"
+        content="Sewa alat BBQ lengkap, bersih, dan siap pakai untuk acara keluarga, komunitas, maupun kantor.">
+    <meta property="og:url" content="https://kelanagrill.wuaze.com">
+    <meta property="og:image"
+        content="https://res.cloudinary.com/dikjbuftt/image/upload/v1771771575/grill-hero_yfennx.png">
 
     @viteReactRefresh
     @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
