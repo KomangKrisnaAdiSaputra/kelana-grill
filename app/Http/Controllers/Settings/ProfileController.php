@@ -26,7 +26,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile settings.
+     * Update the user's profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
@@ -38,11 +38,13 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Profile updated.')]);
+
         return to_route('profile.edit');
     }
 
     /**
-     * Delete the user's account.
+     * Delete the user's profile.
      */
     public function destroy(ProfileDeleteRequest $request): RedirectResponse
     {
