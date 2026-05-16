@@ -1,4 +1,3 @@
-import { usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 import AmbientBackground from "@/components/landing/ambient-background";
@@ -11,6 +10,7 @@ import HeroSection from "@/components/landing/hero-section";
 import MobileNavbar from "@/components/landing/mobile-navbar";
 import Navbar from "@/components/landing/navbar";
 import PricingSection from "@/components/landing/pricing-section";
+import { produk } from "@/routes/landing";
 import type {
   LandingFaqItem,
   LandingNavItem,
@@ -85,10 +85,22 @@ const cartItems = [
   },
 ];
 
-export default function PremiumRentalGrillLandingPage() {
-  const pageProps = usePage().props as { navItems?: LandingNavItem[] };
-  const navItems: LandingNavItem[] = pageProps.navItems ?? [];
+const navItems: LandingNavItem[] = [
+  {
+    name: "About",
+    href: "#"
+  },
+  {
+    name: "Produk",
+    href: produk.url()
+  },
+  {
+    name: "Booking",
+    href: "#"
+  }
+];
 
+export default function PremiumRentalGrillLandingPage() {
   const [theme, setTheme] = useState<ThemeMode>(() => {
     if (typeof window === "undefined") {
       return "light";

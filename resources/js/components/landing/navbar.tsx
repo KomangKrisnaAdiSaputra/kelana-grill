@@ -10,9 +10,9 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { landingTexts } from "@/lang/landing";
+import type { LanguageMode } from "@/lang/landing";
 import type { LandingNavItem, ThemeMode } from "@/types";
-
-type LanguageMode = "id" | "en";
 
 export type CartItem = {
   id: number | string;
@@ -28,8 +28,102 @@ type Props = {
   scrolled: boolean;
   navItems: LandingNavItem[];
   onToggleTheme: () => void;
-
   cartItems?: CartItem[];
+};
+
+const supportedLanguages = ["id", "en"] as const;
+
+const isSupportedLanguage = (value?: string): value is LanguageMode => {
+  return supportedLanguages.includes(value as LanguageMode);
+};
+
+const getLanguageFromUrl = (): LanguageMode | null => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const firstSegment = window.location.pathname.split("/").filter(Boolean)[0];
+
+  return isSupportedLanguage(firstSegment) ? firstSegment : null;
+};
+
+const getSavedLanguage = (): LanguageMode => {
+  if (typeof window === "undefined") {
+    return "id";
+  }
+
+  const savedLanguage = localStorage.getItem("language");
+
+  return isSupportedLanguage(savedLanguage ?? undefined) ? savedLanguage : "id";
+};
+
+const getUrlWithLanguage = (targetLanguage: LanguageMode) => {
+  if (typeof window === "undefined") {
+    return "/";
+  }
+
+  const currentPath = window.location.pathname;
+  const currentSearch = window.location.search;
+  const currentHash = window.location.hash;
+
+  const segments = currentPath.split("/").filter(Boolean);
+  const firstSegment = segments[0];
+
+  if (segments.length === 0) {
+    return `/${targetLanguage}${currentSearch}${currentHash}`;
+  }
+
+  if (isSupportedLanguage(firstSegment)) {
+    segments[0] = targetLanguage;
+  } else {
+    segments.unshift(targetLanguage);
+  }
+
+  return `/${segments.join("/")}${currentSearch}${currentHash}`;
+};
+
+const replaceUrlLanguage = (targetLanguage: LanguageMode) => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.history.replaceState({}, "", getUrlWithLanguage(targetLanguage));
+};
+
+const ensureUrlHasLanguage = (language: LanguageMode) => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  if (getLanguageFromUrl()) {
+    return;
+  }
+
+  window.history.replaceState({}, "", getUrlWithLanguage(language));
+};
+
+const getLocalizedHrefByLanguage = (
+  href: string,
+  language: LanguageMode
+) => {
+  if (href.startsWith("#")) {
+    return `/${language}${href}`;
+  }
+
+  if (href.startsWith("/")) {
+    const segments = href.split("/").filter(Boolean);
+    const firstSegment = segments[0];
+
+    if (isSupportedLanguage(firstSegment)) {
+      segments[0] = language;
+    } else {
+      segments.unshift(language);
+    }
+
+    return `/${segments.join("/")}`;
+  }
+
+  return href;
 };
 
 export default function Navbar({
@@ -41,6 +135,7 @@ export default function Navbar({
 }: Props) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+
   const [localCartItems, setLocalCartItems] = useState<CartItem[]>(() =>
     cartItems.map((item) => ({
       ...item,
@@ -49,20 +144,59 @@ export default function Navbar({
   );
 
   const [language, setLanguage] = useState<LanguageMode>(() => {
-    if (typeof window === "undefined") {
-      return "id";
-    }
-
-    const savedLanguage = localStorage.getItem("language");
-
-    return savedLanguage === "en" || savedLanguage === "id"
-      ? savedLanguage
-      : "id";
+    return getLanguageFromUrl() ?? getSavedLanguage();
   });
+
+  const text = landingTexts[language].navbar;
+  const navText = landingTexts[language].nav;
+
+  useEffect(() => {
+    ensureUrlHasLanguage(language);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("language", language);
   }, [language]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const languageFromUrl = getLanguageFromUrl();
+
+      if (languageFromUrl) {
+        setLanguage(languageFromUrl);
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
+  useEffect(() => {
+    const next = cartItems.map((item) => ({
+      ...item,
+      qty: item.qty ?? 1,
+    }));
+
+    const equal =
+      next.length === localCartItems.length &&
+      next.every((nextItem, index) => {
+        const previousItem = localCartItems[index];
+
+        return (
+          previousItem !== undefined &&
+          previousItem.id === nextItem.id &&
+          previousItem.qty === nextItem.qty &&
+          previousItem.price === nextItem.price
+        );
+      });
+
+    if (!equal) {
+      setLocalCartItems(next);
+    }
+  }, [cartItems]);
 
   const totalCartQty = useMemo(() => {
     return localCartItems.reduce(
@@ -87,9 +221,75 @@ export default function Navbar({
   };
 
   const toggleLanguage = () => {
-    setLanguage((currentLanguage) =>
-      currentLanguage === "id" ? "en" : "id"
-    );
+    setLanguage((currentLanguage) => {
+      const nextLanguage = currentLanguage === "id" ? "en" : "id";
+
+      replaceUrlLanguage(nextLanguage);
+      localStorage.setItem("language", nextLanguage);
+
+      return nextLanguage;
+    });
+  };
+
+  const getLocalizedHref = (href: string) => {
+    return getLocalizedHrefByLanguage(href, language);
+  };
+
+  const handleLocalizedNavigate = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    event.preventDefault();
+
+    const localizedHref = getLocalizedHref(href);
+
+    window.history.pushState({}, "", localizedHref);
+
+    closeMobileMenu();
+
+    const hash = localizedHref.includes("#")
+      ? localizedHref.substring(localizedHref.indexOf("#"))
+      : "";
+
+    if (hash) {
+      const targetElement = document.querySelector(hash);
+
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    } else {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleLogoNavigate = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+
+    window.history.pushState({}, "", `/${language}`);
+    closeMobileMenu();
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const getNavLabel = (item: LandingNavItem) => {
+    const navItem = item as LandingNavItem & {
+      key?: keyof typeof navText;
+    };
+
+    if (navItem.key && navItem.key in navText) {
+      return navText[navItem.key];
+    }
+
+    return item.name || item.label;
   };
 
   const closeMobileMenu = () => {
@@ -166,10 +366,10 @@ export default function Navbar({
   const checkoutCart = () => {
     console.log("checkout cart:", localCartItems);
 
-    // Kalau nanti pakai Inertia, bisa ganti:
+    // Kalau nanti pakai Inertia:
     // router.visit("/checkout");
 
-    // Kalau mau WhatsApp, bisa ganti:
+    // Kalau mau WhatsApp:
     // window.open("https://wa.me/628xxxxxxxxxx", "_blank");
   };
 
@@ -214,9 +414,9 @@ export default function Navbar({
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 md:px-6">
           <a
-            href="/"
+            href={`/${language}`}
             className="flex items-center gap-3"
-            onClick={closeMobileMenu}
+            onClick={handleLogoNavigate}
           >
             <div className="relative">
               <div className="absolute inset-0 rounded-full bg-orange-500 opacity-40 blur-xl" />
@@ -232,7 +432,7 @@ export default function Navbar({
               </h1>
 
               <p className="text-[10px] text-zinc-500 md:text-xs">
-                Premium BBQ Rental
+                {text.brandSubtitle}
               </p>
             </div>
           </a>
@@ -246,7 +446,8 @@ export default function Navbar({
             {navItems.map((item) => (
               <a
                 key={item.href}
-                href={item.href}
+                href={getLocalizedHref(item.href)}
+                onClick={(event) => handleLocalizedNavigate(event, item.href)}
                 className={`
                   relative text-sm font-medium transition duration-300
                   ${theme === "dark"
@@ -258,7 +459,7 @@ export default function Navbar({
                   after:transition-all after:duration-300 hover:after:w-full
                 `}
               >
-                {item.name || item.label}
+                {getNavLabel(item)}
               </a>
             ))}
           </nav>
@@ -332,6 +533,32 @@ export default function Navbar({
                 }
               `}
             >
+              <div className="space-y-1">
+                {navItems.map((item) => (
+                  <a
+                    key={item.href}
+                    href={getLocalizedHref(item.href)}
+                    onClick={(event) => handleLocalizedNavigate(event, item.href)}
+                    className={`
+                      flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold transition
+                      ${theme === "dark"
+                        ? "text-zinc-200 hover:bg-white/10"
+                        : "text-zinc-700 hover:bg-orange-50"
+                      }
+                    `}
+                  >
+                    <span>{getNavLabel(item)}</span>
+                    <span className="text-orange-500">→</span>
+                  </a>
+                ))}
+              </div>
+
+              <div
+                className={`
+                  my-3 h-px
+                  ${theme === "dark" ? "bg-white/10" : "bg-orange-100"}
+                `}
+              />
 
               <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
                 <button
@@ -349,7 +576,22 @@ export default function Navbar({
                   className={mobileActionClass}
                 >
                   {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
-                  <span>{theme === "dark" ? "Light" : "Dark"}</span>
+                  <span>{theme === "dark" ? text.light : text.dark}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={openCart}
+                  className={`relative ${mobileActionClass}`}
+                >
+                  <ShoppingBag size={17} />
+                  <span>{text.cartShort}</span>
+
+                  {totalCartQty > 0 && (
+                    <span className="absolute right-2 top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-bold text-white">
+                      {totalCartQty > 99 ? "99+" : totalCartQty}
+                    </span>
+                  )}
                 </button>
               </div>
             </div>
@@ -383,12 +625,12 @@ export default function Navbar({
                 `}
               >
                 <div>
-                  <h2 className="text-lg font-bold">Keranjang</h2>
+                  <h2 className="text-lg font-bold">{text.cart}</h2>
                   <p
                     className={`text-sm ${theme === "dark" ? "text-zinc-400" : "text-zinc-500"
                       }`}
                   >
-                    {totalCartQty} item dipilih
+                    {totalCartQty} {text.selectedItem}
                   </p>
                 </div>
 
@@ -423,15 +665,14 @@ export default function Navbar({
                     </div>
 
                     <h3 className="text-base font-bold">
-                      Keranjang masih kosong
+                      {text.emptyCartTitle}
                     </h3>
 
                     <p
                       className={`mt-2 max-w-xs text-sm ${theme === "dark" ? "text-zinc-400" : "text-zinc-500"
                         }`}
                     >
-                      Pilih produk atau paket grill terlebih dahulu untuk
-                      dimasukkan ke keranjang.
+                      {text.emptyCartDescription}
                     </p>
 
                     <button
@@ -439,7 +680,7 @@ export default function Navbar({
                       onClick={closeCart}
                       className="mt-5 rounded-full bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/25 transition hover:bg-orange-600"
                     >
-                      Lihat Produk
+                      {text.seeProducts}
                     </button>
                   </div>
                 ) : (
@@ -488,8 +729,8 @@ export default function Navbar({
                                 {item.category && (
                                   <p
                                     className={`mt-0.5 text-xs ${theme === "dark"
-                                      ? "text-zinc-400"
-                                      : "text-zinc-500"
+                                        ? "text-zinc-400"
+                                        : "text-zinc-500"
                                       }`}
                                   >
                                     {item.category}
@@ -520,11 +761,11 @@ export default function Navbar({
 
                                 <p
                                   className={`text-xs ${theme === "dark"
-                                    ? "text-zinc-400"
-                                    : "text-zinc-500"
+                                      ? "text-zinc-400"
+                                      : "text-zinc-500"
                                     }`}
                                 >
-                                  Subtotal:{" "}
+                                  {text.subtotal}:{" "}
                                   {formatRupiah(
                                     item.price * (item.qty ?? 1)
                                   )}
@@ -580,7 +821,7 @@ export default function Navbar({
                     className={`text-sm ${theme === "dark" ? "text-zinc-400" : "text-zinc-500"
                       }`}
                   >
-                    Total
+                    {text.total}
                   </span>
 
                   <span className="text-xl font-black text-orange-500">
@@ -601,7 +842,7 @@ export default function Navbar({
                       }
                     `}
                   >
-                    Kosongkan
+                    {text.clearCart}
                   </button>
 
                   <button
@@ -610,7 +851,7 @@ export default function Navbar({
                     onClick={checkoutCart}
                     className="rounded-full bg-orange-500 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-orange-500/25 transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    Checkout
+                    {text.checkout}
                   </button>
                 </div>
               </div>

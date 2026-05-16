@@ -10,33 +10,11 @@ class LandingPageController extends Controller
 {
     function index()
     {
-        return Inertia::render("landing", [
-            "navItems" => $this->navItems()
-        ]);
+        return Inertia::render("landing");
     }
 
     function indexProduk()
     {
-        return Inertia::render("landing/produk", [
-            "navItems" => $this->navItems()
-        ]);
-    }
-
-    function navItems()
-    {
-        return [
-            [
-                "name" => "About",
-                "href" => "#"
-            ],
-            [
-                "name" => "Produk",
-                "href" => route("landing.produk")
-            ],
-            [
-                "name" => "Form",
-                "href" => "#"
-            ],
-        ];
+        return Inertia::render("landing/produk");
     }
 }
