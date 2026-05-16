@@ -66,6 +66,25 @@ const features = [
   "Modern Experience",
 ];
 
+const cartItems = [
+  {
+    id: 1,
+    name: "Paket Grill Premium",
+    category: "Paket",
+    price: 150000,
+    qty: 1,
+    image: "/images/products/grill-premium.jpg",
+  },
+  {
+    id: 2,
+    name: "Sosis Jumbo",
+    category: "Ala Carte",
+    price: 35000,
+    qty: 2,
+    image: "/images/products/sosis.jpg",
+  },
+];
+
 export default function PremiumRentalGrillLandingPage() {
   const pageProps = usePage().props as { navItems?: LandingNavItem[] };
   const navItems: LandingNavItem[] = pageProps.navItems ?? [];
@@ -123,6 +142,7 @@ export default function PremiumRentalGrillLandingPage() {
           scrolled={scrolled}
           navItems={navItems}
           onToggleTheme={toggleTheme}
+          cartItems={cartItems}
         />
 
         <HeroSection theme={theme} />
