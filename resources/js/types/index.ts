@@ -1,3 +1,24 @@
 export type * from './auth';
 export type * from './navigation';
 export type * from './ui';
+
+export type ThemeMode = "dark" | "light";
+
+export type LandingPackageItem = {
+  title: string;
+  price: string;
+  desc: string;
+  features: string[];
+  highlight?: boolean;
+};
+
+export type LandingFaqItem = {
+  question: string;
+  answer: string;
+};
+
+export type LandingNavItem = {
+  name?: string;
+  label?: string;
+  href: string;
+};
