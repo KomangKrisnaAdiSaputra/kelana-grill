@@ -1,3 +1,4 @@
+import { landing } from "@/routes";
 import type { LandingNavItem, ThemeMode } from "@/types";
 
 type Props = {
@@ -5,7 +6,7 @@ type Props = {
   items: LandingNavItem[];
 };
 
-export default function MobileBottomNavigation({ theme, items }: Props) {
+export default function MobileNavbar({ theme, items }: Props) {
   return (
     <div
       className={`
@@ -18,7 +19,10 @@ export default function MobileBottomNavigation({ theme, items }: Props) {
       `}
     >
       <div className="grid grid-cols-4 gap-2">
-        {items.map((item) => (
+        {[{
+          name: "Home",
+          href: landing().url,
+        }, ...items].map((item) => (
           <a
             key={item.href}
             href={item.href}
@@ -30,7 +34,7 @@ export default function MobileBottomNavigation({ theme, items }: Props) {
               }
             `}
           >
-            {item.label}
+            {item.name}
           </a>
         ))}
       </div>

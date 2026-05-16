@@ -38,7 +38,7 @@ export default function Navbar({
 
           <div>
             <h1 className="text-base font-semibold tracking-tight md:text-lg">
-              Grill<span className="text-orange-500">Haus</span>
+              Kelana<span className="text-orange-500">Grill</span>
             </h1>
 
             <p className="text-[10px] text-zinc-500 md:text-xs">
@@ -49,12 +49,11 @@ export default function Navbar({
 
         <nav
           className={`
-            hidden items-center gap-8 rounded-full px-6 py-3 xl:flex
+            hidden items-center gap-8 px-6 py-3 xl:flex
             ${theme === "dark"
-              ? "border border-white/10 bg-white/[0.03]"
-              : "border border-orange-100 bg-white/70"
+              ? "white/[0.03]"
+              : "white/70"
             }
-            backdrop-blur-xl
           `}
         >
           {navItems.map((item) => (
