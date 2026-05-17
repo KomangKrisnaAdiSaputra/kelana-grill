@@ -48,6 +48,39 @@ export const landingTexts = {
             fallbackProductName: 'Family BBQ Set',
             promoLabel: 'Promo',
         },
+
+        features: {
+            eyebrow: 'Pengalaman',
+            title: 'BBQ Jadi Lebih Praktis.',
+            description:
+                'Pilih paket BBQ dan perlengkapan sesuai kebutuhan acara kamu dengan proses booking yang mudah.',
+            items: [
+                {
+                    key: 'readyToUse',
+                    title: 'Peralatan Siap Pakai',
+                    description:
+                        'Peralatan grill praktis dan mudah digunakan untuk acara BBQ bersama teman atau keluarga.',
+                },
+                {
+                    key: 'valuePackages',
+                    title: 'Paket Hemat',
+                    description:
+                        'Pilihan paket BBQ dengan isi yang lengkap dan harga yang lebih praktis.',
+                },
+                {
+                    key: 'flexibleMenu',
+                    title: 'Pilihan Menu Fleksibel',
+                    description:
+                        'Pilih paket atau tambahan ala carte sesuai kebutuhan acara kamu.',
+                },
+                {
+                    key: 'easyBooking',
+                    title: 'Booking Mudah',
+                    description:
+                        'Pilih produk, masukkan ke keranjang, lalu lanjutkan pemesanan dengan mudah.',
+                },
+            ],
+        },
     },
 
     en: {
@@ -96,6 +129,39 @@ export const landingTexts = {
             fallbackLabel: 'Most Popular Package',
             fallbackProductName: 'Family BBQ Set',
             promoLabel: 'Promo',
+        },
+
+        features: {
+            eyebrow: 'Experience',
+            title: 'Make BBQ More Practical.',
+            description:
+                'Choose BBQ packages and equipment based on your event needs with an easy booking process.',
+            items: [
+                {
+                    key: 'readyToUse',
+                    title: 'Ready-to-Use Equipment',
+                    description:
+                        'Practical grill equipment that is easy to use for BBQ with friends or family.',
+                },
+                {
+                    key: 'valuePackages',
+                    title: 'Value Packages',
+                    description:
+                        'BBQ package options with complete items and practical pricing.',
+                },
+                {
+                    key: 'flexibleMenu',
+                    title: 'Flexible Menu Options',
+                    description:
+                        'Choose packages or ala carte add-ons based on your event needs.',
+                },
+                {
+                    key: 'easyBooking',
+                    title: 'Easy Booking',
+                    description:
+                        'Choose products, add them to your cart, and continue your order easily.',
+                },
+            ],
         },
     },
 } as const;

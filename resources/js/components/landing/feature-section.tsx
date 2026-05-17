@@ -1,36 +1,37 @@
+import { useLanguage } from "@/contexts/language-context";
 import type { ThemeMode } from "@/types";
 
 type Props = {
   theme: ThemeMode;
-  features: string[];
 };
 
-export default function FeatureSection({ theme, features }: Props) {
+export default function FeatureSection({ theme }: Props) {
+  const { text } = useLanguage();
+
   return (
     <section id="features" className="py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <div className="max-w-2xl">
           <p className="text-sm uppercase tracking-[0.3em] text-orange-500">
-            Experience
+            {text.features.eyebrow}
           </p>
 
           <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl">
-            More Than Just a Grill.
+            {text.features.title}
           </h2>
 
           <p
             className={`mt-6 text-base leading-7 md:text-lg md:leading-8 ${theme === "dark" ? "text-zinc-400" : "text-zinc-600"
               }`}
           >
-            Modern BBQ setup dengan pengalaman premium untuk setiap event
-            spesialmu.
+            {text.features.description}
           </p>
         </div>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 md:mt-16 md:gap-6 xl:grid-cols-4">
-          {features.map((item, index) => (
+          {text.features.items.map((item, index) => (
             <div
-              key={item}
+              key={item.key}
               className={`
                 group relative overflow-hidden rounded-[28px] border p-6 backdrop-blur-xl
                 transition duration-500 hover:-translate-y-2
@@ -49,13 +50,15 @@ export default function FeatureSection({ theme, features }: Props) {
                   0{index + 1}
                 </div>
 
-                <h3 className="text-xl font-semibold md:text-2xl">{item}</h3>
+                <h3 className="text-xl font-semibold md:text-2xl">
+                  {item.title}
+                </h3>
 
                 <p
                   className={`mt-4 leading-7 ${theme === "dark" ? "text-zinc-400" : "text-zinc-600"
                     }`}
                 >
-                  Premium service dengan setup modern dan praktis.
+                  {item.description}
                 </p>
               </div>
             </div>

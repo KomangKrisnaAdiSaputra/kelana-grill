@@ -66,13 +66,6 @@ const faqs: LandingFaqItem[] = [
   },
 ];
 
-const features = [
-  "Premium Equipment",
-  "Fast Delivery",
-  "Free Setup",
-  "Modern Experience",
-];
-
 const cartItems = [
   {
     id: 1,
@@ -154,7 +147,7 @@ function PremiumRentalGrillLandingContent() {
           <HeroSection theme={theme} featuredProduct={featuredProduct} />
         </section>
 
-        <FeatureSection theme={theme} features={features} />
+        <FeatureSection theme={theme} />
 
         <section id="products">
           <PricingSection theme={theme} packages={packages} />
