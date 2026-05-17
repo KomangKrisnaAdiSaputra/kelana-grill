@@ -96,6 +96,18 @@ export const landingTexts = {
             closeLabel: 'Tutup',
             noDataLabel: 'Tidak ada data.',
         },
+
+        cta: {
+            titlePrefix: 'Siap untuk',
+            titleHighlight: 'BBQ Night Berikutnya?',
+            description:
+                'Booking cepat dan setup premium untuk event spesialmu.',
+            urgency: 'Slot weekend cepat penuh 🔥',
+            whatsapp: 'Chat WhatsApp',
+            packages: 'Lihat Paket',
+            whatsappMessage:
+                'Halo, saya ingin tanya tentang paket BBQ dan ketersediaan slot booking.',
+        },
     },
 
     en: {
@@ -191,6 +203,18 @@ export const landingTexts = {
             selectedVariantLabel: 'Current Option',
             closeLabel: 'Close',
             noDataLabel: 'No data.',
+        },
+
+        cta: {
+            titlePrefix: 'Ready for Your',
+            titleHighlight: 'Next BBQ Night?',
+            description:
+                'Fast booking and premium setup for your special event.',
+            urgency: 'Weekend slots fill up fast 🔥',
+            whatsapp: 'Chat WhatsApp',
+            packages: 'Explore Packages',
+            whatsappMessage:
+                'Hello, I would like to ask about BBQ packages and booking slot availability.',
         },
     },
 } as const;
