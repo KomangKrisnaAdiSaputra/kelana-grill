@@ -10,42 +10,20 @@ import Footer from "@/components/landing/footer";
 import HeroSection from "@/components/landing/hero-section";
 import MobileNavbar from "@/components/landing/mobile-navbar";
 import Navbar from "@/components/landing/navbar";
-import PricingSection from "@/components/landing/pricing-section";
+import ProductSection from "@/components/landing/product-section";
 import AppProvider from "@/contexts/app-provider";
 import { useTheme } from "@/contexts/theme-context";
 import { produk } from "@/routes/landing";
 import type {
   LandingFaqItem,
   LandingNavItem,
-  LandingPackageItem,
 } from "@/types";
 import type { ProductItem } from "@/types/product";
 
 type LandingPageProps = {
   featuredProduct?: ProductItem | null;
+  products?: ProductItem[] | [];
 };
-
-const packages: LandingPackageItem[] = [
-  {
-    title: "Basic BBQ",
-    price: "299K",
-    desc: "Perfect untuk BBQ kecil bersama teman.",
-    features: ["Portable grill", "Free setup", "2 jam penggunaan"],
-  },
-  {
-    title: "Family Night",
-    price: "599K",
-    desc: "Pilihan paling populer untuk keluarga.",
-    features: ["Premium grill", "Free delivery", "Charcoal included"],
-    highlight: true,
-  },
-  {
-    title: "Premium Event",
-    price: "1.2JT",
-    desc: "Untuk gathering dan event yang lebih besar.",
-    features: ["Large grill", "Full setup", "Support team included"],
-  },
-];
 
 const faqs: LandingFaqItem[] = [
   {
@@ -108,7 +86,7 @@ function PremiumRentalGrillLandingContent() {
 
   const [scrolled, setScrolled] = useState(false);
 
-  const { featuredProduct } = usePage<LandingPageProps>().props;
+  const { featuredProduct, products } = usePage<LandingPageProps>().props;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -150,7 +128,7 @@ function PremiumRentalGrillLandingContent() {
         <FeatureSection theme={theme} />
 
         <section id="products">
-          <PricingSection theme={theme} packages={packages} />
+          <ProductSection theme={theme} products={products} />
         </section>
 
         <FaqSection theme={theme} faqs={faqs} />
