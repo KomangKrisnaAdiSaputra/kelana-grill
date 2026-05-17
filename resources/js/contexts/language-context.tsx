@@ -1,11 +1,12 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
-import type { ReactNode } from "react"
+import type { ReactNode } from "react";
 import {
   ensureUrlHasLanguage,
   getInitialLanguage,
@@ -34,15 +35,32 @@ type Props = {
 };
 
 export function LanguageProvider({ children }: Props) {
-  const [language, setLanguageState] = useState<LanguageMode>(getInitialLanguage);
+  const [language, setLanguageState] =
+    useState<LanguageMode>(getInitialLanguage);
 
-  const setLanguage = (nextLanguage: LanguageMode) => {
+  const setLanguage = useCallback((nextLanguage: LanguageMode) => {
     replaceUrlLanguage(nextLanguage);
     saveLanguage(nextLanguage);
     setLanguageState(nextLanguage);
-  };
+  }, []);
 
+  const toggleLanguage = useCallback(() => {
+    setLanguageState((currentLanguage) => {
+      const nextLanguage = currentLanguage === "id" ? "en" : "id";
 
+      replaceUrlLanguage(nextLanguage);
+      saveLanguage(nextLanguage);
+
+      return nextLanguage;
+    });
+  }, []);
+
+  const getLocalizedHref = useCallback(
+    (href: string) => {
+      return getLocalizedHrefByLanguage(href, language);
+    },
+    [language]
+  );
 
   useEffect(() => {
     ensureUrlHasLanguage(language);
@@ -69,14 +87,6 @@ export function LanguageProvider({ children }: Props) {
     };
   }, []);
 
-  const toggleLanguage = () => {
-    setLanguage(language === "id" ? "en" : "id");
-  };
-
-  const getLocalizedHref = (href: string) => {
-    return getLocalizedHrefByLanguage(href, language);
-  };
-
   const value = useMemo<LanguageContextValue>(() => {
     return {
       language,
@@ -85,7 +95,7 @@ export function LanguageProvider({ children }: Props) {
       toggleLanguage,
       getLocalizedHref,
     };
-  }, [language]);
+  }, [language, setLanguage, toggleLanguage, getLocalizedHref]);
 
   return (
     <LanguageContext.Provider value={value}>

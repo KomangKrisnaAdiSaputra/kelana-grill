@@ -90,7 +90,7 @@ const navItems: LandingNavItem[] = [
   {
     key: "home",
     name: "About",
-    href: "#",
+    href: "hu",
   },
   {
     key: "products",
@@ -100,7 +100,7 @@ const navItems: LandingNavItem[] = [
   {
     key: "contact",
     name: "Booking",
-    href: "#",
+    href: "ha",
   },
 ];
 
