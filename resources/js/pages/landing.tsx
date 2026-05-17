@@ -10,13 +10,13 @@ import HeroSection from "@/components/landing/hero-section";
 import MobileNavbar from "@/components/landing/mobile-navbar";
 import Navbar from "@/components/landing/navbar";
 import PricingSection from "@/components/landing/pricing-section";
-import { LanguageProvider } from "@/contexts/language-context";
+import AppProvider from "@/contexts/app-provider";
+import { useTheme } from "@/contexts/theme-context";
 import { produk } from "@/routes/landing";
 import type {
   LandingFaqItem,
   LandingNavItem,
   LandingPackageItem,
-  ThemeMode,
 } from "@/types";
 
 const packages: LandingPackageItem[] = [
@@ -90,7 +90,7 @@ const navItems: LandingNavItem[] = [
   {
     key: "home",
     name: "About",
-    href: "hu",
+    href: "#home",
   },
   {
     key: "products",
@@ -100,43 +100,21 @@ const navItems: LandingNavItem[] = [
   {
     key: "contact",
     name: "Booking",
-    href: "ha",
+    href: "#booking",
   },
 ];
 
-export default function PremiumRentalGrillLandingPage() {
-  const [theme, setTheme] = useState<ThemeMode>(() => {
-    if (typeof window === "undefined") {
-      return "light";
-    }
-
-    const savedTheme = localStorage.getItem("theme") as ThemeMode | null;
-
-    return savedTheme === "dark" || savedTheme === "light"
-      ? savedTheme
-      : "light";
-  });
+function PremiumRentalGrillLandingContent() {
+  const { theme, toggleTheme } = useTheme();
 
   const [scrolled, setScrolled] = useState(false);
-
-  const toggleTheme = () => {
-    setTheme((currentTheme) => (currentTheme === "dark" ? "light" : "dark"));
-  };
-
-  useEffect(() => {
-    localStorage.setItem("theme", theme);
-
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [theme]);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 30);
     };
+
+    handleScroll();
 
     window.addEventListener("scroll", handleScroll);
 
@@ -144,44 +122,58 @@ export default function PremiumRentalGrillLandingPage() {
   }, []);
 
   return (
-    <LanguageProvider>
-      <div
-        className={`
-          min-h-screen overflow-hidden transition-all duration-500
-          ${theme === "dark"
-            ? "bg-[#0F0F10] text-white"
-            : "bg-gradient-to-br from-[#fff7ed] via-[#fffaf5] to-[#ffe7c2] text-zinc-900"
-          }
-        `}
-      >
-        <AmbientBackground theme={theme} />
+    <div
+      className={`
+        min-h-screen overflow-hidden transition-all duration-500
+        ${theme === "dark"
+          ? "bg-[#0F0F10] text-white"
+          : "bg-gradient-to-br from-[#fff7ed] via-[#fffaf5] to-[#ffe7c2] text-zinc-900"
+        }
+      `}
+    >
+      <AmbientBackground theme={theme} />
 
-        <Navbar
-          theme={theme}
-          scrolled={scrolled}
-          navItems={navItems}
-          onToggleTheme={toggleTheme}
-          cartItems={cartItems}
-        />
+      <Navbar
+        theme={theme}
+        scrolled={scrolled}
+        navItems={navItems}
+        onToggleTheme={toggleTheme}
+        cartItems={cartItems}
+      />
 
-        <HeroSection theme={theme} />
+      <main>
+        <section id="home">
+          <HeroSection theme={theme} />
+        </section>
 
         <FeatureSection theme={theme} features={features} />
 
-        <PricingSection theme={theme} packages={packages} />
+        <section id="products">
+          <PricingSection theme={theme} packages={packages} />
+        </section>
 
         <FaqSection theme={theme} faqs={faqs} />
 
-        <CtaSection theme={theme} />
+        <section id="booking">
+          <CtaSection theme={theme} />
+        </section>
+      </main>
 
-        <MobileNavbar theme={theme} items={navItems} />
+      <MobileNavbar theme={theme} items={navItems} />
 
-        <div className="h-24 xl:hidden" />
+      <div className="h-24 xl:hidden" />
 
-        <Footer theme={theme} />
+      <Footer theme={theme} />
 
-        <FloatingWhatsApp />
-      </div>
-    </LanguageProvider>
+      <FloatingWhatsApp />
+    </div>
+  );
+}
+
+export default function PremiumRentalGrillLandingPage() {
+  return (
+    <AppProvider>
+      <PremiumRentalGrillLandingContent />
+    </AppProvider>
   );
 }
