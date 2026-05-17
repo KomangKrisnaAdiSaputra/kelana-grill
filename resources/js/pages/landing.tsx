@@ -5,7 +5,7 @@ import AmbientBackground from "@/components/landing/ambient-background";
 import CtaSection from "@/components/landing/cta-section";
 import FaqSection from "@/components/landing/faq-section";
 import FeatureSection from "@/components/landing/feature-section";
-import FloatingWhatsApp from "@/components/landing/floating-whatsApp";
+// import FloatingWhatsApp from "@/components/landing/floating-whatsApp";
 import Footer from "@/components/landing/footer";
 import HeroSection from "@/components/landing/hero-section";
 import MobileNavbar from "@/components/landing/mobile-navbar";
@@ -202,7 +202,7 @@ function PremiumRentalGrillLandingContent() {
 
       <Footer theme={theme} />
 
-      <FloatingWhatsApp />
+      {/* <FloatingWhatsApp /> */}
     </div>
   );
 }

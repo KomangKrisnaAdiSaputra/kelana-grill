@@ -249,7 +249,7 @@ export default function Navbar({
                 }
               `}
             >
-              <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
+              <div className="grid grid-cols-2 gap-2 md:grid-cols-2">
                 <button
                   type="button"
                   onClick={toggleLanguage}
