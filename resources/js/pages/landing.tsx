@@ -10,6 +10,7 @@ import HeroSection from "@/components/landing/hero-section";
 import MobileNavbar from "@/components/landing/mobile-navbar";
 import Navbar from "@/components/landing/navbar";
 import PricingSection from "@/components/landing/pricing-section";
+import { LanguageProvider } from "@/contexts/language-context";
 import { produk } from "@/routes/landing";
 import type {
   LandingFaqItem,
@@ -87,17 +88,20 @@ const cartItems = [
 
 const navItems: LandingNavItem[] = [
   {
+    key: "home",
     name: "About",
-    href: "#"
+    href: "#",
   },
   {
+    key: "products",
     name: "Produk",
-    href: produk.url()
+    href: produk.url(),
   },
   {
+    key: "contact",
     name: "Booking",
-    href: "#"
-  }
+    href: "#",
+  },
 ];
 
 export default function PremiumRentalGrillLandingPage() {
@@ -108,8 +112,11 @@ export default function PremiumRentalGrillLandingPage() {
 
     const savedTheme = localStorage.getItem("theme") as ThemeMode | null;
 
-    return savedTheme === "dark" || savedTheme === "light" ? savedTheme : "light";
+    return savedTheme === "dark" || savedTheme === "light"
+      ? savedTheme
+      : "light";
   });
+
   const [scrolled, setScrolled] = useState(false);
 
   const toggleTheme = () => {
@@ -137,7 +144,7 @@ export default function PremiumRentalGrillLandingPage() {
   }, []);
 
   return (
-    <>
+    <LanguageProvider>
       <div
         className={`
           min-h-screen overflow-hidden transition-all duration-500
@@ -175,6 +182,6 @@ export default function PremiumRentalGrillLandingPage() {
 
         <FloatingWhatsApp />
       </div>
-    </>
+    </LanguageProvider>
   );
 }

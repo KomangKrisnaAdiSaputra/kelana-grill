@@ -1,10 +1,15 @@
 <?php
 
 use App\Http\Controllers\LandingPageController;
+use App\Http\Middleware\Locale;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
-Route::prefix('{locale?}')->where(['locale' => 'id|en'])->group(function () {
+Route::prefix('{locale?}')->middleware(Locale::class)->where(['locale' => 'id|en'])->group(function () {
+    Route::prefix('produk')->get('/{a1?}/{a2?}/{a3?}/{a4?}/{a5?}/{a6?}/{a7?}/{a8?}/{a9?}/{a10?}', function () {
+        return;
+    });
+
     Route::inertia('welcome', 'welcome', [
         'canRegister' => Features::enabled(Features::registration()),
     ])->name('home');
