@@ -175,6 +175,26 @@ class LandingPageController extends Controller
                             ],
                         ],
                     ],
+                    [
+                        "translations" => [
+                            "id" => [
+                                "group" => "Pilihan Bumbu",
+                                "items" => [
+                                    ["name" => "BBQ", "qty" => null],
+                                    ["name" => "Teriyaki", "qty" => null],
+                                    ["name" => "Bulgogi", "qty" => null],
+                                ],
+                            ],
+                            "en" => [
+                                "group" => "Seasoning Options",
+                                "items" => [
+                                    ["name" => "BBQ", "qty" => null],
+                                    ["name" => "Teriyaki", "qty" => null],
+                                    ["name" => "Bulgogi", "qty" => null],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
 
@@ -321,6 +341,26 @@ class LandingPageController extends Controller
                                     ["name" => "Chili sauce", "qty" => "1 cup"],
                                     ["name" => "Margarine", "qty" => "1 cup"],
                                     ["name" => "Marinade", "qty" => "included"],
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        "translations" => [
+                            "id" => [
+                                "group" => "Pilihan Bumbu",
+                                "items" => [
+                                    ["name" => "BBQ", "qty" => null],
+                                    ["name" => "Teriyaki", "qty" => null],
+                                    ["name" => "Bulgogi", "qty" => null],
+                                ],
+                            ],
+                            "en" => [
+                                "group" => "Seasoning Options",
+                                "items" => [
+                                    ["name" => "BBQ", "qty" => null],
+                                    ["name" => "Teriyaki", "qty" => null],
+                                    ["name" => "Bulgogi", "qty" => null],
                                 ],
                             ],
                         ],
@@ -475,6 +515,26 @@ class LandingPageController extends Controller
                             ],
                         ],
                     ],
+                    [
+                        "translations" => [
+                            "id" => [
+                                "group" => "Pilihan Bumbu",
+                                "items" => [
+                                    ["name" => "BBQ", "qty" => null],
+                                    ["name" => "Teriyaki", "qty" => null],
+                                    ["name" => "Bulgogi", "qty" => null],
+                                ],
+                            ],
+                            "en" => [
+                                "group" => "Seasoning Options",
+                                "items" => [
+                                    ["name" => "BBQ", "qty" => null],
+                                    ["name" => "Teriyaki", "qty" => null],
+                                    ["name" => "Bulgogi", "qty" => null],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
 
@@ -621,6 +681,26 @@ class LandingPageController extends Controller
                                     ["name" => "Chili sauce", "qty" => "1 cup"],
                                     ["name" => "Margarine", "qty" => "1 cup"],
                                     ["name" => "Marinade", "qty" => "included"],
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        "translations" => [
+                            "id" => [
+                                "group" => "Pilihan Bumbu",
+                                "items" => [
+                                    ["name" => "BBQ", "qty" => null],
+                                    ["name" => "Teriyaki", "qty" => null],
+                                    ["name" => "Bulgogi", "qty" => null],
+                                ],
+                            ],
+                            "en" => [
+                                "group" => "Seasoning Options",
+                                "items" => [
+                                    ["name" => "BBQ", "qty" => null],
+                                    ["name" => "Teriyaki", "qty" => null],
+                                    ["name" => "Bulgogi", "qty" => null],
                                 ],
                             ],
                         ],

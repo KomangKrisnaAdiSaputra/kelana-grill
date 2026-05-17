@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import ProductCard from "@/components/landing/product-card";
+import ProductDetailModal from "@/components/landing/product-detail-modal";
 import { useLanguage } from "@/contexts/language-context";
 import { localizeProducts } from "@/helpers/global";
 import type { ThemeMode } from "@/types";
 import type {
+  LocalizedProductItem,
   LocalizedProductVariant,
   ProductItem,
 } from "@/types/product";
@@ -14,37 +16,28 @@ type Props = {
   products?: ProductItem[] | [];
 };
 
-const productSectionTranslations = {
-  id: {
-    eyebrow: "Produk",
-    title: "Pilih Paket BBQ Kamu.",
-    desc: "Pilih paket BBQ atau menu ala carte sesuai kebutuhan acara kamu.",
-    addButtonLabel: "Tambah",
-  },
-  en: {
-    eyebrow: "Products",
-    title: "Choose Your BBQ Package.",
-    desc: "Choose a BBQ package or ala carte menu based on your event needs.",
-    addButtonLabel: "Add",
-  },
+type SelectedDetail = {
+  product: LocalizedProductItem;
+  variant: LocalizedProductVariant;
 };
 
 export default function ProductSection({ theme, products }: Props) {
-  const { language } = useLanguage();
+  const { language, text } = useLanguage();
 
   const sliderRef = useRef<HTMLDivElement | null>(null);
 
   const [activeSlide, setActiveSlide] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(1);
 
+  const [selectedDetail, setSelectedDetail] = useState<SelectedDetail | null>(
+    null,
+  );
+
   const [selectedVariants, setSelectedVariants] = useState<
     Record<string, string>
   >({});
 
-  const sectionText =
-    productSectionTranslations[
-    language as keyof typeof productSectionTranslations
-    ] ?? productSectionTranslations.id;
+  const sectionText = text.product;
 
   const localizedProducts = useMemo(() => {
     return localizeProducts(products ?? [], language);
@@ -95,12 +88,15 @@ export default function ProductSection({ theme, products }: Props) {
   useEffect(() => {
     const updateItemsPerView = () => {
       const width = window.innerWidth;
+      const nextItemsPerView = width >= 768 && width < 1280 ? 2 : 1;
 
-      if (width >= 768 && width < 1280) {
-        return setItemsPerView(2);
-      }
+      setItemsPerView((current) => {
+        if (current === nextItemsPerView) {
+          return current;
+        }
 
-      setItemsPerView(1);
+        return nextItemsPerView;
+      });
     };
 
     updateItemsPerView();
@@ -123,11 +119,7 @@ export default function ProductSection({ theme, products }: Props) {
       left: 0,
       behavior: "auto",
     });
-
-    window.requestAnimationFrame(() => {
-      handleScroll();
-    });
-  }, [language, localizedProducts.length, itemsPerView, handleScroll]);
+  }, [language, localizedProducts.length, itemsPerView]);
 
   return (
     <section id="products" className="relative overflow-hidden py-20 md:py-24">
@@ -194,11 +186,18 @@ export default function ProductSection({ theme, products }: Props) {
                   selectedVariantKey={selectedVariant?.key}
                   qty={0}
                   addButtonLabel={sectionText.addButtonLabel}
+                  detailButtonLabel={sectionText.detailButtonLabel}
                   onSelectVariant={(variant: LocalizedProductVariant) =>
                     setSelectedVariants((current) => ({
                       ...current,
                       [product.id]: variant.key,
                     }))
+                  }
+                  onDetail={(selectedProduct, selectedProductVariant) =>
+                    setSelectedDetail({
+                      product: selectedProduct,
+                      variant: selectedProductVariant,
+                    })
                   }
                   onPlus={() => {
                     // nanti sambungkan ke cart context/localStorage
@@ -234,6 +233,34 @@ export default function ProductSection({ theme, products }: Props) {
           </div>
         )}
       </div>
+
+      {selectedDetail && (
+        <ProductDetailModal
+          theme={theme}
+          product={selectedDetail.product}
+          selectedVariant={selectedDetail.variant}
+          text={{
+            modalTitle: sectionText.modalTitle,
+            categoriesLabel: sectionText.categoriesLabel,
+            badgesLabel: sectionText.badgesLabel,
+            variantsLabel: sectionText.variantsLabel,
+            selectedVariantLabel: sectionText.selectedVariantLabel,
+            closeLabel: sectionText.closeLabel,
+            noDataLabel: sectionText.noDataLabel,
+          }}
+          onClose={() => setSelectedDetail(null)}
+          onSelectVariant={(variant) =>
+            setSelectedDetail((current) =>
+              current
+                ? {
+                  ...current,
+                  variant,
+                }
+                : current,
+            )
+          }
+        />
+      )}
     </section>
   );
 }

@@ -11,6 +11,7 @@ type ProductCardProps = {
   qty?: number;
   selectedVariantKey?: string;
   addButtonLabel?: string;
+  detailButtonLabel?: string;
   onSelectVariant?: (variant: LocalizedProductVariant) => void;
   onPlus?: (
     product: LocalizedProductItem,
@@ -21,6 +22,10 @@ type ProductCardProps = {
     variant: LocalizedProductVariant,
   ) => void;
   onClick?: (product: LocalizedProductItem) => void;
+  onDetail?: (
+    product: LocalizedProductItem,
+    variant: LocalizedProductVariant,
+  ) => void;
 };
 
 type QtyButtonProps = {
@@ -100,10 +105,12 @@ export default function ProductCard({
   qty = 0,
   selectedVariantKey,
   addButtonLabel = "Tambah",
+  detailButtonLabel = "Detail",
   onSelectVariant,
   onPlus,
   onMinus,
   onClick,
+  onDetail,
 }: ProductCardProps) {
   const selectedVariant = getDefaultVariant(product, selectedVariantKey);
 
@@ -130,6 +137,14 @@ export default function ProductCard({
     }
 
     onMinus(product, selectedVariant);
+  };
+
+  const handleDetail = () => {
+    if (!selectedVariant || !onDetail) {
+      return;
+    }
+
+    onDetail(product, selectedVariant);
   };
 
   return (
@@ -212,7 +227,11 @@ export default function ProductCard({
         {product.variants.length > 1 && (
           <div
             onClick={(event) => event.stopPropagation()}
-            className="mt-5 flex gap-2 overflow-x-auto pb-1"
+            className="
+              mt-5 flex gap-2 overflow-x-auto pb-1
+              [-ms-overflow-style:none] [scrollbar-width:none]
+              [&::-webkit-scrollbar]:hidden
+            "
           >
             {product.variants.map((variant) => {
               const isActive = selectedVariant?.key === variant.key;
@@ -240,7 +259,7 @@ export default function ProductCard({
         )}
 
         <div className="mt-5 flex items-end justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             {hasPromoPrice && (
               <p
                 className={`text-sm line-through ${theme === "dark" ? "text-zinc-500" : "text-zinc-400"
@@ -264,24 +283,42 @@ export default function ProductCard({
             )}
           </div>
 
-          {onPlus && selectedVariant && (
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                handlePlus();
-              }}
-              className={`
-                hidden rounded-2xl px-4 py-3 text-sm font-semibold transition sm:block
-                ${theme === "dark"
-                  ? "bg-white text-zinc-950 hover:bg-orange-100"
-                  : "bg-zinc-950 text-white hover:bg-orange-500"
-                }
-              `}
-            >
-              {addButtonLabel}
-            </button>
-          )}
+          <div
+            onClick={(event) => event.stopPropagation()}
+            className="flex shrink-0 items-center gap-2"
+          >
+            {onDetail && selectedVariant && (
+              <button
+                type="button"
+                onClick={handleDetail}
+                className={`
+                  rounded-2xl px-4 py-3 text-sm font-semibold transition
+                  ${theme === "dark"
+                    ? "bg-white/10 text-white ring-1 ring-white/10 hover:bg-white/15"
+                    : "bg-orange-50 text-orange-600 ring-1 ring-orange-100 hover:bg-orange-100"
+                  }
+                `}
+              >
+                {detailButtonLabel}
+              </button>
+            )}
+
+            {onPlus && selectedVariant && (
+              <button
+                type="button"
+                onClick={handlePlus}
+                className={`
+                  hidden rounded-2xl px-4 py-3 text-sm font-semibold transition sm:block
+                  ${theme === "dark"
+                    ? "bg-white text-zinc-950 hover:bg-orange-100"
+                    : "bg-zinc-950 text-white hover:bg-orange-500"
+                  }
+                `}
+              >
+                {addButtonLabel}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </article>

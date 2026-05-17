@@ -81,6 +81,21 @@ export const landingTexts = {
                 },
             ],
         },
+
+        product: {
+            eyebrow: 'Produk',
+            title: 'Pilih Paket BBQ Kamu.',
+            desc: 'Pilih paket BBQ atau menu ala carte sesuai kebutuhan acara kamu.',
+            addButtonLabel: 'Tambah',
+            detailButtonLabel: 'Detail',
+            modalTitle: 'Detail Produk',
+            categoriesLabel: 'Kategori',
+            badgesLabel: 'Badge',
+            variantsLabel: 'Pilihan Paket',
+            selectedVariantLabel: 'Pilihan saat ini',
+            closeLabel: 'Tutup',
+            noDataLabel: 'Tidak ada data.',
+        },
     },
 
     en: {
@@ -162,6 +177,20 @@ export const landingTexts = {
                         'Choose products, add them to your cart, and continue your order easily.',
                 },
             ],
+        },
+        product: {
+            eyebrow: 'Products',
+            title: 'Choose Your BBQ Package.',
+            desc: 'Choose a BBQ package or ala carte menu based on your event needs.',
+            addButtonLabel: 'Add',
+            detailButtonLabel: 'Details',
+            modalTitle: 'Product Details',
+            categoriesLabel: 'Categories',
+            badgesLabel: 'Badges',
+            variantsLabel: 'Package Options',
+            selectedVariantLabel: 'Current Option',
+            closeLabel: 'Close',
+            noDataLabel: 'No data.',
         },
     },
 } as const;
