@@ -27,23 +27,81 @@ type LandingPageProps = {
 
 const faqs: LandingFaqItem[] = [
   {
-    question: "Apakah sudah termasuk arang?",
-    answer: "Ya, beberapa paket sudah termasuk arang dan perlengkapan dasar BBQ.",
+    key: "stove-package-items",
+    translations: {
+      id: {
+        question: "Untuk paket dengan kompor, isi apa saja?",
+        answer:
+          "Paket dengan kompor sudah termasuk perlengkapan grill seperti kompor grill portable, pan grill, capitan atau penjepit BBQ, mangkok, sumpit, kuas, dan gas. Isi detail bisa berbeda sesuai paket yang dipilih.",
+      },
+      en: {
+        question: "What is included in the package with a stove?",
+        answer:
+          "The package with a stove includes grilling equipment such as a portable grill stove, grill pan, BBQ tongs, bowls, chopsticks, brush, and gas canister. The exact items may vary depending on the package you choose.",
+      },
+    },
   },
   {
-    question: "Area delivery dimana saja?",
-    answer: "Kami melayani area kota dan sekitarnya dengan pengiriman cepat.",
+    key: "gas-included",
+    translations: {
+      id: {
+        question: "Apakah sudah termasuk gas?",
+        answer:
+          "Ya, untuk paket dengan kompor sudah termasuk gas. Untuk paket tanpa kompor, gas tidak termasuk karena tidak ada perlengkapan kompor.",
+      },
+      en: {
+        question: "Is gas included?",
+        answer:
+          "Yes, gas is included for packages with a stove. For packages without a stove, gas is not included because stove equipment is not provided.",
+      },
+    },
   },
   {
-    question: "Bisa booking mendadak?",
-    answer: "Bisa, selama stok dan jadwal masih tersedia.",
+    key: "meat-only",
+    translations: {
+      id: {
+        question: "Apakah bisa hanya membeli daging saja?",
+        answer:
+          "Bisa. Kamu bisa membeli menu ala carte atau daging saja sesuai ketersediaan stok. Silakan hubungi kami untuk pilihan daging dan harga terbaru.",
+      },
+      en: {
+        question: "Can I buy only the meat?",
+        answer:
+          "Yes. You can order ala carte items or meat only, depending on stock availability. Please contact us for the latest meat options and prices.",
+      },
+    },
   },
   {
-    question: "Apakah ada deposit?",
-    answer: "Beberapa paket membutuhkan deposit yang akan dikembalikan.",
+    key: "location",
+    translations: {
+      id: {
+        question: "Lokasinya dimana ya?",
+        answer:
+          "Kami berada di area Denpasar dan Batubulan. Untuk alamat lengkap, titik lokasi, atau informasi pengambilan, silakan hubungi kami melalui WhatsApp.",
+      },
+      en: {
+        question: "Where are you located?",
+        answer:
+          "We are located around the Denpasar and Batubulan areas. For the full address, map location, or pickup information, please contact us via WhatsApp.",
+      },
+    },
+  },
+  {
+    key: "down-payment",
+    translations: {
+      id: {
+        question: "Apakah harus DP?",
+        answer:
+          "DP diperlukan untuk pembelian daging. Selain itu, saat ada event, high season, atau pemesanan sedang ramai, semua pesanan wajib DP agar jadwal dan stok bisa kami amankan.",
+      },
+      en: {
+        question: "Is a down payment required?",
+        answer:
+          "A down payment is required for meat-only purchases. In addition, during events, high season, or busy order periods, all orders require a down payment so we can secure the schedule and stock for you.",
+      },
+    },
   },
 ];
-
 const cartItems = [
   {
     id: 1,

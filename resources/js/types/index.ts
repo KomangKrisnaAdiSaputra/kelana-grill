@@ -13,8 +13,17 @@ export type LandingPackageItem = {
 };
 
 export type LandingFaqItem = {
-    question: string;
-    answer: string;
+    key: string;
+    translations: {
+        id: {
+            question: string;
+            answer: string;
+        };
+        en: {
+            question: string;
+            answer: string;
+        };
+    };
 };
 
 export type LandingNavItem = {
