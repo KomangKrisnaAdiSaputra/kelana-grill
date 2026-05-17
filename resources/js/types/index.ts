@@ -18,7 +18,7 @@ export type LandingFaqItem = {
 };
 
 export type LandingNavItem = {
-    key?: 'home' | 'products' | 'packages' | 'promo' | 'contact';
+    key?: 'about' | 'products' | 'packages' | 'promo' | 'contact';
     name?: string;
     label?: string;
     href: string;

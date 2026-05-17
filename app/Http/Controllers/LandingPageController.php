@@ -22,7 +22,7 @@ class LandingPageController extends Controller
 
     function products()
     {
-        $datas = [
+        $datas = [[
             "id" => Str::uuid7()->toString(),
             "type" => "package",
             "image" => "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1400&auto=format&fit=crop",
@@ -36,7 +36,7 @@ class LandingPageController extends Controller
                     "featuredLabel" => "Paket Paling Populer",
                 ],
                 "en" => [
-                    "name" => "Value Promo",
+                    "name" => "Savings Promo",
                     "desc" => "Perfect for 2-3 people",
                     "featuredLabel" => "Most Popular Package",
                 ],
@@ -274,7 +274,7 @@ class LandingPageController extends Controller
                     ],
                 ],
             ],
-        ];
+        ]];
 
         return collect($datas);
     }

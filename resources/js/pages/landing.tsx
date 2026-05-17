@@ -1,3 +1,4 @@
+import { usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 import AmbientBackground from "@/components/landing/ambient-background";
@@ -18,6 +19,11 @@ import type {
   LandingNavItem,
   LandingPackageItem,
 } from "@/types";
+import type { ProductItem } from "@/types/product";
+
+type LandingPageProps = {
+  featuredProduct?: ProductItem | null;
+};
 
 const packages: LandingPackageItem[] = [
   {
@@ -88,7 +94,7 @@ const cartItems = [
 
 const navItems: LandingNavItem[] = [
   {
-    key: "home",
+    key: "about",
     name: "About",
     href: "#home",
   },
@@ -108,6 +114,8 @@ function PremiumRentalGrillLandingContent() {
   const { theme, toggleTheme } = useTheme();
 
   const [scrolled, setScrolled] = useState(false);
+
+  const { featuredProduct } = usePage<LandingPageProps>().props;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -143,7 +151,7 @@ function PremiumRentalGrillLandingContent() {
 
       <main>
         <section id="home">
-          <HeroSection theme={theme} />
+          <HeroSection theme={theme} featuredProduct={featuredProduct} />
         </section>
 
         <FeatureSection theme={theme} features={features} />

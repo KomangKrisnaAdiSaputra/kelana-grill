@@ -24,11 +24,29 @@ export const landingTexts = {
         },
 
         nav: {
-            home: 'Beranda',
+            about: 'Tentang',
             products: 'Produk',
             packages: 'Paket',
             promo: 'Promo',
             contact: 'Kontak',
+        },
+
+        hero: {
+            eyebrow: 'Pengalaman BBQ Premium',
+            titlePrefix: 'Sewa Grill',
+            titleHighlight: ' Premium',
+            titleSuffix: 'untuk BBQ Party Modern',
+            description:
+                'Rental grill modern untuk party, gathering, camping, dan event dengan setup premium.',
+            primaryButton: 'Sewa Sekarang',
+            secondaryButton: 'Lihat Paket',
+            customers: 'Pelanggan',
+            events: 'Event',
+            rating: 'Rating',
+            review: '“Setup cepat & grill bersih.”',
+            fallbackLabel: 'Paket Paling Populer',
+            fallbackProductName: 'Family BBQ Set',
+            promoLabel: 'Promo',
         },
     },
 
@@ -55,11 +73,29 @@ export const landingTexts = {
         },
 
         nav: {
-            home: 'Home',
+            about: 'About',
             products: 'Products',
             packages: 'Packages',
             promo: 'Promo',
             contact: 'Contact',
+        },
+
+        hero: {
+            eyebrow: 'Premium BBQ Experience',
+            titlePrefix: 'Premium Grill',
+            titleHighlight: ' Rental',
+            titleSuffix: 'for Modern BBQ Party',
+            description:
+                'Modern grill rental for parties, gatherings, camping, and events with premium setup.',
+            primaryButton: 'Rent Now',
+            secondaryButton: 'View Packages',
+            customers: 'Customers',
+            events: 'Events',
+            rating: 'Rating',
+            review: '“Fast setup & clean grill.”',
+            fallbackLabel: 'Most Popular Package',
+            fallbackProductName: 'Family BBQ Set',
+            promoLabel: 'Promo',
         },
     },
 } as const;
