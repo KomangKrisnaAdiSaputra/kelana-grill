@@ -8,7 +8,8 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useLanguage } from "@/contexts/language-context";
-import { scrollToLocalizedHref } from "@/helpers/language";
+import { landing } from "@/routes";
+import { produk } from "@/routes/landing";
 import type { LandingNavItem, ThemeMode } from "@/types";
 import CartDrawer from "./cart-drawer";
 import type { CartItem } from "./cart-drawer";
@@ -16,7 +17,6 @@ import type { CartItem } from "./cart-drawer";
 type Props = {
   theme: ThemeMode;
   scrolled: boolean;
-  navItems: LandingNavItem[];
   onToggleTheme: () => void;
   cartItems?: CartItem[];
 };
@@ -24,7 +24,6 @@ type Props = {
 export default function Navbar({
   theme,
   scrolled,
-  navItems,
   onToggleTheme,
   cartItems = [],
 }: Props) {
@@ -35,8 +34,25 @@ export default function Navbar({
     language,
     text: landingText,
     toggleLanguage,
-    getLocalizedHref,
   } = useLanguage();
+
+  const navItems: LandingNavItem[] = [
+    {
+      key: "about",
+      name: "About",
+      href: "#home",
+    },
+    {
+      key: "products",
+      name: "Produk",
+      href: produk({ locale: language }).url,
+    },
+    {
+      key: "contact",
+      name: "Booking",
+      href: "#booking",
+    },
+  ];
 
   const text = landingText.navbar;
   const navText = landingText.nav;
@@ -45,36 +61,9 @@ export default function Navbar({
     return cartItems.reduce((total, item) => total + (item.qty ?? 1), 0);
   }, [cartItems]);
 
-  const closeMobileMenu = () => {
-    setMobileMenuOpen(false);
-  };
-
   const openCart = () => {
     setCartOpen(true);
     setMobileMenuOpen(false);
-  };
-
-  const handleLocalizedNavigate = (
-    event: React.MouseEvent<HTMLAnchorElement>,
-    href: string
-  ) => {
-    event.preventDefault();
-
-    const localizedHref = getLocalizedHref(href);
-
-    window.history.pushState({}, "", localizedHref);
-
-    closeMobileMenu();
-    scrollToLocalizedHref(localizedHref);
-  };
-
-  const handleLogoNavigate = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-
-    window.history.pushState({}, "", `/${language}`);
-
-    closeMobileMenu();
-    scrollToLocalizedHref(`/${language}`);
   };
 
   const getNavLabel = (item: LandingNavItem) => {
@@ -115,6 +104,45 @@ export default function Navbar({
     }
   `;
 
+  const normalizePathWithoutLanguage = (url: string) => {
+    if (typeof window === "undefined") {
+      return "/";
+    }
+
+    const supportedLanguages = ["id", "en"];
+
+    const parsedUrl = new URL(url, window.location.origin);
+    const segments = parsedUrl.pathname.split("/").filter(Boolean);
+
+    if (segments.length > 0 && supportedLanguages.includes(segments[0])) {
+      segments.shift();
+    }
+
+    return `/${segments.join("/")}`;
+  };
+
+  const isActiveNavItem = (href: string) => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    const currentPath = normalizePathWithoutLanguage(window.location.href);
+    const targetPath = normalizePathWithoutLanguage(href);
+
+    const currentHash = window.location.hash;
+    const targetHash = href.includes("#") ? href.substring(href.indexOf("#")) : "";
+
+    if (targetHash) {
+      return currentPath === targetPath && currentHash === targetHash;
+    }
+
+    if (targetPath === "/") {
+      return currentPath === "/";
+    }
+
+    return currentPath === targetPath || currentPath.startsWith(`${targetPath}/`);
+  };
+
   return (
     <>
       <header
@@ -130,9 +158,9 @@ export default function Navbar({
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 md:px-6">
           <a
-            href={`/${language}`}
+            href={landing({ locale: language }).url}
             className="flex items-center gap-3"
-            onClick={handleLogoNavigate}
+          // onClick={handleLogoNavigate}
           >
             <div className="relative">
               <div className="absolute inset-0 rounded-full bg-orange-500 opacity-40 blur-xl" />
@@ -159,25 +187,34 @@ export default function Navbar({
               ${theme === "dark" ? "white/[0.03]" : "white/70"}
             `}
           >
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={getLocalizedHref(item.href)}
-                onClick={(event) => handleLocalizedNavigate(event, item.href)}
-                className={`
-                  relative text-sm font-medium transition duration-300
-                  ${theme === "dark"
-                    ? "text-zinc-300 hover:text-white"
-                    : "text-zinc-700 hover:text-orange-500"
-                  }
-                  after:absolute after:bottom-[-6px] after:left-0
-                  after:h-[2px] after:w-0 after:bg-orange-500
-                  after:transition-all after:duration-300 hover:after:w-full
-                `}
-              >
-                {getNavLabel(item)}
-              </a>
-            ))}
+            {navItems.map((item) => {
+              const isActive = isActiveNavItem(item.href);
+
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`
+        relative text-sm font-medium transition duration-300
+        ${isActive
+                      ? theme === "dark"
+                        ? "text-white"
+                        : "text-orange-600"
+                      : theme === "dark"
+                        ? "text-zinc-300 hover:text-white"
+                        : "text-zinc-700 hover:text-orange-500"
+                    }
+        after:absolute after:bottom-[-6px] after:left-0
+        after:h-[2px] after:bg-orange-500
+        after:transition-all after:duration-300
+        ${isActive ? "after:w-full" : "after:w-0 hover:after:w-full"}
+      `}
+                >
+                  {getNavLabel(item)}
+                </a>
+              );
+            })}
           </nav>
 
           <div className="hidden items-center gap-2 xl:flex">

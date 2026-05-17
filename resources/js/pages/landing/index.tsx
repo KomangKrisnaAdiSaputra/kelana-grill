@@ -13,10 +13,8 @@ import Navbar from "@/components/landing/navbar";
 import ProductSection from "@/components/landing/product-section";
 import AppProvider from "@/contexts/app-provider";
 import { useTheme } from "@/contexts/theme-context";
-import { produk } from "@/routes/landing";
 import type {
   LandingFaqItem,
-  LandingNavItem,
 } from "@/types";
 import type { ProductItem } from "@/types/product";
 
@@ -121,24 +119,6 @@ const cartItems = [
   },
 ];
 
-const navItems: LandingNavItem[] = [
-  {
-    key: "about",
-    name: "About",
-    href: "#home",
-  },
-  {
-    key: "products",
-    name: "Produk",
-    href: produk.url(),
-  },
-  {
-    key: "contact",
-    name: "Booking",
-    href: "#booking",
-  },
-];
-
 function PremiumRentalGrillLandingContent() {
   const { theme, toggleTheme } = useTheme();
 
@@ -173,7 +153,6 @@ function PremiumRentalGrillLandingContent() {
       <Navbar
         theme={theme}
         scrolled={scrolled}
-        navItems={navItems}
         onToggleTheme={toggleTheme}
         cartItems={cartItems}
       />
@@ -196,7 +175,7 @@ function PremiumRentalGrillLandingContent() {
         </section>
       </main>
 
-      <MobileNavbar theme={theme} items={navItems} />
+      <MobileNavbar theme={theme} />
 
       <div className="h-24 xl:hidden" />
 

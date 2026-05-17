@@ -13,12 +13,14 @@ class LandingPageController extends Controller
     {
         $featuredProduct = $this->products()->firstWhere("isFeatured", true);
         $products = $this->products()->where("isFeatured", false)->where("type", "package")->where("isLanding", true)->take(3)->values();
-        return Inertia::render("landing", compact("featuredProduct", "products"));
+        return Inertia::render("landing/index", compact("featuredProduct", "products"));
     }
 
     function indexProduk()
     {
-        return Inertia::render("landing/produk");
+        return Inertia::render("landing/produk", [
+            "products" => $this->products()
+        ]);
     }
 
     function products()
