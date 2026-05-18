@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useLanguage } from "@/contexts/language-context";
+import { useTranslation } from "@/lib/Lang";
 import { landing } from "@/routes";
 import { produk } from "@/routes/landing";
 import type { LandingNavItem, ThemeMode } from "@/types";
@@ -35,27 +36,28 @@ export default function Navbar({
     text: landingText,
     toggleLanguage,
   } = useLanguage();
+  const { __ } = useTranslation();
 
   const navItems: LandingNavItem[] = [
     {
       key: "about",
-      name: "About",
+      name: __("Tentang"),
       href: "#home",
     },
     {
       key: "products",
-      name: "Produk",
+      name: __("Produk"),
       href: produk({ locale: language }).url,
     },
     {
       key: "contact",
-      name: "Booking",
+      name: __("Kontak"),
       href: "#booking",
     },
   ];
 
   const text = landingText.navbar;
-  const navText = landingText.nav;
+  // const navText = landingText.nav;
 
   const totalCartQty = useMemo(() => {
     return cartItems.reduce((total, item) => total + (item.qty ?? 1), 0);
@@ -66,17 +68,17 @@ export default function Navbar({
     setMobileMenuOpen(false);
   };
 
-  const getNavLabel = (item: LandingNavItem) => {
-    const navItem = item as LandingNavItem & {
-      key?: keyof typeof navText;
-    };
+  // const getNavLabel = (item: LandingNavItem) => {
+  //   const navItem = item as LandingNavItem & {
+  //     key?: keyof typeof navText;
+  //   };
 
-    if (navItem.key && navItem.key in navText) {
-      return navText[navItem.key];
-    }
+  //   if (navItem.key && navItem.key in navText) {
+  //     return navText[navItem.key];
+  //   }
 
-    return item.name || item.label;
-  };
+  //   return item.name || item.label;
+  // };
 
   const buttonClass = `
     flex h-10 w-10 items-center justify-center rounded-full border
@@ -211,7 +213,8 @@ export default function Navbar({
         ${isActive ? "after:w-full" : "after:w-0 hover:after:w-full"}
       `}
                 >
-                  {getNavLabel(item)}
+                  {/* {getNavLabel(item)} */}
+                  {item.name}
                 </a>
               );
             })}

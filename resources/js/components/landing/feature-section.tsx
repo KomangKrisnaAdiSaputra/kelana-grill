@@ -1,4 +1,5 @@
 import { useLanguage } from "@/contexts/language-context";
+import { useTranslation } from "@/lib/Lang";
 import type { ThemeMode } from "@/types";
 
 type Props = {
@@ -7,24 +8,26 @@ type Props = {
 
 export default function FeatureSection({ theme }: Props) {
   const { text } = useLanguage();
+  const { __ } = useTranslation();
+
 
   return (
     <section id="features" className="py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <div className="max-w-2xl">
           <p className="text-sm uppercase tracking-[0.3em] text-orange-500">
-            {text.features.eyebrow}
+            {__("Pengalaman")}
           </p>
 
           <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl">
-            {text.features.title}
+            {__("BBQ Jadi Lebih Praktis.")}
           </h2>
 
           <p
             className={`mt-6 text-base leading-7 md:text-lg md:leading-8 ${theme === "dark" ? "text-zinc-400" : "text-zinc-600"
               }`}
           >
-            {text.features.description}
+            {__("Pilih paket BBQ dan perlengkapan sesuai kebutuhan acara kamu dengan proses booking yang mudah.")}
           </p>
         </div>
 

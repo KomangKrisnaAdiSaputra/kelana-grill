@@ -1,5 +1,6 @@
 import { useLanguage } from "@/contexts/language-context";
 import { formatPrice, localizeProduct } from "@/helpers/global";
+import { useTranslation } from "@/lib/Lang";
 import type { ThemeMode } from "@/types";
 import type { LocalizedProductItem, ProductItem } from "@/types/product";
 
@@ -16,6 +17,8 @@ function isLocalizedProduct(
 
 export default function HeroSection({ theme, featuredProduct }: Props) {
   const { language, text } = useLanguage();
+  const { __ } = useTranslation();
+
 
   const product = featuredProduct
     ? isLocalizedProduct(featuredProduct)
@@ -43,7 +46,7 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
     product?.badges?.[0]?.label ??
     text.hero.fallbackLabel;
 
-  const productName = product?.name ?? text.hero.fallbackProductName;
+  const productName = product?.name ?? __("Family BBQ Set");
 
   const productPrice = formatPrice(defaultVariant?.price);
 
@@ -62,16 +65,16 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
               }
             `}
           >
-            {text.hero.eyebrow}
+            {__("Pengalaman BBQ Premium")}
           </div>
 
           <h1 className="max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-            {text.hero.titlePrefix}
+            {__("Sewa Grill")}
             <span className="bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-300 bg-clip-text text-transparent">
-              {text.hero.titleHighlight}
+              {" "}{__("Premium")}
             </span>
             <br />
-            {text.hero.titleSuffix}
+            {__("Sewa Grill")}
           </h1>
 
           <p
@@ -80,7 +83,7 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
               ${theme === "dark" ? "text-zinc-400" : "text-zinc-600"}
             `}
           >
-            {text.hero.description}
+            {__("Rental grill modern untuk party, gathering, camping, dan event dengan setup premium.")}
           </p>
 
           <div className="mt-8 flex flex-col flex-wrap gap-3 sm:flex-row md:mt-10 md:gap-4">
@@ -88,7 +91,7 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
               href="#booking"
               className="rounded-full bg-gradient-to-r from-orange-500 to-amber-400 px-7 py-4 text-center font-medium text-white shadow-xl shadow-orange-500/20 transition hover:scale-[1.03] hover:shadow-orange-500/40"
             >
-              {text.hero.primaryButton}
+              {__("Sewa Sekarang")}
             </a>
 
             <a
@@ -101,7 +104,7 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
                 }
               `}
             >
-              {text.hero.secondaryButton}
+              {__("Lihat Paket")}
             </a>
           </div>
 
@@ -151,7 +154,7 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
               <div className="flex gap-1 text-yellow-400">★★★★★</div>
 
               <p className="mt-2 text-xs text-white md:text-sm">
-                {text.hero.review}
+                “{__("Setup cepat & grill bersih.")}”
               </p>
             </div>
 
