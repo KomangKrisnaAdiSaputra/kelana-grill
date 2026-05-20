@@ -6,6 +6,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "@/helpers/global";
 import type { ThemeMode } from "@/types";
 
 export type CartItem = {
@@ -22,23 +23,10 @@ type CartOverride = {
   removed?: boolean;
 };
 
-type CartText = {
-  cart: string;
-  selectedItem: string;
-  emptyCartTitle: string;
-  emptyCartDescription: string;
-  seeProducts: string;
-  subtotal: string;
-  total: string;
-  clearCart: string;
-  checkout: string;
-};
-
 type Props = {
   open: boolean;
   theme: ThemeMode;
   cartItems?: CartItem[];
-  text: CartText;
   onClose: () => void;
   onCheckout?: (items: CartItem[]) => void;
 };
@@ -47,10 +35,11 @@ export default function CartDrawer({
   open,
   theme,
   cartItems = [],
-  text,
   onClose,
   onCheckout,
 }: Props) {
+  const { __ } = useTranslation();
+
   const [cartOverrides, setCartOverrides] = useState<
     Record<string, CartOverride>
   >({});
@@ -201,13 +190,13 @@ export default function CartDrawer({
             `}
           >
             <div>
-              <h2 className="text-lg font-bold">{text.cart}</h2>
+              <h2 className="text-lg font-bold">{__("Keranjang")}</h2>
 
               <p
                 className={`text-sm ${theme === "dark" ? "text-zinc-400" : "text-zinc-500"
                   }`}
               >
-                {totalCartQty} {text.selectedItem}
+                {totalCartQty} {__("item dipilih")}
               </p>
             </div>
 
@@ -242,14 +231,14 @@ export default function CartDrawer({
                 </div>
 
                 <h3 className="text-base font-bold">
-                  {text.emptyCartTitle}
+                  {__("Keranjang masih kosong")}
                 </h3>
 
                 <p
                   className={`mt-2 max-w-xs text-sm ${theme === "dark" ? "text-zinc-400" : "text-zinc-500"
                     }`}
                 >
-                  {text.emptyCartDescription}
+                  {__("Pilih produk atau paket grill terlebih dahulu untuk dimasukkan ke keranjang.")}
                 </p>
 
                 <button
@@ -257,7 +246,7 @@ export default function CartDrawer({
                   onClick={onClose}
                   className="mt-5 rounded-full bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/25 transition hover:bg-orange-600"
                 >
-                  {text.seeProducts}
+                  {__("Lihat Produk")}
                 </button>
               </div>
             ) : (
@@ -303,8 +292,8 @@ export default function CartDrawer({
                             {item.category && (
                               <p
                                 className={`mt-0.5 text-xs ${theme === "dark"
-                                    ? "text-zinc-400"
-                                    : "text-zinc-500"
+                                  ? "text-zinc-400"
+                                  : "text-zinc-500"
                                   }`}
                               >
                                 {item.category}
@@ -335,11 +324,11 @@ export default function CartDrawer({
 
                             <p
                               className={`text-xs ${theme === "dark"
-                                  ? "text-zinc-400"
-                                  : "text-zinc-500"
+                                ? "text-zinc-400"
+                                : "text-zinc-500"
                                 }`}
                             >
-                              {text.subtotal}:{" "}
+                              {__("Subtotal")}:{" "}
                               {formatRupiah(item.price * (item.qty ?? 1))}
                             </p>
                           </div>
@@ -393,7 +382,7 @@ export default function CartDrawer({
                 className={`text-sm ${theme === "dark" ? "text-zinc-400" : "text-zinc-500"
                   }`}
               >
-                {text.total}
+                {__("Total")}
               </span>
 
               <span className="text-xl font-black text-orange-500">
@@ -414,7 +403,7 @@ export default function CartDrawer({
                   }
                 `}
               >
-                {text.clearCart}
+                {__("Kosongkan")}
               </button>
 
               <button
@@ -423,7 +412,7 @@ export default function CartDrawer({
                 onClick={checkoutCart}
                 className="rounded-full bg-orange-500 px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-orange-500/25 transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {text.checkout}
+                {__("Pesan")}
               </button>
             </div>
           </div>

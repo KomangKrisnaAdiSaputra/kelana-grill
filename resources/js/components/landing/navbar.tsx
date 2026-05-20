@@ -1,3 +1,4 @@
+import { router, usePage } from "@inertiajs/react";
 import {
   Languages,
   Menu,
@@ -7,8 +8,7 @@ import {
   X,
 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { useLanguage } from "@/contexts/language-context";
-import { useTranslation } from "@/lib/Lang";
+import { useTranslation } from "@/helpers/global";
 import { landing } from "@/routes";
 import { produk } from "@/routes/landing";
 import type { LandingNavItem, ThemeMode } from "@/types";
@@ -22,20 +22,25 @@ type Props = {
   cartItems?: CartItem[];
 };
 
+type PageProps = {
+  params: any;
+  switchUrl: string;
+}
+
 export default function Navbar({
   theme,
   scrolled,
   onToggleTheme,
   cartItems = [],
 }: Props) {
+  const props = usePage<PageProps>().props;
+
+  const locale = props.params.locale;
+  const switchUrl = props.switchUrl;
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
 
-  const {
-    language,
-    text: landingText,
-    toggleLanguage,
-  } = useLanguage();
   const { __ } = useTranslation();
 
   const navItems: LandingNavItem[] = [
@@ -47,7 +52,7 @@ export default function Navbar({
     {
       key: "products",
       name: __("Produk"),
-      href: produk({ locale: language }).url,
+      href: produk({ locale }).url,
     },
     {
       key: "contact",
@@ -55,9 +60,6 @@ export default function Navbar({
       href: "#booking",
     },
   ];
-
-  const text = landingText.navbar;
-  // const navText = landingText.nav;
 
   const totalCartQty = useMemo(() => {
     return cartItems.reduce((total, item) => total + (item.qty ?? 1), 0);
@@ -68,17 +70,9 @@ export default function Navbar({
     setMobileMenuOpen(false);
   };
 
-  // const getNavLabel = (item: LandingNavItem) => {
-  //   const navItem = item as LandingNavItem & {
-  //     key?: keyof typeof navText;
-  //   };
-
-  //   if (navItem.key && navItem.key in navText) {
-  //     return navText[navItem.key];
-  //   }
-
-  //   return item.name || item.label;
-  // };
+  const toggleLanguage = () => {
+    return router.visit(switchUrl);
+  }
 
   const buttonClass = `
     flex h-10 w-10 items-center justify-center rounded-full border
@@ -160,9 +154,8 @@ export default function Navbar({
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 md:px-6">
           <a
-            href={landing({ locale: language }).url}
+            href={landing({ locale }).url}
             className="flex items-center gap-3"
-          // onClick={handleLogoNavigate}
           >
             <div className="relative">
               <div className="absolute inset-0 rounded-full bg-orange-500 opacity-40 blur-xl" />
@@ -178,7 +171,7 @@ export default function Navbar({
               </h1>
 
               <p className="text-[10px] text-zinc-500 md:text-xs">
-                {text.brandSubtitle}
+                {__("Premium BBQ Rental")}
               </p>
             </div>
           </a>
@@ -213,7 +206,6 @@ export default function Navbar({
         ${isActive ? "after:w-full" : "after:w-0 hover:after:w-full"}
       `}
                 >
-                  {/* {getNavLabel(item)} */}
                   {item.name}
                 </a>
               );
@@ -227,7 +219,7 @@ export default function Navbar({
               className={pillButtonClass}
             >
               <Languages size={16} />
-              <span>{language.toUpperCase()}</span>
+              <span>{locale.toUpperCase()}</span>
             </button>
 
             <button
@@ -296,7 +288,7 @@ export default function Navbar({
                   className={mobileActionClass}
                 >
                   <Languages size={17} />
-                  <span>{language.toUpperCase()}</span>
+                  <span>{locale.toUpperCase()}</span>
                 </button>
 
                 <button
@@ -305,7 +297,7 @@ export default function Navbar({
                   className={mobileActionClass}
                 >
                   {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
-                  <span>{theme === "dark" ? text.light : text.dark}</span>
+                  <span>{theme === "dark" ? __("Light") : __("Dark")}</span>
                 </button>
               </div>
             </div>
@@ -317,7 +309,6 @@ export default function Navbar({
         open={cartOpen}
         theme={theme}
         cartItems={cartItems}
-        text={text}
         onClose={() => setCartOpen(false)}
         onCheckout={(items) => {
           console.log("checkout cart:", items);

@@ -36,6 +36,37 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $locale = $request->locale;
+
+        $availableLocales = ['id', 'en'];
+
+        $segments = $request->segments();
+
+        $currentLocale = in_array($segments[0] ?? null, $availableLocales)
+            ? $segments[0]
+            : 'id';
+
+        $targetLocale = $currentLocale === 'id' ? 'en' : 'id';
+
+        // Hapus locale lama dari segment pertama
+        if (in_array($segments[0] ?? null, $availableLocales)) {
+            array_shift($segments);
+        }
+
+        // Buat path baru dengan locale target
+        $newPath = implode('/', array_filter([
+            $targetLocale,
+            ...$segments,
+        ]));
+
+        // Bawa query string otomatis
+        $queryString = $request->getQueryString();
+
+        $switchUrl = $request->getSchemeAndHttpHost() . '/' . $newPath;
+
+        if ($queryString) {
+            $switchUrl .= '?' . $queryString;
+        }
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -43,7 +74,9 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
-            'language' => fn() => $locale != config('app.locale') ? translations() : [],
+            'language' => fn() => $locale != 'id' ? translations() : [],
+            "params" => [...$request->route()->parameters(), ...$request->query()],
+            "switchUrl" => $switchUrl,
         ];
     }
 }

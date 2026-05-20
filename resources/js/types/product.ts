@@ -1,106 +1,70 @@
-export type LocaleCode = 'id' | 'en';
-
 export type ProductType = 'package' | 'alacarte' | string;
 
-export type TranslationMap<T> = Record<LocaleCode, T>;
+export type PromoType = 'fixed' | 'percent' | string;
 
-export type ProductTranslation = {
-    name: string;
-    desc: string;
-    featuredLabel?: string;
-};
-
-export type ProductCategoryTranslation = {
-    label: string;
-};
-
-export type ProductBadgeTranslation = {
-    label: string;
-};
-
-export type ProductVariantTranslation = {
-    label: string;
-};
-
-export type ProductDetailItem = {
-    name: string;
-    qty: string;
-};
-
-export type ProductDetailTranslation = {
-    group: string;
-    items: ProductDetailItem[];
+export type ProductPromo = {
+    id: number;
+    type: PromoType;
+    value: number;
+    label: string | null;
+    description: string | null;
 };
 
 export type ProductCategory = {
-    key: string;
-    translations: TranslationMap<ProductCategoryTranslation>;
+    id: number | null;
+    key: string | null;
+    label: string | null;
 };
 
 export type ProductBadge = {
-    key: string;
-    translations: TranslationMap<ProductBadgeTranslation>;
+    id: number | null;
+    key: string | null;
+    label: string | null;
 };
 
 export type ProductVariant = {
+    id: number;
     key: string;
+    label: string | null;
     price: number;
-    originalPrice?: number;
-    isDefault?: boolean;
-    translations: TranslationMap<ProductVariantTranslation>;
+    originalPrice: number | null;
+    isDefault: boolean;
+};
+
+export type ProductDetailItem = {
+    id: number;
+    name: string;
+    qty: string | null;
 };
 
 export type ProductDetail = {
-    translations: TranslationMap<ProductDetailTranslation>;
-};
-
-export type ProductItem = {
-    id: string;
-    type: ProductType;
-    image: string;
-    isFeatured?: boolean;
-    isNew?: boolean;
-    translations: TranslationMap<ProductTranslation>;
-    categories: ProductCategory[];
-    badges?: ProductBadge[];
-    variants: ProductVariant[];
-    details: ProductDetail[];
-};
-
-export type LocalizedProductCategory = {
+    id: number;
     key: string;
-    label: string;
-};
-
-export type LocalizedProductBadge = {
-    key: string;
-    label: string;
-};
-
-export type LocalizedProductVariant = {
-    key: string;
-    label: string;
-    price: number;
-    originalPrice?: number;
-    isDefault?: boolean;
-};
-
-export type LocalizedProductDetail = {
-    group: string;
+    group: string | null;
     items: ProductDetailItem[];
 };
 
-export type LocalizedProductItem = {
-    id: string;
+export type Product = {
+    id: number;
     type: ProductType;
     image: string;
-    name: string;
-    desc: string;
-    featuredLabel?: string;
-    isFeatured?: boolean;
-    isNew?: boolean;
-    categories: LocalizedProductCategory[];
-    badges: LocalizedProductBadge[];
-    variants: LocalizedProductVariant[];
-    details: LocalizedProductDetail[];
+
+    name: string | null;
+    desc: string | null;
+    featuredLabel: string | null;
+
+    price: number;
+    originalPrice: number | null;
+
+    hasPromo: boolean;
+    promo: ProductPromo | null;
+
+    isFeatured: boolean;
+    isLanding: boolean;
+    isNew: boolean;
+
+    categories: ProductCategory[];
+    badges: ProductBadge[];
+    variants: ProductVariant[];
+    details: ProductDetail[];
 };

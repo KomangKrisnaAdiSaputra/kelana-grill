@@ -2,25 +2,25 @@ import { usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 import AmbientBackground from "@/components/landing/ambient-background";
-import CtaSection from "@/components/landing/cta-section";
-import FaqSection from "@/components/landing/faq-section";
-import FeatureSection from "@/components/landing/feature-section";
+// import CtaSection from "@/components/landing/cta-section";
+// import FaqSection from "@/components/landing/faq-section";
+// import FeatureSection from "@/components/landing/feature-section";
 // import FloatingWhatsApp from "@/components/landing/floating-whatsApp";
-import Footer from "@/components/landing/footer";
+// import Footer from "@/components/landing/footer";
 import HeroSection from "@/components/landing/hero-section";
-import MobileNavbar from "@/components/landing/mobile-navbar";
+// import MobileNavbar from "@/components/landing/mobile-navbar";
 import Navbar from "@/components/landing/navbar";
-import ProductSection from "@/components/landing/product-section";
+// import ProductSection from "@/components/landing/product-section";
 import AppProvider from "@/contexts/app-provider";
 import { useTheme } from "@/contexts/theme-context";
 import type {
   LandingFaqItem,
 } from "@/types";
-import type { ProductItem } from "@/types/product";
+import type { Product } from "@/types/product";
 
-type LandingPageProps = {
-  featuredProduct?: ProductItem | null;
-  products?: ProductItem[] | [];
+export type LandingPageProps = {
+  featuredProduct: Product | null;
+  products: Product[];
 };
 
 const faqs: LandingFaqItem[] = [
@@ -101,22 +101,22 @@ const faqs: LandingFaqItem[] = [
   },
 ];
 const cartItems = [
-  {
-    id: 1,
-    name: "Paket Grill Premium",
-    category: "Paket",
-    price: 150000,
-    qty: 1,
-    image: "/images/products/grill-premium.jpg",
-  },
-  {
-    id: 2,
-    name: "Sosis Jumbo",
-    category: "Ala Carte",
-    price: 35000,
-    qty: 2,
-    image: "/images/products/sosis.jpg",
-  },
+  // {
+  //   id: 1,
+  //   name: "Paket Grill Premium",
+  //   category: "Paket",
+  //   price: 150000,
+  //   qty: 1,
+  //   image: "/images/products/grill-premium.jpg",
+  // },
+  // {
+  //   id: 2,
+  //   name: "Sosis Jumbo",
+  //   category: "Ala Carte",
+  //   price: 35000,
+  //   qty: 2,
+  //   image: "/images/products/sosis.jpg",
+  // },
 ];
 
 function PremiumRentalGrillLandingContent() {
@@ -162,24 +162,24 @@ function PremiumRentalGrillLandingContent() {
           <HeroSection theme={theme} featuredProduct={featuredProduct} />
         </section>
 
-        <FeatureSection theme={theme} />
+        {/* <FeatureSection theme={theme} /> */}
 
         <section id="products">
-          <ProductSection theme={theme} products={products} />
+          {/* <ProductSection theme={theme} products={products} /> */}
         </section>
 
-        <FaqSection theme={theme} faqs={faqs} />
+        {/* <FaqSection theme={theme} faqs={faqs} /> */}
 
         <section id="booking">
-          <CtaSection theme={theme} />
+          {/* <CtaSection theme={theme} /> */}
         </section>
       </main>
 
-      <MobileNavbar theme={theme} />
+      {/* <MobileNavbar theme={theme} /> */}
 
       <div className="h-24 xl:hidden" />
 
-      <Footer theme={theme} />
+      {/* <Footer theme={theme} /> */}
 
       {/* <FloatingWhatsApp /> */}
     </div>

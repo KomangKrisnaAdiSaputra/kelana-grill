@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 
-import { LanguageProvider } from "@/contexts/language-context";
 import { ThemeProvider } from "@/contexts/theme-context";
 
 type AppProviderProps = {
@@ -9,8 +8,6 @@ type AppProviderProps = {
 
 export default function AppProvider({ children }: AppProviderProps) {
   return (
-    <LanguageProvider>
-      <ThemeProvider>{children}</ThemeProvider>
-    </LanguageProvider>
+    <ThemeProvider>{children}</ThemeProvider>
   );
 }
