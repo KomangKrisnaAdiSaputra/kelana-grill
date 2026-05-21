@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\KelanaGrillData;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -11,24 +12,56 @@ class LandingPageController extends Controller
 {
     public function index(Request $request)
     {
-        $language = $request->get('locale', 'id');
+        $data = KelanaGrillData::get();
 
-        $featuredProduct = $this->getProductData([
-            'language' => $language,
-            'is_featured' => true,
-        ])->first();
+        $products = $data['products'];
+        dd([
+            'locale' => $data['locale'],
 
-        $products = $this->getProductData([
-            'language' => $language,
-            'type' => 'package',
-            'is_featured' => false,
-            'is_landing' => true,
-            'limit' => 3,
-        ]);
+            'types' => $data['types'],
 
-        return Inertia::render('landing/index', [
-            'featuredProduct' => $featuredProduct,
             'products' => $products,
+
+            'packages' => $products
+                ->where('type_id', 'type-package')
+                ->values(),
+
+            'alacartes' => $products
+                ->where('type_id', 'type-alacarte')
+                ->values(),
+
+            'equipments' => $products
+                ->where('type_id', 'type-equipment')
+                ->values(),
+
+            'categories' => $data['categories'],
+            'badges' => $data['badges'],
+
+            'languageContents' => $data['language_contents'],
+        ]);
+        return Inertia::render('Landing/Index', [
+            'locale' => $data['locale'],
+
+            'types' => $data['types'],
+
+            'products' => $products,
+
+            'packages' => $products
+                ->where('type_id', 'type-package')
+                ->values(),
+
+            'alacartes' => $products
+                ->where('type_id', 'type-alacarte')
+                ->values(),
+
+            'equipments' => $products
+                ->where('type_id', 'type-equipment')
+                ->values(),
+
+            'categories' => $data['categories'],
+            'badges' => $data['badges'],
+
+            'languageContents' => $data['language_contents'],
         ]);
     }
 

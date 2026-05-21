@@ -11,14 +11,14 @@ return new class extends Migration
         Schema::create('types', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            // contoh: package, alacarte, addon
-            $table->string('code')->unique();
+            $table->string('name');
+            $table->string('slug')->unique();
 
-            $table->boolean('is_active')->default(true);
+            $table->boolean('active')->default(true);
 
             $table->timestamps();
 
-            $table->index('is_active');
+            $table->index('active');
         });
     }
 

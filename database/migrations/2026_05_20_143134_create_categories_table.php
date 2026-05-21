@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->boolean('is_active')->default(true);
+            $table->boolean('active')->default(true);
 
             $table->timestamps();
 
-            $table->index('is_active');
+            $table->index('active');
         });
     }
 

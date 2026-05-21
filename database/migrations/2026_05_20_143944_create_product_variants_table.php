@@ -11,23 +11,21 @@ return new class extends Migration
         Schema::create('product_variants', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('product_id');
+            $table->foreignUuid('product_id')
+                ->constrained('products')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
 
             $table->decimal('rate', 15, 2)->default(0);
 
-            $table->integer('min_person')->nullable();
-            $table->integer('max_person')->nullable();
+            $table->unsignedInteger('min_person')->nullable();
+            $table->unsignedInteger('max_person')->nullable();
 
-            $table->boolean('is_active')->default(true);
-            $table->integer('sort_order')->default(0);
+            $table->boolean('active')->default(true);
 
             $table->timestamps();
 
-            $table->foreign('product_id')->references('id')->on('products')->cascadeOnDelete();
-
-            $table->index('product_id');
-            $table->index('rate');
-            $table->index(['is_active', 'sort_order']);
+            $table->index(['product_id', 'active']);
         });
     }
 

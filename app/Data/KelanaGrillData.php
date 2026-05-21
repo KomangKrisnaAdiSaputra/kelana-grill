@@ -14,1006 +14,1161 @@ class KelanaGrillData
       $language = 'id';
     }
 
+    /*
+        |--------------------------------------------------------------------------
+        | TYPES
+        |--------------------------------------------------------------------------
+        | Type tidak pakai translation.
+        */
+
     $types = collect([
       [
         'id' => 'type-package',
-        'code' => 'package',
-        'is_active' => true,
+        'name' => 'Package',
+        'slug' => 'package',
         'sort_order' => 1,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Paket',
-            'slug' => 'paket',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Package',
-            'slug' => 'package',
-          ],
-        ],
+        'active' => true,
       ],
       [
         'id' => 'type-alacarte',
-        'code' => 'alacarte',
-        'is_active' => true,
+        'name' => 'Ala Carte',
+        'slug' => 'alacarte',
         'sort_order' => 2,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Ala Carte',
-            'slug' => 'alacarte',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'A La Carte',
-            'slug' => 'alacarte',
-          ],
-        ],
+        'active' => true,
       ],
       [
         'id' => 'type-equipment',
-        'code' => 'equipment',
-        'is_active' => true,
+        'name' => 'Equipment',
+        'slug' => 'equipment',
         'sort_order' => 3,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Sewa Alat',
-            'slug' => 'sewa-alat',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Equipment Rental',
-            'slug' => 'equipment-rental',
-          ],
-        ],
+        'active' => true,
       ],
-    ])->map(function ($type) use ($language) {
-      return array_merge($type, [
-        'translation' => self::pickTranslation($type['translations'], $language),
-      ]);
-    });
+    ]);
+
+    /*
+        |--------------------------------------------------------------------------
+        | CATEGORIES
+        |--------------------------------------------------------------------------
+        */
 
     $categories = collect([
       [
         'id' => 'cat-package-ramean',
-        'is_active' => true,
         'sort_order' => 1,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Paket Ramean',
-            'slug' => 'paket-ramean',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Group Package',
-            'slug' => 'group-package',
-          ],
-        ],
+        'active' => true,
       ],
       [
         'id' => 'cat-package-small',
-        'is_active' => true,
         'sort_order' => 2,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Paket Kecil',
-            'slug' => 'paket-kecil',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Small Package',
-            'slug' => 'small-package',
-          ],
-        ],
+        'active' => true,
       ],
       [
         'id' => 'cat-bbq',
-        'is_active' => true,
         'sort_order' => 3,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'BBQ',
-            'slug' => 'bbq',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'BBQ',
-            'slug' => 'bbq',
-          ],
-        ],
+        'active' => true,
       ],
       [
         'id' => 'cat-grill-suki',
-        'is_active' => true,
         'sort_order' => 4,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Grill & Suki',
-            'slug' => 'grill-suki',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Grill & Suki',
-            'slug' => 'grill-suki',
-          ],
-        ],
+        'active' => true,
       ],
       [
         'id' => 'cat-meat',
-        'is_active' => true,
         'sort_order' => 5,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Daging',
-            'slug' => 'daging',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Meat',
-            'slug' => 'meat',
-          ],
-        ],
+        'active' => true,
       ],
       [
         'id' => 'cat-seafood',
-        'is_active' => true,
         'sort_order' => 6,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Seafood',
-            'slug' => 'seafood',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Seafood',
-            'slug' => 'seafood',
-          ],
-        ],
+        'active' => true,
       ],
       [
         'id' => 'cat-vegetable',
-        'is_active' => true,
         'sort_order' => 7,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Sayuran',
-            'slug' => 'sayuran',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Vegetables',
-            'slug' => 'vegetables',
-          ],
-        ],
+        'active' => true,
       ],
       [
         'id' => 'cat-sauce',
-        'is_active' => true,
         'sort_order' => 8,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Saus & Bumbu',
-            'slug' => 'saus-bumbu',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Sauces & Seasoning',
-            'slug' => 'sauces-seasoning',
-          ],
-        ],
+        'active' => true,
       ],
       [
         'id' => 'cat-equipment',
-        'is_active' => true,
         'sort_order' => 9,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Alat Grill',
-            'slug' => 'alat-grill',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Grill Equipment',
-            'slug' => 'grill-equipment',
-          ],
-        ],
+        'active' => true,
       ],
-    ])->map(function ($category) use ($language) {
-      return array_merge($category, [
-        'translation' => self::pickTranslation($category['translations'], $language),
-      ]);
-    });
+    ]);
+
+    $categoryTranslations = collect([
+      self::categoryTranslation('cat-package-ramean', 'id', 'Paket Ramean', 'paket-ramean'),
+      self::categoryTranslation('cat-package-ramean', 'en', 'Group Package', 'group-package'),
+
+      self::categoryTranslation('cat-package-small', 'id', 'Paket Kecil', 'paket-kecil'),
+      self::categoryTranslation('cat-package-small', 'en', 'Small Package', 'small-package'),
+
+      self::categoryTranslation('cat-bbq', 'id', 'BBQ', 'bbq'),
+      self::categoryTranslation('cat-bbq', 'en', 'BBQ', 'bbq'),
+
+      self::categoryTranslation('cat-grill-suki', 'id', 'Grill & Suki', 'grill-suki'),
+      self::categoryTranslation('cat-grill-suki', 'en', 'Grill & Suki', 'grill-suki'),
+
+      self::categoryTranslation('cat-meat', 'id', 'Daging', 'daging'),
+      self::categoryTranslation('cat-meat', 'en', 'Meat', 'meat'),
+
+      self::categoryTranslation('cat-seafood', 'id', 'Seafood', 'seafood'),
+      self::categoryTranslation('cat-seafood', 'en', 'Seafood', 'seafood'),
+
+      self::categoryTranslation('cat-vegetable', 'id', 'Sayuran', 'sayuran'),
+      self::categoryTranslation('cat-vegetable', 'en', 'Vegetables', 'vegetables'),
+
+      self::categoryTranslation('cat-sauce', 'id', 'Saus & Bumbu', 'saus-bumbu'),
+      self::categoryTranslation('cat-sauce', 'en', 'Sauces & Seasoning', 'sauces-seasoning'),
+
+      self::categoryTranslation('cat-equipment', 'id', 'Alat Grill', 'alat-grill'),
+      self::categoryTranslation('cat-equipment', 'en', 'Grill Equipment', 'grill-equipment'),
+    ]);
+
+    /*
+        |--------------------------------------------------------------------------
+        | BADGES
+        |--------------------------------------------------------------------------
+        */
 
     $badges = collect([
       [
         'id' => 'badge-best-seller',
-        'is_active' => true,
         'sort_order' => 1,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Paling Laris',
-            'slug' => 'paling-laris',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Best Seller',
-            'slug' => 'best-seller',
-          ],
-        ],
+        'active' => true,
       ],
       [
         'id' => 'badge-ramean',
-        'is_active' => true,
         'sort_order' => 2,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Ramean',
-            'slug' => 'ramean',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Group Deal',
-            'slug' => 'group-deal',
-          ],
-        ],
+        'active' => true,
       ],
       [
         'id' => 'badge-premium',
-        'is_active' => true,
         'sort_order' => 3,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Premium',
-            'slug' => 'premium',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Premium',
-            'slug' => 'premium',
-          ],
-        ],
+        'active' => true,
       ],
       [
         'id' => 'badge-add-on',
-        'is_active' => true,
         'sort_order' => 4,
-        'translations' => [
-          'id' => [
-            'language' => 'id',
-            'name' => 'Add On',
-            'slug' => 'add-on',
-          ],
-          'en' => [
-            'language' => 'en',
-            'name' => 'Add On',
-            'slug' => 'add-on',
-          ],
-        ],
+        'active' => true,
       ],
-    ])->map(function ($badge) use ($language) {
-      return array_merge($badge, [
-        'translation' => self::pickTranslation($badge['translations'], $language),
-      ]);
-    });
+    ]);
+
+    $badgeTranslations = collect([
+      self::badgeTranslation('badge-best-seller', 'id', 'Paling Laris', 'paling-laris'),
+      self::badgeTranslation('badge-best-seller', 'en', 'Best Seller', 'best-seller'),
+
+      self::badgeTranslation('badge-ramean', 'id', 'Ramean', 'ramean'),
+      self::badgeTranslation('badge-ramean', 'en', 'Group Deal', 'group-deal'),
+
+      self::badgeTranslation('badge-premium', 'id', 'Premium', 'premium'),
+      self::badgeTranslation('badge-premium', 'en', 'Premium', 'premium'),
+
+      self::badgeTranslation('badge-add-on', 'id', 'Add On', 'add-on'),
+      self::badgeTranslation('badge-add-on', 'en', 'Add On', 'add-on'),
+    ]);
+
+    /*
+        |--------------------------------------------------------------------------
+        | PRODUCTS
+        |--------------------------------------------------------------------------
+        | Product utama tidak simpan name/slug/description.
+        */
 
     $products = collect([
-      self::packageProduct(
-        id: 'product-paket-ramean-a',
-        nameId: 'Paket Ramean A',
-        nameEn: 'Group Package A',
-        slugId: 'paket-ramean-a',
-        slugEn: 'group-package-a',
-        descriptionId: 'Paket BBQ ramean cocok untuk 10-12 orang.',
-        descriptionEn: 'BBQ group package suitable for 10-12 people.',
-        featuredLabelId: 'Ramean',
-        featuredLabelEn: 'Group Deal',
-        rate: 699000,
-        image: '/images/products/paket-ramean-a.jpg',
-        categories: ['cat-package-ramean', 'cat-bbq'],
-        badges: ['badge-ramean'],
-        variants: [
-          self::variant('variant-ramean-a-meat-only', 'Hanya Daging', 'hanya-daging', 699000, 10, 12, 'Paket tanpa kompor.', 1),
-          self::variant('variant-ramean-a-with-stove', 'Paket Kompor', 'paket-kompor', 779000, 10, 12, 'Termasuk 2 paket kompor.', 2),
-        ],
-        items: [
-          self::item('product-beef-shortplate', 250, 'gram'),
-          self::item('product-beef-sirloin', 250, 'gram'),
-          self::item('product-beef-saikoro', 250, 'gram'),
-          self::item('product-daging-ayam', 500, 'gram'),
-          self::item('product-sosis-ayam', 200, 'gram'),
-          self::item('product-bakso-ayam', 250, 'gram'),
-          self::item('product-bakso-ikan', 200, 'gram'),
-          self::item('product-tempura-ikan', 250, 'gram'),
-          self::item('product-udang', 150, 'gram'),
-          self::item('product-cumi', 150, 'gram'),
-          self::item('product-selada', 2, 'pack'),
-          self::item('product-bawang-bombay', 2, 'pack'),
-          self::item('product-enoki', 2, 'pack'),
-          self::item('product-saos-sambal', 2, 'pack'),
-          self::item('product-saos-bbq-teriyaki-bulgogi', 2, 'pack'),
-          self::item('product-margarin', 2, 'pack'),
-        ],
-        sortOrder: 1,
-        language: $language,
-        isFeatured: true
-      ),
+      /*
+            |--------------------------------------------------------------------------
+            | PACKAGES
+            |--------------------------------------------------------------------------
+            */
 
-      self::packageProduct(
-        id: 'product-paket-ramean-b',
-        nameId: 'Paket Ramean B',
-        nameEn: 'Group Package B',
-        slugId: 'paket-ramean-b',
-        slugEn: 'group-package-b',
-        descriptionId: 'Paket BBQ ramean cocok untuk 20 orang.',
-        descriptionEn: 'BBQ group package suitable for 20 people.',
-        featuredLabelId: 'Ramean',
-        featuredLabelEn: 'Group Deal',
-        rate: 1149000,
-        image: '/images/products/paket-ramean-b.jpg',
-        categories: ['cat-package-ramean', 'cat-bbq'],
-        badges: ['badge-ramean'],
-        variants: [
-          self::variant('variant-ramean-b-meat-only', 'Hanya Daging', 'hanya-daging', 1149000, 20, 20, 'Paket tanpa kompor.', 1),
-          self::variant('variant-ramean-b-with-stove', 'Paket Kompor', 'paket-kompor', 1269000, 20, 20, 'Termasuk 3 paket kompor.', 2),
-        ],
-        items: [
-          self::item('product-beef-saikoro', 250, 'gram'),
-          self::item('product-beef-shortplate', 250, 'gram'),
-          self::item('product-beef-sirloin', 250, 'gram'),
-          self::item('product-beef-wagyu-meltique', 250, 'gram'),
-          self::item('product-daging-ayam', 500, 'gram'),
-          self::item('product-sosis-ayam', 400, 'gram'),
-          self::item('product-bakso-ayam', 500, 'gram'),
-          self::item('product-bakso-ikan', 250, 'gram'),
-          self::item('product-tempura-ikan', 250, 'gram'),
-          self::item('product-otak-otak-ikan', 250, 'gram'),
-          self::item('product-udang', 300, 'gram'),
-          self::item('product-cumi', 300, 'gram'),
-          self::item('product-selada', 400, 'gram'),
-          self::item('product-bawang-bombay', 3, 'pack'),
-          self::item('product-enoki', 3, 'pack'),
-          self::item('product-saos-sambal', 4, 'pack'),
-          self::item('product-saos-bbq', 3, 'pack'),
-          self::item('product-saos-teriyaki-bulgogi', 2, 'pack'),
-          self::item('product-margarin', 3, 'pack'),
-        ],
-        sortOrder: 2,
-        language: $language,
-        isFeatured: true
-      ),
+      self::product('product-paket-ramean-a', 'type-package', 699000, '/images/products/paket-ramean-a.jpg', 1, true, false),
+      self::product('product-paket-ramean-b', 'type-package', 1149000, '/images/products/paket-ramean-b.jpg', 2, true, false),
+      self::product('product-paket-shortplate-mix', 'type-package', 169000, '/images/products/paket-shortplate-mix.jpg', 3),
+      self::product('product-paket-shortplate-komplit', 'type-package', 209000, '/images/products/paket-shortplate-komplit.jpg', 4),
+      self::product('product-paket-bbq-mantap', 'type-package', 179000, '/images/products/paket-bbq-mantap.jpg', 5),
+      self::product('product-paket-bbq-premium', 'type-package', 249000, '/images/products/paket-bbq-premium.jpg', 6, true, false),
+      self::product('product-paket-seru', 'type-package', 109000, '/images/products/paket-seru.jpg', 7),
+      self::product('product-paket-hemat', 'type-package', 79000, '/images/products/paket-hemat.jpg', 8, true, false),
+      self::product('product-paket-mix-favorit', 'type-package', 139000, '/images/products/paket-mix-favorit.jpg', 9),
 
-      self::packageProduct(
-        id: 'product-paket-shortplate-mix',
-        nameId: 'Paket Shortplate Mix',
-        nameEn: 'Shortplate Mix Package',
-        slugId: 'paket-shortplate-mix',
-        slugEn: 'shortplate-mix-package',
-        descriptionId: 'Paket shortplate mix cocok untuk 2-3 orang.',
-        descriptionEn: 'Shortplate mix package suitable for 2-3 people.',
-        featuredLabelId: null,
-        featuredLabelEn: null,
-        rate: 169000,
-        image: '/images/products/paket-shortplate-mix.jpg',
-        categories: ['cat-package-small', 'cat-bbq'],
-        badges: [],
-        variants: [
-          self::variant('variant-shortplate-mix-meat-only', 'Hanya Daging', 'hanya-daging', 169000, 2, 3, 'Paket tanpa kompor.', 1),
-          self::variant('variant-shortplate-mix-with-stove', 'Paket Kompor', 'paket-kompor', 209000, 2, 3, 'Paket dengan kompor.', 2),
-        ],
-        items: [
-          self::item('product-beef-shortplate', 250, 'gram'),
-          self::item('product-daging-ayam', 250, 'gram'),
-          self::item('product-sosis-ayam', 200, 'gram'),
-          self::item('product-selada', 1, 'pack'),
-          self::item('product-bawang-bombay', 1, 'pack'),
-          self::item('product-margarin', 1, 'pack'),
-          self::item('product-saos-sambal-tomat', 1, 'pack'),
-        ],
-        sortOrder: 3,
-        language: $language
-      ),
+      /*
+            |--------------------------------------------------------------------------
+            | ALA CARTE
+            |--------------------------------------------------------------------------
+            */
 
-      self::packageProduct(
-        id: 'product-paket-shortplate-komplit',
-        nameId: 'Paket Shortplate Komplit',
-        nameEn: 'Complete Shortplate Package',
-        slugId: 'paket-shortplate-komplit',
-        slugEn: 'complete-shortplate-package',
-        descriptionId: 'Paket shortplate komplit cocok untuk 3-4 orang.',
-        descriptionEn: 'Complete shortplate package suitable for 3-4 people.',
-        featuredLabelId: null,
-        featuredLabelEn: null,
-        rate: 209000,
-        image: '/images/products/paket-shortplate-komplit.jpg',
-        categories: ['cat-package-small', 'cat-bbq'],
-        badges: [],
-        variants: [
-          self::variant('variant-shortplate-komplit-meat-only', 'Hanya Daging', 'hanya-daging', 209000, 3, 4, 'Paket tanpa kompor.', 1),
-          self::variant('variant-shortplate-komplit-with-stove', 'Paket Kompor', 'paket-kompor', 249000, 3, 4, 'Paket dengan kompor.', 2),
-        ],
-        items: [
-          self::item('product-beef-shortplate', 250, 'gram'),
-          self::item('product-daging-ayam', 250, 'gram'),
-          self::item('product-sosis-ayam', 200, 'gram'),
-          self::item('product-bakso-ayam', 250, 'gram'),
-          self::item('product-selada', 1, 'pack'),
-          self::item('product-bawang-bombay', 1, 'pack'),
-          self::item('product-margarin', 1, 'pack'),
-          self::item('product-saos-sambal-tomat', 1, 'pack'),
-        ],
-        sortOrder: 4,
-        language: $language
-      ),
+      self::product('product-daging-ayam', 'type-alacarte', 30000, '/images/products/daging-ayam.jpg', 101, false, false),
+      self::product('product-sosis-ayam', 'type-alacarte', 20000, '/images/products/sosis-ayam.jpg', 102, false, false),
+      self::product('product-bakso-ayam', 'type-alacarte', 25000, '/images/products/bakso-ayam.jpg', 103, false, false),
+      self::product('product-bakso-ikan', 'type-alacarte', 30000, '/images/products/bakso-ikan.jpg', 104, false, false),
+      self::product('product-sate-bakso-sosis', 'type-alacarte', 28000, '/images/products/sate-bakso-sosis.jpg', 105, false, false),
+      self::product('product-cumi', 'type-alacarte', 37000, '/images/products/cumi-cumi.jpg', 106, false, false),
+      self::product('product-tempura-ikan', 'type-alacarte', 25000, '/images/products/tempura-ikan.jpg', 107, false, false),
+      self::product('product-otak-otak-ikan', 'type-alacarte', 25000, '/images/products/otak-otak-ikan.jpg', 108, false, false),
+      self::product('product-ham-sapi', 'type-alacarte', 26000, '/images/products/ham-sapi.jpg', 109, false, false),
+      self::product('product-udang', 'type-alacarte', 38000, '/images/products/udang.jpg', 110, false, false),
+      self::product('product-beef-saikoro', 'type-alacarte', 77000, '/images/products/beef-saikoro.jpg', 111, false, false),
+      self::product('product-beef-shortplate', 'type-alacarte', 77000, '/images/products/beef-shortplate.jpg', 112, false, false),
+      self::product('product-beef-sirloin', 'type-alacarte', 65000, '/images/products/beef-sirloin.jpg', 113, false, false),
+      self::product('product-beef-wagyu-meltique', 'type-alacarte', 77000, '/images/products/beef-wagyu-meltique.jpg', 114, false, false),
+      self::product('product-bawang-bombay', 'type-alacarte', 10000, '/images/products/bawang-bombay.jpg', 115, false, false),
+      self::product('product-selada', 'type-alacarte', 10000, '/images/products/selada.jpg', 116, false, false),
+      self::product('product-enoki', 'type-alacarte', 10000, '/images/products/enoki.jpg', 117, false, false),
+      self::product('product-bihun', 'type-alacarte', 12000, '/images/products/bihun.jpg', 118, false, false),
+      self::product('product-mie-kuning', 'type-alacarte', 12000, '/images/products/mie-kuning.jpg', 119, false, false),
+      self::product('product-pasta-tomyam', 'type-alacarte', 20000, '/images/products/pasta-tomyam.jpg', 120, false, false),
+      self::product('product-kaldu-ayam', 'type-alacarte', 25000, '/images/products/kaldu-ayam.jpg', 121, false, false),
+      self::product('product-saos-sambal', 'type-alacarte', 7000, '/images/products/saos-sambal.jpg', 122, false, false),
+      self::product('product-saos-sambal-tomat', 'type-alacarte', 7000, '/images/products/saos-sambal-tomat.jpg', 123, false, false),
+      self::product('product-saos-bbq', 'type-alacarte', 10000, '/images/products/saos-bbq.jpg', 124, false, false),
+      self::product('product-saos-teriyaki-bulgogi', 'type-alacarte', 10000, '/images/products/saos-teriyaki-bulgogi.jpg', 125, false, false),
+      self::product('product-saos-bbq-teriyaki-bulgogi', 'type-alacarte', 10000, '/images/products/saos-bbq-bulgogi-teriyaki.jpg', 126, false, false),
+      self::product('product-margarin', 'type-alacarte', 5000, '/images/products/margarin.jpg', 127, false, false),
 
-      self::packageProduct(
-        id: 'product-paket-bbq-mantap',
-        nameId: 'Paket BBQ Mantap',
-        nameEn: 'BBQ Mantap Package',
-        slugId: 'paket-bbq-mantap',
-        slugEn: 'bbq-mantap-package',
-        descriptionId: 'Paket BBQ Mantap cocok untuk 3-4 orang.',
-        descriptionEn: 'BBQ Mantap package suitable for 3-4 people.',
-        featuredLabelId: null,
-        featuredLabelEn: null,
-        rate: 179000,
-        image: '/images/products/paket-bbq-mantap.jpg',
-        categories: ['cat-package-small', 'cat-bbq'],
-        badges: [],
-        variants: [
-          self::variant('variant-bbq-mantap-meat-only', 'Hanya Daging', 'hanya-daging', 179000, 3, 4, 'Paket tanpa kompor.', 1),
-          self::variant('variant-bbq-mantap-with-stove', 'Paket Kompor', 'paket-kompor', 219000, 3, 4, 'Paket dengan kompor.', 2),
-        ],
-        items: [
-          self::item('product-beef-sirloin', 250, 'gram'),
-          self::item('product-daging-ayam', 250, 'gram'),
-          self::item('product-sosis-ayam', 200, 'gram'),
-          self::item('product-bakso-ayam', 250, 'gram'),
-          self::item('product-selada', 1, 'pack'),
-          self::item('product-bawang-bombay', 1, 'pack'),
-          self::item('product-margarin', 1, 'pack'),
-        ],
-        sortOrder: 5,
-        language: $language
-      ),
+      /*
+            |--------------------------------------------------------------------------
+            | EQUIPMENT
+            |--------------------------------------------------------------------------
+            */
 
-      self::packageProduct(
-        id: 'product-paket-bbq-premium',
-        nameId: 'Paket BBQ Premium',
-        nameEn: 'Premium BBQ Package',
-        slugId: 'paket-bbq-premium',
-        slugEn: 'premium-bbq-package',
-        descriptionId: 'Paket BBQ Premium cocok untuk 4-5 orang.',
-        descriptionEn: 'Premium BBQ package suitable for 4-5 people.',
-        featuredLabelId: 'Premium',
-        featuredLabelEn: 'Premium',
-        rate: 249000,
-        image: '/images/products/paket-bbq-premium.jpg',
-        categories: ['cat-package-small', 'cat-bbq'],
-        badges: ['badge-premium'],
-        variants: [
-          self::variant('variant-bbq-premium-meat-only', 'Hanya Daging', 'hanya-daging', 249000, 4, 5, 'Paket tanpa kompor.', 1),
-          self::variant('variant-bbq-premium-with-stove', 'Paket Kompor', 'paket-kompor', 289000, 4, 5, 'Paket dengan kompor.', 2),
-        ],
-        items: [
-          self::item('product-beef-saikoro', 250, 'gram'),
-          self::item('product-beef-sirloin', 250, 'gram'),
-          self::item('product-udang', 150, 'gram'),
-          self::item('product-daging-ayam', 250, 'gram'),
-          self::item('product-selada', 1, 'pack'),
-          self::item('product-bawang-bombay', 1, 'pack'),
-          self::item('product-margarin', 1, 'pack'),
-          self::item('product-saos-sambal-tomat', 1, 'pack'),
-        ],
-        sortOrder: 6,
-        language: $language,
-        isFeatured: true
-      ),
-
-      self::packageProduct(
-        id: 'product-paket-seru',
-        nameId: 'Paket Seru',
-        nameEn: 'Fun Package',
-        slugId: 'paket-seru',
-        slugEn: 'fun-package',
-        descriptionId: 'Paket seru cocok untuk 2-3 orang.',
-        descriptionEn: 'Fun package suitable for 2-3 people.',
-        featuredLabelId: null,
-        featuredLabelEn: null,
-        rate: 109000,
-        image: '/images/products/paket-seru.jpg',
-        categories: ['cat-package-small', 'cat-grill-suki'],
-        badges: [],
-        variants: [
-          self::variant('variant-paket-seru-meat-only', 'Hanya Daging', 'hanya-daging', 109000, 2, 3, 'Paket tanpa kompor.', 1),
-          self::variant('variant-paket-seru-with-stove', 'Paket Kompor', 'paket-kompor', 119000, 2, 3, 'Paket dengan kompor.', 2),
-        ],
-        items: [
-          self::item('product-sosis-ayam', 200, 'gram'),
-          self::item('product-bakso-ayam', 250, 'gram'),
-          self::item('product-selada', 1, 'pack'),
-          self::item('product-bawang-bombay', 1, 'pack'),
-          self::item('product-margarin', 1, 'pack'),
-          self::item('product-saos-sambal-tomat', 1, 'pack'),
-        ],
-        sortOrder: 7,
-        language: $language
-      ),
-
-      self::packageProduct(
-        id: 'product-paket-hemat',
-        nameId: 'Paket Hemat',
-        nameEn: 'Value Package',
-        slugId: 'paket-hemat',
-        slugEn: 'value-package',
-        descriptionId: 'Paket hemat cocok untuk 2-3 orang.',
-        descriptionEn: 'Value package suitable for 2-3 people.',
-        featuredLabelId: 'Paling Laris',
-        featuredLabelEn: 'Best Seller',
-        rate: 79000,
-        image: '/images/products/paket-hemat.jpg',
-        categories: ['cat-package-small', 'cat-grill-suki'],
-        badges: ['badge-best-seller'],
-        variants: [
-          self::variant('variant-paket-hemat-meat-only', 'Hanya Daging', 'hanya-daging', 79000, 2, 3, 'Paket tanpa kompor.', 1),
-          self::variant('variant-paket-hemat-with-stove', 'Paket Kompor', 'paket-kompor', 119000, 2, 3, 'Paket dengan kompor.', 2),
-        ],
-        items: [
-          self::item('product-sosis-ayam', 200, 'gram'),
-          self::item('product-bakso-ayam', 250, 'gram'),
-          self::item('product-selada', 1, 'pack'),
-          self::item('product-bawang-bombay', 1, 'pack'),
-          self::item('product-margarin', 1, 'pack'),
-          self::item('product-saos-sambal-tomat', 1, 'pack'),
-        ],
-        sortOrder: 8,
-        language: $language,
-        isFeatured: true
-      ),
-
-      self::packageProduct(
-        id: 'product-paket-mix-favorit',
-        nameId: 'Paket Mix Favorit',
-        nameEn: 'Favorite Mix Package',
-        slugId: 'paket-mix-favorit',
-        slugEn: 'favorite-mix-package',
-        descriptionId: 'Paket mix favorit cocok untuk 3-4 orang.',
-        descriptionEn: 'Favorite mix package suitable for 3-4 people.',
-        featuredLabelId: null,
-        featuredLabelEn: null,
-        rate: 139000,
-        image: '/images/products/paket-mix-favorit.jpg',
-        categories: ['cat-package-small', 'cat-grill-suki'],
-        badges: [],
-        variants: [
-          self::variant('variant-paket-mix-favorit-meat-only', 'Hanya Daging', 'hanya-daging', 139000, 3, 4, 'Paket tanpa kompor.', 1),
-          self::variant('variant-paket-mix-favorit-with-stove', 'Paket Kompor', 'paket-kompor', 179000, 3, 4, 'Paket dengan kompor.', 2),
-        ],
-        items: [
-          self::item('product-daging-ayam', 250, 'gram'),
-          self::item('product-sosis-ayam', 200, 'gram'),
-          self::item('product-tempura-ikan', 250, 'gram'),
-          self::item('product-bakso-ikan', 200, 'gram'),
-          self::item('product-selada', 1, 'pack'),
-          self::item('product-bawang-bombay', 1, 'pack'),
-          self::item('product-margarin', 1, 'pack'),
-          self::item('product-saos-sambal-tomat', 1, 'pack'),
-        ],
-        sortOrder: 9,
-        language: $language
-      ),
-
-      self::alacarte('product-daging-ayam', 'Daging Ayam', 'Chicken Meat', 'daging-ayam', 'chicken-meat', 30000, '250 gram', ['cat-meat'], 101, $language),
-      self::alacarte('product-sosis-ayam', 'Sosis Ayam', 'Chicken Sausage', 'sosis-ayam', 'chicken-sausage', 20000, '200 gram', ['cat-meat'], 102, $language),
-      self::alacarte('product-bakso-ayam', 'Bakso Ayam', 'Chicken Meatball', 'bakso-ayam', 'chicken-meatball', 25000, '250 gram', ['cat-meat'], 103, $language),
-      self::alacarte('product-bakso-ikan', 'Bakso Ikan', 'Fish Meatball', 'bakso-ikan', 'fish-meatball', 30000, '200 gram', ['cat-seafood'], 104, $language),
-      self::alacarte('product-sate-bakso-sosis', 'Sate Bakso Sosis', 'Meatball Sausage Skewer', 'sate-bakso-sosis', 'meatball-sausage-skewer', 28000, '10 tusuk', ['cat-meat'], 105, $language),
-      self::alacarte('product-cumi', 'Cumi-cumi', 'Squid', 'cumi-cumi', 'squid', 37000, '150 gram', ['cat-seafood'], 106, $language),
-      self::alacarte('product-tempura-ikan', 'Tempura Ikan', 'Fish Tempura', 'tempura-ikan', 'fish-tempura', 25000, '250 gram', ['cat-seafood'], 107, $language),
-      self::alacarte('product-otak-otak-ikan', 'Otak-otak Ikan', 'Fish Cake', 'otak-otak-ikan', 'fish-cake', 25000, '200 gram', ['cat-seafood'], 108, $language),
-      self::alacarte('product-ham-sapi', 'Ham Sapi', 'Beef Ham', 'ham-sapi', 'beef-ham', 26000, '250 gram', ['cat-meat'], 109, $language),
-      self::alacarte('product-udang', 'Udang', 'Shrimp', 'udang', 'shrimp', 38000, '150 gram', ['cat-seafood'], 110, $language),
-      self::alacarte('product-beef-saikoro', 'Beef Saikoro', 'Beef Saikoro', 'beef-saikoro', 'beef-saikoro', 77000, '250 gram', ['cat-meat'], 111, $language),
-      self::alacarte('product-beef-shortplate', 'Beef Shortplate', 'Beef Shortplate', 'beef-shortplate', 'beef-shortplate', 77000, '250 gram', ['cat-meat'], 112, $language),
-      self::alacarte('product-beef-sirloin', 'Beef Sirloin', 'Beef Sirloin', 'beef-sirloin', 'beef-sirloin', 65000, '250 gram', ['cat-meat'], 113, $language),
-      self::alacarte('product-beef-wagyu-meltique', 'Beef Wagyu Meltique', 'Beef Wagyu Meltique', 'beef-wagyu-meltique', 'beef-wagyu-meltique', 77000, '250 gram', ['cat-meat'], 114, $language),
-      self::alacarte('product-bawang-bombay', 'Bawang Bombay', 'Onion', 'bawang-bombay', 'onion', 10000, null, ['cat-vegetable'], 115, $language),
-      self::alacarte('product-selada', 'Selada', 'Lettuce', 'selada', 'lettuce', 10000, null, ['cat-vegetable'], 116, $language),
-      self::alacarte('product-enoki', 'Enoki', 'Enoki Mushroom', 'enoki', 'enoki-mushroom', 10000, '2 pax', ['cat-vegetable'], 117, $language),
-      self::alacarte('product-bihun', 'Bihun', 'Rice Vermicelli', 'bihun', 'rice-vermicelli', 12000, '200 gram', ['cat-grill-suki'], 118, $language),
-      self::alacarte('product-mie-kuning', 'Mie Kuning', 'Yellow Noodles', 'mie-kuning', 'yellow-noodles', 12000, '200 gram', ['cat-grill-suki'], 119, $language),
-      self::alacarte('product-pasta-tomyam', 'Pasta Tomyam', 'Tom Yum Paste', 'pasta-tomyam', 'tom-yum-paste', 20000, '60 gram', ['cat-sauce'], 120, $language),
-      self::alacarte('product-kaldu-ayam', 'Kaldu Ayam', 'Chicken Broth', 'kaldu-ayam', 'chicken-broth', 25000, '1 liter', ['cat-sauce'], 121, $language),
-      self::alacarte('product-saos-sambal', 'Saos Sambal', 'Chili Sauce', 'saos-sambal', 'chili-sauce', 7000, '100 ml', ['cat-sauce'], 122, $language),
-      self::alacarte('product-saos-sambal-tomat', 'Saos Sambal + Tomat', 'Chili Sauce + Tomato Sauce', 'saos-sambal-tomat', 'chili-tomato-sauce', 7000, '100 ml', ['cat-sauce'], 123, $language),
-      self::alacarte('product-saos-bbq', 'Saos BBQ', 'BBQ Sauce', 'saos-bbq', 'bbq-sauce', 10000, '100 ml', ['cat-sauce'], 124, $language),
-      self::alacarte('product-saos-teriyaki-bulgogi', 'Saos Teriyaki / Bulgogi', 'Teriyaki / Bulgogi Sauce', 'saos-teriyaki-bulgogi', 'teriyaki-bulgogi-sauce', 10000, '100 ml', ['cat-sauce'], 125, $language),
-      self::alacarte('product-saos-bbq-teriyaki-bulgogi', 'Saos BBQ / Bulgogi / Teriyaki', 'BBQ / Bulgogi / Teriyaki Sauce', 'saos-bbq-bulgogi-teriyaki', 'bbq-bulgogi-teriyaki-sauce', 10000, '100 ml', ['cat-sauce'], 126, $language),
-      self::alacarte('product-margarin', 'Margarin', 'Margarine', 'margarin', 'margarine', 5000, null, ['cat-sauce'], 127, $language),
-
-      self::equipment('product-kompor', 'Kompor', 'Stove', 'kompor', 'stove', 25000, ['cat-equipment'], 201, $language),
-      self::equipment('product-pan-grill-bulat', 'Pan Grill Bulat', 'Round Grill Pan', 'pan-grill-bulat', 'round-grill-pan', 15000, ['cat-equipment'], 202, $language),
-      self::equipment('product-pan-grill-kotak', 'Pan Grill Kotak', 'Square Grill Pan', 'pan-grill-kotak', 'square-grill-pan', 20000, ['cat-equipment'], 203, $language),
-      self::equipment('product-panci-suki', 'Panci Suki', 'Suki Pot', 'panci-suki', 'suki-pot', 20000, ['cat-equipment'], 204, $language),
-      self::equipment('product-mangkok-sedang', 'Mangkok Sedang', 'Medium Bowl', 'mangkok-sedang', 'medium-bowl', 5000, ['cat-equipment'], 205, $language),
-      self::equipment('product-mangkok-kecil', 'Mangkok Kecil', 'Small Bowl', 'mangkok-kecil', 'small-bowl', 3000, ['cat-equipment'], 206, $language),
-      self::equipment('product-sumpit', 'Sumpit', 'Chopsticks', 'sumpit', 'chopsticks', 2000, ['cat-equipment'], 207, $language),
-      self::equipment('product-capitan', 'Capitan', 'Food Tongs', 'capitan', 'food-tongs', 5000, ['cat-equipment'], 208, $language),
-      self::equipment('product-sendok-kuah-set', 'Sendok Kuah Set', 'Soup Spoon Set', 'sendok-kuah-set', 'soup-spoon-set', 10000, ['cat-equipment'], 209, $language),
-      self::equipment('product-gas-kaleng-beli', 'Gas Kaleng Beli', 'Gas Canister Purchase', 'gas-kaleng-beli', 'gas-canister-purchase', 25000, ['cat-equipment'], 210, $language),
-      self::equipment('product-tikar-uk-150x200', 'Tikar UK 150 x 200', 'Mat Size 150 x 200', 'tikar-uk-150x200', 'mat-size-150x200', 15000, ['cat-equipment'], 211, $language),
-      self::equipment('product-sendok-ramen', 'Sendok Ramen', 'Ramen Spoon', 'sendok-ramen', 'ramen-spoon', 3000, ['cat-equipment'], 212, $language),
+      self::product('product-kompor', 'type-equipment', 25000, '/images/products/kompor.jpg', 201, false, false),
+      self::product('product-pan-grill-bulat', 'type-equipment', 15000, '/images/products/pan-grill-bulat.jpg', 202, false, false),
+      self::product('product-pan-grill-kotak', 'type-equipment', 20000, '/images/products/pan-grill-kotak.jpg', 203, false, false),
+      self::product('product-panci-suki', 'type-equipment', 20000, '/images/products/panci-suki.jpg', 204, false, false),
+      self::product('product-mangkok-sedang', 'type-equipment', 5000, '/images/products/mangkok-sedang.jpg', 205, false, false),
+      self::product('product-mangkok-kecil', 'type-equipment', 3000, '/images/products/mangkok-kecil.jpg', 206, false, false),
+      self::product('product-sumpit', 'type-equipment', 2000, '/images/products/sumpit.jpg', 207, false, false),
+      self::product('product-capitan', 'type-equipment', 5000, '/images/products/capitan.jpg', 208, false, false),
+      self::product('product-sendok-kuah-set', 'type-equipment', 10000, '/images/products/sendok-kuah-set.jpg', 209, false, false),
+      self::product('product-gas-kaleng-beli', 'type-equipment', 25000, '/images/products/gas-kaleng-beli.jpg', 210, false, false),
+      self::product('product-tikar-uk-150x200', 'type-equipment', 15000, '/images/products/tikar-uk-150x200.jpg', 211, false, false),
+      self::product('product-sendok-ramen', 'type-equipment', 3000, '/images/products/sendok-ramen.jpg', 212, false, false),
     ]);
 
-    $products = $products->map(function ($product) use ($types, $categories, $badges) {
-      $type = $types->firstWhere('id', $product['type_id']);
+    /*
+        |--------------------------------------------------------------------------
+        | PRODUCT TRANSLATIONS
+        |--------------------------------------------------------------------------
+        */
 
-      $productCategories = $categories
-        ->whereIn('id', $product['categories'] ?? [])
-        ->values();
+    $productTranslations = collect([
+      /*
+            |--------------------------------------------------------------------------
+            | PACKAGE TRANSLATIONS
+            |--------------------------------------------------------------------------
+            */
 
-      $productBadges = $badges
-        ->whereIn('id', $product['badges'] ?? [])
-        ->values();
+      self::productTranslation('product-paket-ramean-a', 'id', 'Paket Ramean A', 'paket-ramean-a', 'Paket BBQ ramean cocok untuk 10-12 orang.', 'Ramean'),
+      self::productTranslation('product-paket-ramean-a', 'en', 'Group Package A', 'group-package-a', 'BBQ group package suitable for 10-12 people.', 'Group Deal'),
 
-      return array_merge($product, [
-        'type' => $type,
-        'categories_data' => $productCategories,
-        'badges_data' => $productBadges,
-      ]);
-    });
+      self::productTranslation('product-paket-ramean-b', 'id', 'Paket Ramean B', 'paket-ramean-b', 'Paket BBQ ramean cocok untuk 20 orang.', 'Ramean'),
+      self::productTranslation('product-paket-ramean-b', 'en', 'Group Package B', 'group-package-b', 'BBQ group package suitable for 20 people.', 'Group Deal'),
 
-    $productCategories = $products
-      ->flatMap(function ($product) {
-        return collect($product['categories'] ?? [])
-          ->map(function ($categoryId) use ($product) {
-            return [
-              'product_id' => $product['id'],
-              'category_id' => $categoryId,
-            ];
-          });
+      self::productTranslation('product-paket-shortplate-mix', 'id', 'Paket Shortplate Mix', 'paket-shortplate-mix', 'Paket Shortplate Mix cocok untuk 2-3 orang.'),
+      self::productTranslation('product-paket-shortplate-mix', 'en', 'Shortplate Mix Package', 'shortplate-mix-package', 'Shortplate Mix package suitable for 2-3 people.'),
+
+      self::productTranslation('product-paket-shortplate-komplit', 'id', 'Paket Shortplate Komplit', 'paket-shortplate-komplit', 'Paket Shortplate Komplit cocok untuk 3-4 orang.'),
+      self::productTranslation('product-paket-shortplate-komplit', 'en', 'Complete Shortplate Package', 'complete-shortplate-package', 'Complete Shortplate package suitable for 3-4 people.'),
+
+      self::productTranslation('product-paket-bbq-mantap', 'id', 'Paket BBQ Mantap', 'paket-bbq-mantap', 'Paket BBQ Mantap cocok untuk 3-4 orang.'),
+      self::productTranslation('product-paket-bbq-mantap', 'en', 'BBQ Mantap Package', 'bbq-mantap-package', 'BBQ Mantap package suitable for 3-4 people.'),
+
+      self::productTranslation('product-paket-bbq-premium', 'id', 'Paket BBQ Premium', 'paket-bbq-premium', 'Paket BBQ Premium cocok untuk 4-5 orang.', 'Premium'),
+      self::productTranslation('product-paket-bbq-premium', 'en', 'Premium BBQ Package', 'premium-bbq-package', 'Premium BBQ package suitable for 4-5 people.', 'Premium'),
+
+      self::productTranslation('product-paket-seru', 'id', 'Paket Seru', 'paket-seru', 'Paket Seru cocok untuk 2-3 orang.'),
+      self::productTranslation('product-paket-seru', 'en', 'Fun Package', 'fun-package', 'Fun package suitable for 2-3 people.'),
+
+      self::productTranslation('product-paket-hemat', 'id', 'Paket Hemat', 'paket-hemat', 'Paket Hemat cocok untuk 2-3 orang.', 'Paling Laris'),
+      self::productTranslation('product-paket-hemat', 'en', 'Value Package', 'value-package', 'Value package suitable for 2-3 people.', 'Best Seller'),
+
+      self::productTranslation('product-paket-mix-favorit', 'id', 'Paket Mix Favorit', 'paket-mix-favorit', 'Paket Mix Favorit cocok untuk 3-4 orang.'),
+      self::productTranslation('product-paket-mix-favorit', 'en', 'Favorite Mix Package', 'favorite-mix-package', 'Favorite Mix package suitable for 3-4 people.'),
+
+      /*
+            |--------------------------------------------------------------------------
+            | ALA CARTE TRANSLATIONS
+            |--------------------------------------------------------------------------
+            */
+
+      self::productTranslation('product-daging-ayam', 'id', 'Daging Ayam', 'daging-ayam', 'Daging ayam ukuran 250 gram.'),
+      self::productTranslation('product-daging-ayam', 'en', 'Chicken Meat', 'chicken-meat', 'Chicken meat size 250 gram.'),
+
+      self::productTranslation('product-sosis-ayam', 'id', 'Sosis Ayam', 'sosis-ayam', 'Sosis ayam ukuran 200 gram.'),
+      self::productTranslation('product-sosis-ayam', 'en', 'Chicken Sausage', 'chicken-sausage', 'Chicken sausage size 200 gram.'),
+
+      self::productTranslation('product-bakso-ayam', 'id', 'Bakso Ayam', 'bakso-ayam', 'Bakso ayam ukuran 250 gram.'),
+      self::productTranslation('product-bakso-ayam', 'en', 'Chicken Meatball', 'chicken-meatball', 'Chicken meatball size 250 gram.'),
+
+      self::productTranslation('product-bakso-ikan', 'id', 'Bakso Ikan', 'bakso-ikan', 'Bakso ikan ukuran 200 gram.'),
+      self::productTranslation('product-bakso-ikan', 'en', 'Fish Meatball', 'fish-meatball', 'Fish meatball size 200 gram.'),
+
+      self::productTranslation('product-sate-bakso-sosis', 'id', 'Sate Bakso Sosis', 'sate-bakso-sosis', 'Sate bakso sosis isi 10 tusuk.'),
+      self::productTranslation('product-sate-bakso-sosis', 'en', 'Meatball Sausage Skewer', 'meatball-sausage-skewer', 'Meatball sausage skewer contains 10 skewers.'),
+
+      self::productTranslation('product-cumi', 'id', 'Cumi-cumi', 'cumi-cumi', 'Cumi-cumi ukuran 150 gram.'),
+      self::productTranslation('product-cumi', 'en', 'Squid', 'squid', 'Squid size 150 gram.'),
+
+      self::productTranslation('product-tempura-ikan', 'id', 'Tempura Ikan', 'tempura-ikan', 'Tempura ikan ukuran 250 gram.'),
+      self::productTranslation('product-tempura-ikan', 'en', 'Fish Tempura', 'fish-tempura', 'Fish tempura size 250 gram.'),
+
+      self::productTranslation('product-otak-otak-ikan', 'id', 'Otak-otak Ikan', 'otak-otak-ikan', 'Otak-otak ikan ukuran 200 gram.'),
+      self::productTranslation('product-otak-otak-ikan', 'en', 'Fish Cake', 'fish-cake', 'Fish cake size 200 gram.'),
+
+      self::productTranslation('product-ham-sapi', 'id', 'Ham Sapi', 'ham-sapi', 'Ham sapi ukuran 250 gram.'),
+      self::productTranslation('product-ham-sapi', 'en', 'Beef Ham', 'beef-ham', 'Beef ham size 250 gram.'),
+
+      self::productTranslation('product-udang', 'id', 'Udang', 'udang', 'Udang ukuran 150 gram.'),
+      self::productTranslation('product-udang', 'en', 'Shrimp', 'shrimp', 'Shrimp size 150 gram.'),
+
+      self::productTranslation('product-beef-saikoro', 'id', 'Beef Saikoro', 'beef-saikoro', 'Beef saikoro ukuran 250 gram.'),
+      self::productTranslation('product-beef-saikoro', 'en', 'Beef Saikoro', 'beef-saikoro', 'Beef saikoro size 250 gram.'),
+
+      self::productTranslation('product-beef-shortplate', 'id', 'Beef Shortplate', 'beef-shortplate', 'Beef shortplate ukuran 250 gram.'),
+      self::productTranslation('product-beef-shortplate', 'en', 'Beef Shortplate', 'beef-shortplate', 'Beef shortplate size 250 gram.'),
+
+      self::productTranslation('product-beef-sirloin', 'id', 'Beef Sirloin', 'beef-sirloin', 'Beef sirloin ukuran 250 gram.'),
+      self::productTranslation('product-beef-sirloin', 'en', 'Beef Sirloin', 'beef-sirloin', 'Beef sirloin size 250 gram.'),
+
+      self::productTranslation('product-beef-wagyu-meltique', 'id', 'Beef Wagyu Meltique', 'beef-wagyu-meltique', 'Beef wagyu meltique ukuran 250 gram.'),
+      self::productTranslation('product-beef-wagyu-meltique', 'en', 'Beef Wagyu Meltique', 'beef-wagyu-meltique', 'Beef wagyu meltique size 250 gram.'),
+
+      self::productTranslation('product-bawang-bombay', 'id', 'Bawang Bombay', 'bawang-bombay', 'Bawang bombay untuk pelengkap grill.'),
+      self::productTranslation('product-bawang-bombay', 'en', 'Onion', 'onion', 'Onion for grill side dish.'),
+
+      self::productTranslation('product-selada', 'id', 'Selada', 'selada', 'Selada untuk pelengkap grill.'),
+      self::productTranslation('product-selada', 'en', 'Lettuce', 'lettuce', 'Lettuce for grill side dish.'),
+
+      self::productTranslation('product-enoki', 'id', 'Enoki', 'enoki', 'Enoki ukuran 2 pax.'),
+      self::productTranslation('product-enoki', 'en', 'Enoki Mushroom', 'enoki-mushroom', 'Enoki mushroom size 2 pax.'),
+
+      self::productTranslation('product-bihun', 'id', 'Bihun', 'bihun', 'Bihun ukuran 200 gram.'),
+      self::productTranslation('product-bihun', 'en', 'Rice Vermicelli', 'rice-vermicelli', 'Rice vermicelli size 200 gram.'),
+
+      self::productTranslation('product-mie-kuning', 'id', 'Mie Kuning', 'mie-kuning', 'Mie kuning ukuran 200 gram.'),
+      self::productTranslation('product-mie-kuning', 'en', 'Yellow Noodles', 'yellow-noodles', 'Yellow noodles size 200 gram.'),
+
+      self::productTranslation('product-pasta-tomyam', 'id', 'Pasta Tomyam', 'pasta-tomyam', 'Pasta tomyam ukuran 60 gram.'),
+      self::productTranslation('product-pasta-tomyam', 'en', 'Tom Yum Paste', 'tom-yum-paste', 'Tom yum paste size 60 gram.'),
+
+      self::productTranslation('product-kaldu-ayam', 'id', 'Kaldu Ayam', 'kaldu-ayam', 'Kaldu ayam ukuran 1 liter.'),
+      self::productTranslation('product-kaldu-ayam', 'en', 'Chicken Broth', 'chicken-broth', 'Chicken broth size 1 liter.'),
+
+      self::productTranslation('product-saos-sambal', 'id', 'Saos Sambal', 'saos-sambal', 'Saos sambal ukuran 100 ml.'),
+      self::productTranslation('product-saos-sambal', 'en', 'Chili Sauce', 'chili-sauce', 'Chili sauce size 100 ml.'),
+
+      self::productTranslation('product-saos-sambal-tomat', 'id', 'Saos Tomat / Sambal', 'saos-sambal-tomat', 'Saos tomat atau sambal ukuran 100 ml.'),
+      self::productTranslation('product-saos-sambal-tomat', 'en', 'Tomato / Chili Sauce', 'tomato-chili-sauce', 'Tomato or chili sauce size 100 ml.'),
+
+      self::productTranslation('product-saos-bbq', 'id', 'Saos BBQ', 'saos-bbq', 'Saos BBQ ukuran 100 ml.'),
+      self::productTranslation('product-saos-bbq', 'en', 'BBQ Sauce', 'bbq-sauce', 'BBQ sauce size 100 ml.'),
+
+      self::productTranslation('product-saos-teriyaki-bulgogi', 'id', 'Saos Teriyaki / Bulgogi', 'saos-teriyaki-bulgogi', 'Saos teriyaki atau bulgogi ukuran 100 ml.'),
+      self::productTranslation('product-saos-teriyaki-bulgogi', 'en', 'Teriyaki / Bulgogi Sauce', 'teriyaki-bulgogi-sauce', 'Teriyaki or bulgogi sauce size 100 ml.'),
+
+      self::productTranslation('product-saos-bbq-teriyaki-bulgogi', 'id', 'Saos BBQ / Bulgogi / Teriyaki', 'saos-bbq-bulgogi-teriyaki', 'Saos BBQ, bulgogi, atau teriyaki ukuran 100 ml.'),
+      self::productTranslation('product-saos-bbq-teriyaki-bulgogi', 'en', 'BBQ / Bulgogi / Teriyaki Sauce', 'bbq-bulgogi-teriyaki-sauce', 'BBQ, bulgogi, or teriyaki sauce size 100 ml.'),
+
+      self::productTranslation('product-margarin', 'id', 'Margarin', 'margarin', 'Margarin untuk grill.'),
+      self::productTranslation('product-margarin', 'en', 'Margarine', 'margarine', 'Margarine for grill.'),
+
+      /*
+            |--------------------------------------------------------------------------
+            | EQUIPMENT TRANSLATIONS
+            |--------------------------------------------------------------------------
+            */
+
+      self::productTranslation('product-kompor', 'id', 'Kompor', 'kompor', 'Sewa kompor untuk kebutuhan grill.'),
+      self::productTranslation('product-kompor', 'en', 'Stove', 'stove', 'Rent stove for your grill needs.'),
+
+      self::productTranslation('product-pan-grill-bulat', 'id', 'Pan Grill Bulat', 'pan-grill-bulat', 'Sewa pan grill bulat untuk kebutuhan grill.'),
+      self::productTranslation('product-pan-grill-bulat', 'en', 'Round Grill Pan', 'round-grill-pan', 'Rent round grill pan for your grill needs.'),
+
+      self::productTranslation('product-pan-grill-kotak', 'id', 'Pan Grill Kotak', 'pan-grill-kotak', 'Sewa pan grill kotak untuk kebutuhan grill.'),
+      self::productTranslation('product-pan-grill-kotak', 'en', 'Square Grill Pan', 'square-grill-pan', 'Rent square grill pan for your grill needs.'),
+
+      self::productTranslation('product-panci-suki', 'id', 'Panci Suki', 'panci-suki', 'Sewa panci suki untuk kebutuhan grill dan suki.'),
+      self::productTranslation('product-panci-suki', 'en', 'Suki Pot', 'suki-pot', 'Rent suki pot for your grill and suki needs.'),
+
+      self::productTranslation('product-mangkok-sedang', 'id', 'Mangkok Sedang', 'mangkok-sedang', 'Sewa mangkok sedang.'),
+      self::productTranslation('product-mangkok-sedang', 'en', 'Medium Bowl', 'medium-bowl', 'Rent medium bowl.'),
+
+      self::productTranslation('product-mangkok-kecil', 'id', 'Mangkok Kecil', 'mangkok-kecil', 'Sewa mangkok kecil.'),
+      self::productTranslation('product-mangkok-kecil', 'en', 'Small Bowl', 'small-bowl', 'Rent small bowl.'),
+
+      self::productTranslation('product-sumpit', 'id', 'Sumpit', 'sumpit', 'Sewa sumpit.'),
+      self::productTranslation('product-sumpit', 'en', 'Chopsticks', 'chopsticks', 'Rent chopsticks.'),
+
+      self::productTranslation('product-capitan', 'id', 'Capitan', 'capitan', 'Sewa capitan makanan.'),
+      self::productTranslation('product-capitan', 'en', 'Food Tongs', 'food-tongs', 'Rent food tongs.'),
+
+      self::productTranslation('product-sendok-kuah-set', 'id', 'Sendok Kuah Set', 'sendok-kuah-set', 'Sewa sendok kuah set.'),
+      self::productTranslation('product-sendok-kuah-set', 'en', 'Soup Spoon Set', 'soup-spoon-set', 'Rent soup spoon set.'),
+
+      self::productTranslation('product-gas-kaleng-beli', 'id', 'Gas Kaleng Beli', 'gas-kaleng-beli', 'Gas kaleng untuk kebutuhan kompor portable.'),
+      self::productTranslation('product-gas-kaleng-beli', 'en', 'Gas Canister Purchase', 'gas-canister-purchase', 'Gas canister for portable stove.'),
+
+      self::productTranslation('product-tikar-uk-150x200', 'id', 'Tikar UK 150 x 200', 'tikar-uk-150x200', 'Sewa tikar ukuran 150 x 200.'),
+      self::productTranslation('product-tikar-uk-150x200', 'en', 'Mat Size 150 x 200', 'mat-size-150x200', 'Rent mat size 150 x 200.'),
+
+      self::productTranslation('product-sendok-ramen', 'id', 'Sendok Ramen', 'sendok-ramen', 'Sewa sendok ramen.'),
+      self::productTranslation('product-sendok-ramen', 'en', 'Ramen Spoon', 'ramen-spoon', 'Rent ramen spoon.'),
+    ]);
+
+    /*
+        |--------------------------------------------------------------------------
+        | PRODUCT VARIANTS
+        |--------------------------------------------------------------------------
+        */
+
+    $productVariants = collect([
+      self::variant('variant-paket-ramean-a-meat-only', 'product-paket-ramean-a', 699000, 10, 12, 1),
+      self::variant('variant-paket-ramean-a-with-stove', 'product-paket-ramean-a', 779000, 10, 12, 2),
+
+      self::variant('variant-paket-ramean-b-meat-only', 'product-paket-ramean-b', 1149000, 20, 20, 1),
+      self::variant('variant-paket-ramean-b-with-stove', 'product-paket-ramean-b', 1269000, 20, 20, 2),
+
+      self::variant('variant-paket-shortplate-mix-meat-only', 'product-paket-shortplate-mix', 169000, 2, 3, 1),
+      self::variant('variant-paket-shortplate-mix-with-stove', 'product-paket-shortplate-mix', 209000, 2, 3, 2),
+
+      self::variant('variant-paket-shortplate-komplit-meat-only', 'product-paket-shortplate-komplit', 209000, 3, 4, 1),
+      self::variant('variant-paket-shortplate-komplit-with-stove', 'product-paket-shortplate-komplit', 249000, 3, 4, 2),
+
+      self::variant('variant-paket-bbq-mantap-meat-only', 'product-paket-bbq-mantap', 179000, 3, 4, 1),
+      self::variant('variant-paket-bbq-mantap-with-stove', 'product-paket-bbq-mantap', 219000, 3, 4, 2),
+
+      self::variant('variant-paket-bbq-premium-meat-only', 'product-paket-bbq-premium', 249000, 4, 5, 1),
+      self::variant('variant-paket-bbq-premium-with-stove', 'product-paket-bbq-premium', 289000, 4, 5, 2),
+
+      self::variant('variant-paket-seru-meat-only', 'product-paket-seru', 109000, 2, 3, 1),
+      self::variant('variant-paket-seru-with-stove', 'product-paket-seru', 119000, 2, 3, 2),
+
+      self::variant('variant-paket-hemat-meat-only', 'product-paket-hemat', 79000, 2, 3, 1),
+      self::variant('variant-paket-hemat-with-stove', 'product-paket-hemat', 119000, 2, 3, 2),
+
+      self::variant('variant-paket-mix-favorit-meat-only', 'product-paket-mix-favorit', 139000, 3, 4, 1),
+      self::variant('variant-paket-mix-favorit-with-stove', 'product-paket-mix-favorit', 179000, 3, 4, 2),
+    ]);
+
+    $productVariantTranslations = $productVariants
+      ->flatMap(function ($variant) {
+        $isWithStove = str_contains($variant['id'], 'with-stove');
+
+        return [
+          self::variantTranslation(
+            $variant['id'],
+            'id',
+            $isWithStove ? 'Paket Kompor' : 'Hanya Daging',
+            $isWithStove ? 'paket-kompor' : 'hanya-daging',
+            $isWithStove ? 'Paket dengan kompor.' : 'Paket tanpa kompor.'
+          ),
+          self::variantTranslation(
+            $variant['id'],
+            'en',
+            $isWithStove ? 'With Stove Package' : 'Meat Only',
+            $isWithStove ? 'with-stove-package' : 'meat-only',
+            $isWithStove ? 'Package with stove.' : 'Package without stove.'
+          ),
+        ];
       })
       ->values();
 
-    $productBadges = $products
-      ->flatMap(function ($product) {
-        return collect($product['badges'] ?? [])
-          ->map(function ($badgeId) use ($product) {
-            return [
-              'product_id' => $product['id'],
-              'badge_id' => $badgeId,
-            ];
-          });
+    /*
+        |--------------------------------------------------------------------------
+        | ALA CARTE DEFAULT VARIANTS
+        |--------------------------------------------------------------------------
+        */
+
+    $alacarteIds = $products
+      ->where('type_id', 'type-alacarte')
+      ->pluck('id');
+
+    $alacarteVariants = $alacarteIds
+      ->map(function ($productId) use ($products) {
+        $product = $products->firstWhere('id', $productId);
+
+        return self::variant(
+          id: 'variant-' . str_replace('product-', '', $productId) . '-default',
+          productId: $productId,
+          rate: $product['rate'],
+          minPerson: null,
+          maxPerson: null,
+          sortOrder: 1
+        );
       })
       ->values();
 
-    $productVariants = $products
-      ->flatMap(function ($product) {
-        return collect($product['variants'] ?? [])
-          ->map(function ($variant) use ($product) {
-            return array_merge($variant, [
-              'product_id' => $product['id'],
-            ]);
-          });
+    $alacarteVariantTranslations = $alacarteVariants
+      ->flatMap(function ($variant) {
+        return [
+          self::variantTranslation($variant['id'], 'id', 'Default', 'default', null),
+          self::variantTranslation($variant['id'], 'en', 'Default', 'default', null),
+        ];
       })
       ->values();
 
-    $packageItems = $products
-      ->where('type_id', 'type-package')
-      ->flatMap(function ($package) {
-        return collect($package['items'] ?? [])
-          ->values()
-          ->map(function ($item, $index) use ($package) {
-            return [
-              'id' => 'package-item-' . $package['id'] . '-' . $item['product_id'],
-              'package_id' => $package['id'],
-              'product_id' => $item['product_id'],
-              'qty' => $item['qty'],
-              'unit' => $item['unit'],
-              'sort_order' => $index + 1,
-            ];
-          });
+    /*
+        |--------------------------------------------------------------------------
+        | EQUIPMENT DEFAULT VARIANTS
+        |--------------------------------------------------------------------------
+        */
+
+    $equipmentIds = $products
+      ->where('type_id', 'type-equipment')
+      ->pluck('id');
+
+    $equipmentVariants = $equipmentIds
+      ->map(function ($productId) use ($products) {
+        $product = $products->firstWhere('id', $productId);
+
+        return self::variant(
+          id: 'variant-' . str_replace('product-', '', $productId) . '-daily-rental',
+          productId: $productId,
+          rate: $product['rate'],
+          minPerson: null,
+          maxPerson: null,
+          sortOrder: 1
+        );
       })
       ->values();
+
+    $equipmentVariantTranslations = $equipmentVariants
+      ->flatMap(function ($variant) {
+        return [
+          self::variantTranslation($variant['id'], 'id', '1x24 Jam', '1x24-jam', 'Harga berlaku untuk 1x24 jam.'),
+          self::variantTranslation($variant['id'], 'en', '24 Hours', '24-hours', 'Price is valid for 24 hours.'),
+        ];
+      })
+      ->values();
+
+    $productVariants = $productVariants
+      ->merge($alacarteVariants)
+      ->merge($equipmentVariants)
+      ->values();
+
+    $productVariantTranslations = $productVariantTranslations
+      ->merge($alacarteVariantTranslations)
+      ->merge($equipmentVariantTranslations)
+      ->values();
+
+    /*
+        |--------------------------------------------------------------------------
+        | PRODUCT CATEGORIES
+        |--------------------------------------------------------------------------
+        */
+
+    $productCategories = collect([
+      self::productCategory('product-paket-ramean-a', 'cat-package-ramean'),
+      self::productCategory('product-paket-ramean-a', 'cat-bbq'),
+
+      self::productCategory('product-paket-ramean-b', 'cat-package-ramean'),
+      self::productCategory('product-paket-ramean-b', 'cat-bbq'),
+
+      self::productCategory('product-paket-shortplate-mix', 'cat-package-small'),
+      self::productCategory('product-paket-shortplate-mix', 'cat-bbq'),
+
+      self::productCategory('product-paket-shortplate-komplit', 'cat-package-small'),
+      self::productCategory('product-paket-shortplate-komplit', 'cat-bbq'),
+
+      self::productCategory('product-paket-bbq-mantap', 'cat-package-small'),
+      self::productCategory('product-paket-bbq-mantap', 'cat-bbq'),
+
+      self::productCategory('product-paket-bbq-premium', 'cat-package-small'),
+      self::productCategory('product-paket-bbq-premium', 'cat-bbq'),
+
+      self::productCategory('product-paket-seru', 'cat-package-small'),
+      self::productCategory('product-paket-seru', 'cat-grill-suki'),
+
+      self::productCategory('product-paket-hemat', 'cat-package-small'),
+      self::productCategory('product-paket-hemat', 'cat-grill-suki'),
+
+      self::productCategory('product-paket-mix-favorit', 'cat-package-small'),
+      self::productCategory('product-paket-mix-favorit', 'cat-grill-suki'),
+    ]);
+
+    $meatProducts = [
+      'product-daging-ayam',
+      'product-sosis-ayam',
+      'product-bakso-ayam',
+      'product-sate-bakso-sosis',
+      'product-ham-sapi',
+      'product-beef-saikoro',
+      'product-beef-shortplate',
+      'product-beef-sirloin',
+      'product-beef-wagyu-meltique',
+    ];
+
+    $seafoodProducts = [
+      'product-bakso-ikan',
+      'product-cumi',
+      'product-tempura-ikan',
+      'product-otak-otak-ikan',
+      'product-udang',
+    ];
+
+    $vegetableProducts = [
+      'product-bawang-bombay',
+      'product-selada',
+      'product-enoki',
+    ];
+
+    $sauceProducts = [
+      'product-pasta-tomyam',
+      'product-kaldu-ayam',
+      'product-saos-sambal',
+      'product-saos-sambal-tomat',
+      'product-saos-bbq',
+      'product-saos-teriyaki-bulgogi',
+      'product-saos-bbq-teriyaki-bulgogi',
+      'product-margarin',
+    ];
+
+    $grillSukiProducts = [
+      'product-bihun',
+      'product-mie-kuning',
+    ];
+
+    $equipmentProducts = $products
+      ->where('type_id', 'type-equipment')
+      ->pluck('id')
+      ->all();
+
+    foreach ($meatProducts as $productId) {
+      $productCategories->push(self::productCategory($productId, 'cat-meat'));
+    }
+
+    foreach ($seafoodProducts as $productId) {
+      $productCategories->push(self::productCategory($productId, 'cat-seafood'));
+    }
+
+    foreach ($vegetableProducts as $productId) {
+      $productCategories->push(self::productCategory($productId, 'cat-vegetable'));
+    }
+
+    foreach ($sauceProducts as $productId) {
+      $productCategories->push(self::productCategory($productId, 'cat-sauce'));
+    }
+
+    foreach ($grillSukiProducts as $productId) {
+      $productCategories->push(self::productCategory($productId, 'cat-grill-suki'));
+    }
+
+    foreach ($equipmentProducts as $productId) {
+      $productCategories->push(self::productCategory($productId, 'cat-equipment'));
+    }
+
+    $productCategories = $productCategories->values();
+
+    /*
+        |--------------------------------------------------------------------------
+        | PRODUCT BADGES
+        |--------------------------------------------------------------------------
+        */
+
+    $productBadges = collect([
+      self::productBadge('product-paket-ramean-a', 'badge-ramean'),
+      self::productBadge('product-paket-ramean-b', 'badge-ramean'),
+      self::productBadge('product-paket-bbq-premium', 'badge-premium'),
+      self::productBadge('product-paket-hemat', 'badge-best-seller'),
+    ]);
+
+    foreach ($products->where('type_id', 'type-alacarte')->pluck('id') as $productId) {
+      $productBadges->push(self::productBadge($productId, 'badge-add-on'));
+    }
+
+    $productBadges = $productBadges->values();
+
+    /*
+        |--------------------------------------------------------------------------
+        | PRODUCT ITEMS
+        |--------------------------------------------------------------------------
+        | product_id = parent package
+        | item_product_id = item product
+        */
+
+    $productItems = collect([
+      /*
+            |--------------------------------------------------------------------------
+            | PAKET RAMEAN A
+            |--------------------------------------------------------------------------
+            */
+
+      self::productItem('product-paket-ramean-a', 'product-beef-shortplate', 250, 'gram', 1),
+      self::productItem('product-paket-ramean-a', 'product-beef-sirloin', 250, 'gram', 2),
+      self::productItem('product-paket-ramean-a', 'product-beef-saikoro', 250, 'gram', 3),
+      self::productItem('product-paket-ramean-a', 'product-daging-ayam', 500, 'gram', 4),
+      self::productItem('product-paket-ramean-a', 'product-sosis-ayam', 200, 'gram', 5),
+      self::productItem('product-paket-ramean-a', 'product-bakso-ayam', 250, 'gram', 6),
+      self::productItem('product-paket-ramean-a', 'product-bakso-ikan', 200, 'gram', 7),
+      self::productItem('product-paket-ramean-a', 'product-tempura-ikan', 250, 'gram', 8),
+      self::productItem('product-paket-ramean-a', 'product-udang', 150, 'gram', 9),
+      self::productItem('product-paket-ramean-a', 'product-cumi', 150, 'gram', 10),
+      self::productItem('product-paket-ramean-a', 'product-selada', 2, 'pack', 11),
+      self::productItem('product-paket-ramean-a', 'product-bawang-bombay', 2, 'pack', 12),
+      self::productItem('product-paket-ramean-a', 'product-enoki', 2, 'pack', 13),
+      self::productItem('product-paket-ramean-a', 'product-saos-sambal', 2, 'pack', 14),
+      self::productItem('product-paket-ramean-a', 'product-saos-bbq-teriyaki-bulgogi', 2, 'pack', 15),
+      self::productItem('product-paket-ramean-a', 'product-margarin', 2, 'pack', 16),
+
+      /*
+            |--------------------------------------------------------------------------
+            | PAKET RAMEAN B
+            |--------------------------------------------------------------------------
+            */
+
+      self::productItem('product-paket-ramean-b', 'product-beef-saikoro', 250, 'gram', 1),
+      self::productItem('product-paket-ramean-b', 'product-beef-shortplate', 250, 'gram', 2),
+      self::productItem('product-paket-ramean-b', 'product-beef-sirloin', 250, 'gram', 3),
+      self::productItem('product-paket-ramean-b', 'product-beef-wagyu-meltique', 250, 'gram', 4),
+      self::productItem('product-paket-ramean-b', 'product-daging-ayam', 500, 'gram', 5),
+      self::productItem('product-paket-ramean-b', 'product-sosis-ayam', 400, 'gram', 6),
+      self::productItem('product-paket-ramean-b', 'product-bakso-ayam', 500, 'gram', 7),
+      self::productItem('product-paket-ramean-b', 'product-bakso-ikan', 250, 'gram', 8),
+      self::productItem('product-paket-ramean-b', 'product-tempura-ikan', 250, 'gram', 9),
+      self::productItem('product-paket-ramean-b', 'product-otak-otak-ikan', 250, 'gram', 10),
+      self::productItem('product-paket-ramean-b', 'product-udang', 300, 'gram', 11),
+      self::productItem('product-paket-ramean-b', 'product-cumi', 300, 'gram', 12),
+      self::productItem('product-paket-ramean-b', 'product-selada', 400, 'gram', 13),
+      self::productItem('product-paket-ramean-b', 'product-bawang-bombay', 3, 'pack', 14),
+      self::productItem('product-paket-ramean-b', 'product-enoki', 3, 'pack', 15),
+      self::productItem('product-paket-ramean-b', 'product-saos-sambal', 4, 'pack', 16),
+      self::productItem('product-paket-ramean-b', 'product-saos-bbq', 3, 'pack', 17),
+      self::productItem('product-paket-ramean-b', 'product-saos-teriyaki-bulgogi', 2, 'pack', 18),
+      self::productItem('product-paket-ramean-b', 'product-margarin', 3, 'pack', 19),
+
+      /*
+            |--------------------------------------------------------------------------
+            | PAKET SHORTPLATE MIX
+            |--------------------------------------------------------------------------
+            */
+
+      self::productItem('product-paket-shortplate-mix', 'product-beef-shortplate', 250, 'gram', 1),
+      self::productItem('product-paket-shortplate-mix', 'product-daging-ayam', 250, 'gram', 2),
+      self::productItem('product-paket-shortplate-mix', 'product-sosis-ayam', 200, 'gram', 3),
+      self::productItem('product-paket-shortplate-mix', 'product-selada', 1, 'pack', 4),
+      self::productItem('product-paket-shortplate-mix', 'product-bawang-bombay', 1, 'pack', 5),
+      self::productItem('product-paket-shortplate-mix', 'product-margarin', 1, 'pack', 6),
+      self::productItem('product-paket-shortplate-mix', 'product-saos-sambal-tomat', 1, 'pack', 7),
+
+      /*
+            |--------------------------------------------------------------------------
+            | PAKET SHORTPLATE KOMPLIT
+            |--------------------------------------------------------------------------
+            */
+
+      self::productItem('product-paket-shortplate-komplit', 'product-beef-shortplate', 250, 'gram', 1),
+      self::productItem('product-paket-shortplate-komplit', 'product-daging-ayam', 250, 'gram', 2),
+      self::productItem('product-paket-shortplate-komplit', 'product-sosis-ayam', 200, 'gram', 3),
+      self::productItem('product-paket-shortplate-komplit', 'product-bakso-ayam', 250, 'gram', 4),
+      self::productItem('product-paket-shortplate-komplit', 'product-selada', 1, 'pack', 5),
+      self::productItem('product-paket-shortplate-komplit', 'product-bawang-bombay', 1, 'pack', 6),
+      self::productItem('product-paket-shortplate-komplit', 'product-margarin', 1, 'pack', 7),
+      self::productItem('product-paket-shortplate-komplit', 'product-saos-sambal-tomat', 1, 'pack', 8),
+
+      /*
+            |--------------------------------------------------------------------------
+            | PAKET BBQ MANTAP
+            |--------------------------------------------------------------------------
+            */
+
+      self::productItem('product-paket-bbq-mantap', 'product-beef-sirloin', 250, 'gram', 1),
+      self::productItem('product-paket-bbq-mantap', 'product-daging-ayam', 250, 'gram', 2),
+      self::productItem('product-paket-bbq-mantap', 'product-sosis-ayam', 200, 'gram', 3),
+      self::productItem('product-paket-bbq-mantap', 'product-bakso-ayam', 250, 'gram', 4),
+      self::productItem('product-paket-bbq-mantap', 'product-selada', 1, 'pack', 5),
+      self::productItem('product-paket-bbq-mantap', 'product-bawang-bombay', 1, 'pack', 6),
+      self::productItem('product-paket-bbq-mantap', 'product-margarin', 1, 'pack', 7),
+
+      /*
+            |--------------------------------------------------------------------------
+            | PAKET BBQ PREMIUM
+            |--------------------------------------------------------------------------
+            */
+
+      self::productItem('product-paket-bbq-premium', 'product-beef-saikoro', 250, 'gram', 1),
+      self::productItem('product-paket-bbq-premium', 'product-beef-sirloin', 250, 'gram', 2),
+      self::productItem('product-paket-bbq-premium', 'product-udang', 150, 'gram', 3),
+      self::productItem('product-paket-bbq-premium', 'product-daging-ayam', 250, 'gram', 4),
+      self::productItem('product-paket-bbq-premium', 'product-selada', 1, 'pack', 5),
+      self::productItem('product-paket-bbq-premium', 'product-bawang-bombay', 1, 'pack', 6),
+      self::productItem('product-paket-bbq-premium', 'product-margarin', 1, 'pack', 7),
+      self::productItem('product-paket-bbq-premium', 'product-saos-sambal-tomat', 1, 'pack', 8),
+
+      /*
+            |--------------------------------------------------------------------------
+            | PAKET SERU
+            |--------------------------------------------------------------------------
+            */
+
+      self::productItem('product-paket-seru', 'product-sosis-ayam', 200, 'gram', 1),
+      self::productItem('product-paket-seru', 'product-bakso-ayam', 250, 'gram', 2),
+      self::productItem('product-paket-seru', 'product-selada', 1, 'pack', 3),
+      self::productItem('product-paket-seru', 'product-bawang-bombay', 1, 'pack', 4),
+      self::productItem('product-paket-seru', 'product-margarin', 1, 'pack', 5),
+      self::productItem('product-paket-seru', 'product-saos-sambal-tomat', 1, 'pack', 6),
+
+      /*
+            |--------------------------------------------------------------------------
+            | PAKET HEMAT
+            |--------------------------------------------------------------------------
+            */
+
+      self::productItem('product-paket-hemat', 'product-sosis-ayam', 200, 'gram', 1),
+      self::productItem('product-paket-hemat', 'product-bakso-ayam', 250, 'gram', 2),
+      self::productItem('product-paket-hemat', 'product-selada', 1, 'pack', 3),
+      self::productItem('product-paket-hemat', 'product-bawang-bombay', 1, 'pack', 4),
+      self::productItem('product-paket-hemat', 'product-margarin', 1, 'pack', 5),
+      self::productItem('product-paket-hemat', 'product-saos-sambal-tomat', 1, 'pack', 6),
+
+      /*
+            |--------------------------------------------------------------------------
+            | PAKET MIX FAVORIT
+            |--------------------------------------------------------------------------
+            */
+
+      self::productItem('product-paket-mix-favorit', 'product-daging-ayam', 250, 'gram', 1),
+      self::productItem('product-paket-mix-favorit', 'product-sosis-ayam', 200, 'gram', 2),
+      self::productItem('product-paket-mix-favorit', 'product-tempura-ikan', 250, 'gram', 3),
+      self::productItem('product-paket-mix-favorit', 'product-bakso-ikan', 200, 'gram', 4),
+      self::productItem('product-paket-mix-favorit', 'product-selada', 1, 'pack', 5),
+      self::productItem('product-paket-mix-favorit', 'product-bawang-bombay', 1, 'pack', 6),
+      self::productItem('product-paket-mix-favorit', 'product-margarin', 1, 'pack', 7),
+      self::productItem('product-paket-mix-favorit', 'product-saos-sambal-tomat', 1, 'pack', 8),
+    ]);
+
+    /*
+        |--------------------------------------------------------------------------
+        | LANGUAGE CONTENTS
+        |--------------------------------------------------------------------------
+        */
 
     $languageContents = collect([
-      [
-        'id' => 'content-landing-hero-title',
-        'group' => 'landing',
-        'language' => $language,
-        'key' => 'hero_title',
-        'value' => $language === 'en'
-          ? 'Practical Grill Rental for Your Event'
-          : 'Sewa Grill Praktis Untuk Acara Kamu',
-      ],
-      [
-        'id' => 'content-landing-hero-subtitle',
-        'group' => 'landing',
-        'language' => $language,
-        'key' => 'hero_subtitle',
-        'value' => $language === 'en'
-          ? 'Choose BBQ packages, grill, suki, or add a la carte menus as needed.'
-          : 'Pilih paket BBQ, grill, suki, atau tambah menu ala carte sesuai kebutuhan.',
-      ],
-      [
-        'id' => 'content-contact-whatsapp',
-        'group' => 'contact',
-        'language' => $language,
-        'key' => 'whatsapp',
-        'value' => '081337467442',
-      ],
-      [
-        'id' => 'content-social-instagram',
-        'group' => 'social',
-        'language' => $language,
-        'key' => 'instagram',
-        'value' => '@kelanagrill',
-      ],
-      [
-        'id' => 'content-social-tiktok',
-        'group' => 'social',
-        'language' => $language,
-        'key' => 'tiktok',
-        'value' => '@kelana.grill',
-      ],
-      [
-        'id' => 'content-note-addon',
-        'group' => 'note',
-        'language' => $language,
-        'key' => 'addon_minimum',
-        'value' => $language === 'en'
-          ? 'Minimum purchase of 4 meat packs, variants can be mixed if without BBQ package purchase.'
-          : 'Minimal pembelian 4 pack daging boleh mix varian jika tanpa pembelian paket BBQ.',
-      ],
-      [
-        'id' => 'content-note-equipment',
-        'group' => 'note',
-        'language' => $language,
-        'key' => 'equipment_duration',
-        'value' => $language === 'en'
-          ? 'Equipment rental price is valid for 24 hours.'
-          : 'Harga alat berlaku untuk 1x24 jam.',
-      ],
+      self::languageContent('landing', 'hero_title', 'id', 'Sewa Grill Praktis Untuk Acara Kamu'),
+      self::languageContent('landing', 'hero_title', 'en', 'Practical Grill Rental for Your Event'),
+
+      self::languageContent('landing', 'hero_subtitle', 'id', 'Pilih paket BBQ, grill, suki, atau tambah menu ala carte sesuai kebutuhan.'),
+      self::languageContent('landing', 'hero_subtitle', 'en', 'Choose BBQ packages, grill, suki, or add a la carte menus as needed.'),
+
+      self::languageContent('contact', 'whatsapp', 'id', '081337467442'),
+      self::languageContent('contact', 'whatsapp', 'en', '081337467442'),
+
+      self::languageContent('social', 'instagram', 'id', '@kelanagrill'),
+      self::languageContent('social', 'instagram', 'en', '@kelanagrill'),
+
+      self::languageContent('social', 'tiktok', 'id', '@kelana.grill'),
+      self::languageContent('social', 'tiktok', 'en', '@kelana.grill'),
+
+      self::languageContent('note', 'addon_minimum', 'id', 'Minimal pembelian 4 pack daging boleh mix varian jika tanpa pembelian paket BBQ.'),
+      self::languageContent('note', 'addon_minimum', 'en', 'Minimum purchase of 4 meat packs, variants can be mixed if without BBQ package purchase.'),
+
+      self::languageContent('note', 'equipment_duration', 'id', 'Harga alat berlaku untuk 1x24 jam.'),
+      self::languageContent('note', 'equipment_duration', 'en', 'Equipment rental price is valid for 24 hours.'),
     ]);
+
+    /*
+        |--------------------------------------------------------------------------
+        | ATTACH CURRENT LOCALE DATA
+        |--------------------------------------------------------------------------
+        */
+
+    $categories = $categories
+      ->map(function ($category) use ($categoryTranslations, $language) {
+        return array_merge($category, [
+          'translation' => $categoryTranslations
+            ->where('category_id', $category['id'])
+            ->firstWhere('language', $language),
+          'translations' => $categoryTranslations
+            ->where('category_id', $category['id'])
+            ->values(),
+        ]);
+      })
+      ->values();
+
+    $badges = $badges
+      ->map(function ($badge) use ($badgeTranslations, $language) {
+        return array_merge($badge, [
+          'translation' => $badgeTranslations
+            ->where('badge_id', $badge['id'])
+            ->firstWhere('language', $language),
+          'translations' => $badgeTranslations
+            ->where('badge_id', $badge['id'])
+            ->values(),
+        ]);
+      })
+      ->values();
+
+    $productVariants = $productVariants
+      ->map(function ($variant) use ($productVariantTranslations, $language) {
+        return array_merge($variant, [
+          'translation' => $productVariantTranslations
+            ->where('product_variant_id', $variant['id'])
+            ->firstWhere('language', $language),
+          'translations' => $productVariantTranslations
+            ->where('product_variant_id', $variant['id'])
+            ->values(),
+        ]);
+      })
+      ->values();
+
+    $products = $products
+      ->map(function ($product) use (
+        $types,
+        $productTranslations,
+        $productVariants,
+        $productCategories,
+        $productBadges,
+        $productItems,
+        $categories,
+        $badges,
+        $language
+      ) {
+        $categoryIds = $productCategories
+          ->where('product_id', $product['id'])
+          ->pluck('category_id')
+          ->values();
+
+        $badgeIds = $productBadges
+          ->where('product_id', $product['id'])
+          ->pluck('badge_id')
+          ->values();
+
+        $items = $productItems
+          ->where('product_id', $product['id'])
+          ->map(function ($item) use ($productTranslations, $language) {
+            return array_merge($item, [
+              'item_product_translation' => $productTranslations
+                ->where('product_id', $item['item_product_id'])
+                ->firstWhere('language', $language),
+            ]);
+          })
+          ->values();
+
+        return array_merge($product, [
+          'type' => $types->firstWhere('id', $product['type_id']),
+
+          'translation' => $productTranslations
+            ->where('product_id', $product['id'])
+            ->firstWhere('language', $language),
+
+          'translations' => $productTranslations
+            ->where('product_id', $product['id'])
+            ->values(),
+
+          'variants' => $productVariants
+            ->where('product_id', $product['id'])
+            ->values(),
+
+          'categories' => $categories
+            ->whereIn('id', $categoryIds)
+            ->values(),
+
+          'badges' => $badges
+            ->whereIn('id', $badgeIds)
+            ->values(),
+
+          'items' => $items,
+        ]);
+      })
+      ->values();
 
     return collect([
       'locale' => $language,
+
       'types' => $types,
-      'categories' => $categories,
-      'badges' => $badges,
+
       'products' => $products,
+      'product_translations' => $productTranslations,
+
+      'categories' => $categories,
+      'category_translations' => $categoryTranslations,
+
+      'badges' => $badges,
+      'badge_translations' => $badgeTranslations,
+
+      'product_variants' => $productVariants,
+      'product_variant_translations' => $productVariantTranslations,
+
       'product_categories' => $productCategories,
       'product_badges' => $productBadges,
-      'product_variants' => $productVariants,
-      'package_items' => $packageItems,
-      'language_contents' => $languageContents,
+      'product_items' => $productItems,
+
+      'language_contents' => $languageContents
+        ->where('language', $language)
+        ->values(),
+
+      'all_language_contents' => $languageContents,
     ]);
   }
 
-  private static function packageProduct(
-    string $id,
-    string $nameId,
-    string $nameEn,
-    string $slugId,
-    string $slugEn,
-    string $descriptionId,
-    string $descriptionEn,
-    ?string $featuredLabelId,
-    ?string $featuredLabelEn,
-    int $rate,
-    string $image,
-    array $categories,
-    array $badges,
-    array $variants,
-    array $items,
-    int $sortOrder,
-    string $language,
-    bool $isFeatured = false,
-    bool $isNew = false,
-    bool $isActive = true
-  ): array {
-    $translations = [
-      'id' => [
-        'language' => 'id',
-        'name' => $nameId,
-        'slug' => $slugId,
-        'description' => $descriptionId,
-        'featured_label' => $featuredLabelId,
-      ],
-      'en' => [
-        'language' => 'en',
-        'name' => $nameEn,
-        'slug' => $slugEn,
-        'description' => $descriptionEn,
-        'featured_label' => $featuredLabelEn,
-      ],
-    ];
+  /*
+    |--------------------------------------------------------------------------
+    | HELPERS
+    |--------------------------------------------------------------------------
+    */
 
+  private static function product(
+    string $id,
+    string $typeId,
+    int|float $rate,
+    ?string $image,
+    int $sortOrder,
+    bool $featured = false,
+    bool $new = true,
+    bool $active = true
+  ): array {
     return [
       'id' => $id,
-      'type_id' => 'type-package',
+      'type_id' => $typeId,
       'rate' => $rate,
-      'is_featured' => $isFeatured,
-      'is_new' => $isNew,
-      'is_active' => $isActive,
+      'featured' => $featured,
+      'new' => $new,
+      'active' => $active,
       'image' => $image,
       'sort_order' => $sortOrder,
-      'translations' => $translations,
-      'translation' => self::pickTranslation($translations, $language),
-      'categories' => $categories,
-      'badges' => $badges,
-      'variants' => $variants,
-      'items' => $items,
     ];
   }
 
-  private static function alacarte(
-    string $id,
-    string $nameId,
-    string $nameEn,
-    string $slugId,
-    string $slugEn,
-    int $rate,
-    ?string $portion,
-    array $categories,
-    int $sortOrder,
-    string $language
+  private static function productTranslation(
+    string $productId,
+    string $language,
+    string $name,
+    string $slug,
+    ?string $description = null,
+    ?string $featuredLabel = null
   ): array {
-    $translations = [
-      'id' => [
-        'language' => 'id',
-        'name' => $nameId,
-        'slug' => $slugId,
-        'description' => $portion ? $nameId . ' ukuran ' . $portion . '.' : $nameId . '.',
-        'featured_label' => null,
-      ],
-      'en' => [
-        'language' => 'en',
-        'name' => $nameEn,
-        'slug' => $slugEn,
-        'description' => $portion ? $nameEn . ' size ' . $portion . '.' : $nameEn . '.',
-        'featured_label' => null,
-      ],
-    ];
-
     return [
-      'id' => $id,
-      'type_id' => 'type-alacarte',
-      'rate' => $rate,
-      'is_featured' => false,
-      'is_new' => false,
-      'is_active' => true,
-      'image' => '/images/products/' . $slugId . '.jpg',
-      'sort_order' => $sortOrder,
-      'translations' => $translations,
-      'translation' => self::pickTranslation($translations, $language),
-      'categories' => $categories,
-      'badges' => ['badge-add-on'],
-      'variants' => [
-        self::variant(
-          id: 'variant-' . $slugId,
-          name: $portion ?: 'Default',
-          slug: $slugId,
-          rate: $rate,
-          minPerson: null,
-          maxPerson: null,
-          description: $portion,
-          sortOrder: 1
-        ),
-      ],
-      'items' => [],
+      'id' => 'product-translation-' . $productId . '-' . $language,
+      'product_id' => $productId,
+      'language' => $language,
+      'name' => $name,
+      'slug' => $slug,
+      'description' => $description,
+      'featured_label' => $featuredLabel,
     ];
   }
 
-  private static function equipment(
-    string $id,
-    string $nameId,
-    string $nameEn,
-    string $slugId,
-    string $slugEn,
-    int $rate,
-    array $categories,
-    int $sortOrder,
-    string $language
+  private static function categoryTranslation(
+    string $categoryId,
+    string $language,
+    string $name,
+    string $slug
   ): array {
-    $translations = [
-      'id' => [
-        'language' => 'id',
-        'name' => $nameId,
-        'slug' => $slugId,
-        'description' => 'Sewa ' . strtolower($nameId) . ' untuk kebutuhan grill.',
-        'featured_label' => null,
-      ],
-      'en' => [
-        'language' => 'en',
-        'name' => $nameEn,
-        'slug' => $slugEn,
-        'description' => 'Rent ' . strtolower($nameEn) . ' for your grill needs.',
-        'featured_label' => null,
-      ],
-    ];
-
     return [
-      'id' => $id,
-      'type_id' => 'type-equipment',
-      'rate' => $rate,
-      'is_featured' => false,
-      'is_new' => false,
-      'is_active' => true,
-      'image' => '/images/products/' . $slugId . '.jpg',
-      'sort_order' => $sortOrder,
-      'translations' => $translations,
-      'translation' => self::pickTranslation($translations, $language),
-      'categories' => $categories,
-      'badges' => [],
-      'variants' => [
-        self::variant(
-          id: 'variant-' . $slugId,
-          name: $language === 'en' ? '24 Hours' : '1x24 Jam',
-          slug: $slugId,
-          rate: $rate,
-          minPerson: null,
-          maxPerson: null,
-          description: $language === 'en'
-            ? 'Price is valid for 24 hours.'
-            : 'Harga berlaku untuk 1x24 jam.',
-          sortOrder: 1
-        ),
-      ],
-      'items' => [],
+      'id' => 'category-translation-' . $categoryId . '-' . $language,
+      'category_id' => $categoryId,
+      'language' => $language,
+      'name' => $name,
+      'slug' => $slug,
+    ];
+  }
+
+  private static function badgeTranslation(
+    string $badgeId,
+    string $language,
+    string $name,
+    string $slug
+  ): array {
+    return [
+      'id' => 'badge-translation-' . $badgeId . '-' . $language,
+      'badge_id' => $badgeId,
+      'language' => $language,
+      'name' => $name,
+      'slug' => $slug,
     ];
   }
 
   private static function variant(
     string $id,
-    string $name,
-    string $slug,
-    int $rate,
+    string $productId,
+    int|float $rate,
     ?int $minPerson,
     ?int $maxPerson,
-    ?string $description,
-    int $sortOrder
+    int $sortOrder,
+    bool $active = true
   ): array {
     return [
       'id' => $id,
-      'name' => $name,
-      'slug' => $slug,
+      'product_id' => $productId,
       'rate' => $rate,
       'min_person' => $minPerson,
       'max_person' => $maxPerson,
-      'description' => $description,
       'sort_order' => $sortOrder,
-      'is_active' => true,
+      'active' => $active,
     ];
   }
 
-  private static function item(
-    string $productId,
-    int|float $qty,
-    string $unit
+  private static function variantTranslation(
+    string $variantId,
+    string $language,
+    string $name,
+    string $slug,
+    ?string $description = null
   ): array {
     return [
-      'product_id' => $productId,
-      'qty' => $qty,
-      'unit' => $unit,
+      'id' => 'variant-translation-' . $variantId . '-' . $language,
+      'product_variant_id' => $variantId,
+      'language' => $language,
+      'name' => $name,
+      'slug' => $slug,
+      'description' => $description,
     ];
   }
 
-  private static function pickTranslation(array $translations, string $language = 'id'): array
-  {
-    return $translations[$language] ?? $translations['id'];
+  private static function productCategory(
+    string $productId,
+    string $categoryId
+  ): array {
+    return [
+      'id' => 'product-category-' . $productId . '-' . $categoryId,
+      'product_id' => $productId,
+      'category_id' => $categoryId,
+    ];
+  }
+
+  private static function productBadge(
+    string $productId,
+    string $badgeId
+  ): array {
+    return [
+      'id' => 'product-badge-' . $productId . '-' . $badgeId,
+      'product_id' => $productId,
+      'badge_id' => $badgeId,
+    ];
+  }
+
+  private static function productItem(
+    string $productId,
+    string $itemProductId,
+    int|float $qty,
+    ?string $unit,
+    int $sortOrder
+  ): array {
+    return [
+      'id' => 'product-item-' . $productId . '-' . $itemProductId,
+      'product_id' => $productId,
+      'item_product_id' => $itemProductId,
+      'qty' => $qty,
+      'unit' => $unit,
+      'sort_order' => $sortOrder,
+    ];
+  }
+
+  private static function languageContent(
+    string $group,
+    string $key,
+    string $language,
+    ?string $value
+  ): array {
+    return [
+      'id' => 'language-content-' . $group . '-' . $key . '-' . $language,
+      'group' => $group,
+      'language' => $language,
+      'key' => $key,
+      'value' => $value,
+    ];
   }
 }

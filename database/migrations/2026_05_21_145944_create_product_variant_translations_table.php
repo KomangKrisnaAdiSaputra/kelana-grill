@@ -8,11 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('category_translations', function (Blueprint $table) {
+        Schema::create('product_variant_translations', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->foreignUuid('category_id')
-                ->constrained('categories')
+            $table->foreignUuid('product_variant_id')
+                ->constrained('product_variants')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
@@ -20,11 +20,12 @@ return new class extends Migration
 
             $table->string('name');
             $table->string('slug');
+            $table->text('description')->nullable();
 
             $table->timestamps();
 
-            $table->unique(['category_id', 'language']);
-            $table->unique(['language', 'slug']);
+            $table->unique(['product_variant_id', 'language']);
+            $table->unique(['product_variant_id', 'language', 'slug'], 'variant_translation_unique_slug');
 
             $table->index(['language', 'name']);
             $table->index(['language', 'slug']);
@@ -33,6 +34,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('category_translations');
+        Schema::dropIfExists('product_variant_translations');
     }
 };

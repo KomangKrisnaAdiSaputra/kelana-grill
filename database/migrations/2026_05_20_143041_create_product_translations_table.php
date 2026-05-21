@@ -11,8 +11,12 @@ return new class extends Migration
         Schema::create('product_translations', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('product_id');
-            $table->string('language', 5);
+            $table->foreignUuid('product_id')
+                ->constrained('products')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
+            $table->string('language', 10);
 
             $table->string('name');
             $table->string('slug');
@@ -21,15 +25,11 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->foreign('product_id')->references('id')->on('products')->cascadeOnDelete();
-
             $table->unique(['product_id', 'language']);
             $table->unique(['language', 'slug']);
 
             $table->index(['language', 'name']);
-
-            // MySQL 8 support
-            $table->fullText(['name', 'description']);
+            $table->index(['language', 'slug']);
         });
     }
 

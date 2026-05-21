@@ -9,17 +9,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_badges', function (Blueprint $table) {
-            $table->uuid('product_id');
-            $table->uuid('badge_id');
+            $table->uuid('id')->primary();
+
+            $table->foreignUuid('product_id')
+                ->constrained('products')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
+            $table->foreignUuid('badge_id')
+                ->constrained('badges')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
 
             $table->timestamps();
 
-            $table->foreign('product_id')->references('id')->on('products')->cascadeOnDelete();
+            $table->unique(['product_id', 'badge_id']);
 
-            $table->foreign('badge_id')->references('id')->on('badges')->cascadeOnDelete();
-
-            $table->primary(['product_id', 'badge_id']);
-
+            $table->index('product_id');
             $table->index('badge_id');
         });
     }

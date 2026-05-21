@@ -11,25 +11,25 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('type_id');
+            $table->foreignUuid('type_id')
+                ->constrained('types')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
 
             $table->decimal('rate', 15, 2)->default(0);
 
-            $table->boolean('is_featured')->default(false);
-            $table->boolean('is_new')->default(true);
-            $table->boolean('is_active')->default(true);
+            $table->boolean('featured')->default(false);
+            $table->boolean('new')->default(true);
+            $table->boolean('active')->default(true);
 
             $table->text('image')->nullable();
 
+
             $table->timestamps();
 
-            $table->foreign('type_id')->references('id')->on('types')->restrictOnDelete();
-
-            $table->index('type_id');
-            $table->index('rate');
-            $table->index(['is_active', 'is_featured']);
-            $table->index(['is_active', 'is_new']);
-            $table->index(['is_active', 'rate']);
+            $table->index(['type_id', 'active']);
+            $table->index(['featured', 'active']);
+            $table->index(['new', 'active']);
         });
     }
 
