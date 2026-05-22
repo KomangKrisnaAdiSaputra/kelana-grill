@@ -154,7 +154,7 @@ function PremiumRentalGrillLandingContent() {
         theme={theme}
         scrolled={scrolled}
         onToggleTheme={toggleTheme}
-        cartItems={cartItems}
+        cartItems={[]}
       />
 
       <main>

@@ -185,15 +185,15 @@ class KelanaGrillData
             |--------------------------------------------------------------------------
             */
 
-      self::product('product-paket-ramean-a', 'type-package', 699000, '/images/products/paket-ramean-a.jpg', 1, true, false),
-      self::product('product-paket-ramean-b', 'type-package', 1149000, '/images/products/paket-ramean-b.jpg', 2, true, false),
-      self::product('product-paket-shortplate-mix', 'type-package', 169000, '/images/products/paket-shortplate-mix.jpg', 3),
-      self::product('product-paket-shortplate-komplit', 'type-package', 209000, '/images/products/paket-shortplate-komplit.jpg', 4),
-      self::product('product-paket-bbq-mantap', 'type-package', 179000, '/images/products/paket-bbq-mantap.jpg', 5),
-      self::product('product-paket-bbq-premium', 'type-package', 249000, '/images/products/paket-bbq-premium.jpg', 6, true, false),
-      self::product('product-paket-seru', 'type-package', 109000, '/images/products/paket-seru.jpg', 7),
-      self::product('product-paket-hemat', 'type-package', 79000, '/images/products/paket-hemat.jpg', 8, true, false),
-      self::product('product-paket-mix-favorit', 'type-package', 139000, '/images/products/paket-mix-favorit.jpg', 9),
+      self::product('product-paket-ramean-a', 'type-package', 699000, 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop', 1, true, false),
+      self::product('product-paket-ramean-b', 'type-package', 1149000, 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop', 2, true, false),
+      self::product('product-paket-shortplate-mix', 'type-package', 169000, 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop', 3),
+      self::product('product-paket-shortplate-komplit', 'type-package', 209000, 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop', 4),
+      self::product('product-paket-bbq-mantap', 'type-package', 179000, 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop', 5),
+      self::product('product-paket-bbq-premium', 'type-package', 249000, 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop', 6, true, false),
+      self::product('product-paket-seru', 'type-package', 109000, 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop', 7),
+      self::product('product-paket-hemat', 'type-package', 79000, 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop', 8, true, false),
+      self::product('product-paket-mix-favorit', 'type-package', 139000, 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop', 9),
 
       /*
             |--------------------------------------------------------------------------

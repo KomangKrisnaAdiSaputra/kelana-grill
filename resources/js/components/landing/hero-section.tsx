@@ -13,14 +13,9 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
   const product = featuredProduct ?? null;
 
   const defaultVariant =
-    product?.variants.find((variant) => variant.isDefault) ??
-    product?.variants[0];
-
-  // const hasPromoPrice =
-  // typeof product?.originalPrice === "number" &&
-  // typeof product?.price === "number" &&
-  // product.originalPrice > product.price;
-  const hasPromoPrice = product?.hasPromo ?? false;
+    product?.variants?.find((variant) => variant.isDefault) ??
+    product?.variants?.[0] ??
+    null;
 
   const productBadges = product?.badges ?? [];
 
@@ -32,13 +27,40 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
     product?.featuredLabel ??
     product?.promo?.label ??
     product?.badges?.[0]?.label ??
+    product?.badges?.[0]?.name ??
     __("Paket Paling Populer");
 
   const productName = product?.name ?? __("Family BBQ Set");
 
-  const productPrice = formatPrice(product?.price);
+  const productDescription =
+    product?.description ?? product?.desc ?? null;
 
-  const productOriginalPrice = formatPrice(product?.originalPrice ?? 0);
+  const productPriceValue =
+    defaultVariant?.rate ??
+    defaultVariant?.price ??
+    product?.rate ??
+    product?.price ??
+    0;
+
+  const productOriginalPriceValue =
+    product?.originalPrice ?? null;
+
+  const hasPromoPrice =
+    product?.hasPromo ??
+    (
+      typeof productOriginalPriceValue === "number" &&
+      productOriginalPriceValue > productPriceValue
+    );
+
+  const productPrice = formatPrice(productPriceValue);
+
+  const productOriginalPrice =
+    typeof productOriginalPriceValue === "number"
+      ? formatPrice(productOriginalPriceValue)
+      : null;
+
+  const defaultVariantLabel =
+    defaultVariant?.label ?? defaultVariant?.name ?? null;
 
   return (
     <section className="relative flex min-h-[92vh] items-center pt-20 md:pt-24">
@@ -130,14 +152,22 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
 
             {productBadges.length > 0 && (
               <div className="absolute right-4 top-4 flex flex-wrap justify-end gap-2 md:right-6 md:top-6">
-                {productBadges.map((badge) => (
-                  <span
-                    key={badge.id ?? badge.key ?? badge.label}
-                    className="rounded-full bg-gradient-to-r from-red-500 to-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-orange-500/30 md:text-sm"
-                  >
-                    {badge.label}
-                  </span>
-                ))}
+                {productBadges.map((badge) => {
+                  const badgeText = badge.label ?? badge.name ?? badge.key ?? badge.slug;
+
+                  if (!badgeText) {
+                    return null;
+                  }
+
+                  return (
+                    <span
+                      key={badge.id ?? badge.key ?? badge.slug ?? badgeText}
+                      className="rounded-full bg-gradient-to-r from-red-500 to-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-orange-500/30 md:text-sm"
+                    >
+                      {badgeText}
+                    </span>
+                  );
+                })}
               </div>
             )}
 
@@ -155,7 +185,7 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
                   </div>
 
                   <div className="shrink-0 rounded-2xl bg-white/10 px-4 py-3 text-right text-white ring-1 ring-white/15 backdrop-blur-xl md:px-5 md:py-4">
-                    {hasPromoPrice && (
+                    {hasPromoPrice && productOriginalPrice && (
                       <p className="mb-1 text-[11px] font-medium text-white/55 line-through md:text-xs">
                         {productOriginalPrice}
                       </p>
@@ -167,9 +197,9 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
                   </div>
                 </div>
 
-                {defaultVariant?.label && (
+                {defaultVariantLabel && (
                   <p className="mt-3 text-xs text-zinc-300 md:text-sm">
-                    {defaultVariant.label}
+                    {defaultVariantLabel}
                   </p>
                 )}
 
@@ -179,9 +209,9 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
                   </p>
                 )}
 
-                {product?.desc && (
+                {productDescription && (
                   <p className="mt-2 line-clamp-2 text-xs text-zinc-400 md:text-sm">
-                    {product.desc}
+                    {productDescription}
                   </p>
                 )}
               </div>

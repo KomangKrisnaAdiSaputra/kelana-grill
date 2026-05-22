@@ -3,7 +3,7 @@ export type ProductType = 'package' | 'alacarte' | string;
 export type PromoType = 'fixed' | 'percent' | string;
 
 export type ProductPromo = {
-    id: number;
+    id: string | number;
     type: PromoType;
     value: number;
     label: string | null;
@@ -11,60 +11,94 @@ export type ProductPromo = {
 };
 
 export type ProductCategory = {
-    id: number | null;
-    key: string | null;
-    label: string | null;
+    id: string | number | null;
+    key?: string | null;
+    slug: string | null;
+    label?: string | null;
+    name: string | null;
 };
 
 export type ProductBadge = {
-    id: number | null;
-    key: string | null;
-    label: string | null;
+    id: string | number | null;
+    key?: string | null;
+    slug: string | null;
+    label?: string | null;
+    name: string | null;
 };
 
 export type ProductVariant = {
-    id: number;
-    key: string;
-    label: string | null;
-    price: number;
-    originalPrice: number | null;
-    isDefault: boolean;
+    id: string | number;
+    key?: string | null;
+    slug: string;
+    label?: string | null;
+    name: string | null;
+    description: string | null;
+    price?: number;
+    rate: number;
+    originalPrice?: number | null;
+    isDefault?: boolean;
+    minPerson: number | null;
+    maxPerson: number | null;
 };
 
 export type ProductDetailItem = {
-    id: number;
+    id: string | number;
     name: string;
-    qty: string | null;
+    slug?: string | null;
+    description?: string | null;
+    qty: string | number | null;
+    unit?: string | null;
 };
 
 export type ProductDetail = {
-    id: number;
+    id: string | number;
     key: string;
     group: string | null;
     items: ProductDetailItem[];
 };
 
+export type ProductItem = {
+    id: string | number;
+    name: string;
+    slug: string;
+    description: string | null;
+    qty: string | number | null;
+    unit: string | null;
+};
+
 export type Product = {
-    id: number;
-    type: ProductType;
-    image: string;
+    id: string | number;
+    type?: ProductType;
 
     name: string | null;
-    desc: string | null;
+    slug: string;
+    description: string | null;
+    desc?: string | null;
+
     featuredLabel: string | null;
 
-    price: number;
-    originalPrice: number | null;
+    image: string;
 
-    hasPromo: boolean;
-    promo: ProductPromo | null;
+    price?: number;
+    rate: number;
+    originalPrice?: number | null;
 
-    isFeatured: boolean;
-    isLanding: boolean;
-    isNew: boolean;
+    hasPromo?: boolean;
+    promo?: ProductPromo | null;
+
+    isFeatured?: boolean;
+    featured: boolean;
+
+    isLanding?: boolean;
+
+    isNew?: boolean;
+    new: boolean;
 
     categories: ProductCategory[];
     badges: ProductBadge[];
     variants: ProductVariant[];
-    details: ProductDetail[];
+
+    items: ProductItem[];
+
+    details?: ProductDetail[];
 };
