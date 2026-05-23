@@ -1,5 +1,4 @@
-import { useLanguage } from "@/contexts/language-context";
-import { useTranslation } from "@/lib/Lang";
+import { useTranslation } from "@/helpers/global";
 import type { ThemeMode } from "@/types";
 
 type Props = {
@@ -7,9 +6,30 @@ type Props = {
 };
 
 export default function FeatureSection({ theme }: Props) {
-  const { text } = useLanguage();
   const { __ } = useTranslation();
 
+  const featuresItems = [
+    {
+      title: __('Peralatan Siap Pakai'),
+      description:
+        __('Peralatan grill praktis dan mudah digunakan untuk acara BBQ bersama teman atau keluarga.'),
+    },
+    {
+      title: __('Paket Hemat'),
+      description:
+        __('Pilihan paket BBQ dengan isi yang lengkap dan harga yang lebih praktis.'),
+    },
+    {
+      title: __('Pilihan Menu Fleksibel'),
+      description:
+        __('Pilih paket atau tambahan ala carte sesuai kebutuhan acara kamu.'),
+    },
+    {
+      title: __('Booking Mudah'),
+      description:
+        __('Pilih produk, masukkan ke keranjang, lalu lanjutkan pemesanan dengan mudah.'),
+    },
+  ];
 
   return (
     <section id="features" className="py-20 md:py-24">
@@ -32,9 +52,9 @@ export default function FeatureSection({ theme }: Props) {
         </div>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 md:mt-16 md:gap-6 xl:grid-cols-4">
-          {text.features.items.map((item, index) => (
+          {featuresItems.map((item, index) => (
             <div
-              key={item.key}
+              key={index}
               className={`
                 group relative overflow-hidden rounded-[28px] border p-6 backdrop-blur-xl
                 transition duration-500 hover:-translate-y-2

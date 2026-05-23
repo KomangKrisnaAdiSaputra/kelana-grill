@@ -1,16 +1,18 @@
+import { usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
-import { useLanguage } from "@/contexts/language-context";
+import { useTranslation } from "@/helpers/global";
 import { landing } from "@/routes";
-import { produk } from "@/routes/landing";
 import type { LandingNavItem, ThemeMode } from "@/types";
 
 type Props = {
   theme: ThemeMode;
+  navItems: LandingNavItem[];
 };
 
-export default function MobileNavbar({ theme }: Props) {
-  const { text, language } = useLanguage();
+export default function MobileNavbar({ theme, navItems }: Props) {
+  const locale = usePage<any>().props.locale;
+  const { __ } = useTranslation();
 
   const [currentHash, setCurrentHash] = useState(() => {
     if (typeof window === "undefined") {
@@ -28,31 +30,12 @@ export default function MobileNavbar({ theme }: Props) {
     return window.location.pathname;
   });
 
-  const navItems: LandingNavItem[] = [
-    {
-      key: "about",
-      name: "About",
-      href: "#home",
-    },
-    {
-      key: "products",
-      name: "Produk",
-      href: produk({ locale: language }).url,
-    },
-    {
-      key: "contact",
-      name: "Booking",
-      href: "#booking",
-    },
-  ];
-
-  const navText = text.nav;
 
   const mobileItems: LandingNavItem[] = [
     {
       key: "home",
-      name: "Home",
-      href: landing({ locale: language }).url,
+      name: __("Home"),
+      href: landing({ locale }).url,
     },
     ...navItems,
   ];
@@ -71,18 +54,6 @@ export default function MobileNavbar({ theme }: Props) {
       window.removeEventListener("popstate", syncLocation);
     };
   }, []);
-
-  const getNavLabel = (item: LandingNavItem) => {
-    const navItem = item as LandingNavItem & {
-      key?: keyof typeof navText;
-    };
-
-    if (navItem.key && navItem.key in navText) {
-      return navText[navItem.key];
-    }
-
-    return item.name || item.label;
-  };
 
   const normalizePathWithoutLanguage = (url: string) => {
     if (typeof window === "undefined") {
@@ -178,7 +149,7 @@ export default function MobileNavbar({ theme }: Props) {
                 }
               `}
             >
-              {getNavLabel(item)}
+              {item.name}
             </a>
           );
         })}

@@ -1,49 +1,48 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import ProductCard from "@/components/landing/product-card";
 import ProductDetailModal from "@/components/landing/product-detail-modal";
-import { useLanguage } from "@/contexts/language-context";
-import { localizeProducts } from "@/helpers/global";
+
+import { useTranslation } from "@/helpers/global";
 import type { ThemeMode } from "@/types";
+
 import type {
-  LocalizedProductItem,
-  LocalizedProductVariant,
-  ProductItem,
+  Product,
+  ProductVariant,
 } from "@/types/product";
+
 
 type Props = {
   theme: ThemeMode;
-  products?: ProductItem[] | [];
+  products?: Product[];
 };
 
 type SelectedDetail = {
-  product: LocalizedProductItem;
-  variant: LocalizedProductVariant;
+  product: Product;
+  variant: ProductVariant;
 };
 
-export default function ProductSection({ theme, products }: Props) {
-  const { language, text } = useLanguage();
+export default function ProductSection({
+  theme,
+  products = [],
+}: Props) {
+  const { __ } = useTranslation();
 
   const sliderRef = useRef<HTMLDivElement | null>(null);
 
   const [activeSlide, setActiveSlide] = useState(0);
+
   const [itemsPerView, setItemsPerView] = useState(1);
 
-  const [selectedDetail, setSelectedDetail] = useState<SelectedDetail | null>(
-    null,
+  const [selectedDetail, setSelectedDetail] =
+    useState<SelectedDetail | null>(null);
+
+  const [selectedVariants, setSelectedVariants] =
+    useState<Record<string, string>>({});
+
+  const totalSlides = Math.ceil(
+    products.length / itemsPerView,
   );
-
-  const [selectedVariants, setSelectedVariants] = useState<
-    Record<string, string>
-  >({});
-
-  const sectionText = text.product;
-
-  const localizedProducts = useMemo(() => {
-    return localizeProducts(products ?? [], language);
-  }, [products, language]);
-
-  const totalSlides = Math.ceil(localizedProducts.length / itemsPerView);
 
   const handleScroll = useCallback(() => {
     const slider = sliderRef.current;
@@ -52,17 +51,21 @@ export default function ProductSection({ theme, products }: Props) {
       return setActiveSlide(0);
     }
 
-    const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
+    const maxScrollLeft =
+      slider.scrollWidth - slider.clientWidth;
 
     if (maxScrollLeft <= 0) {
       return setActiveSlide(0);
     }
 
     const currentIndex = Math.round(
-      (slider.scrollLeft / maxScrollLeft) * (totalSlides - 1),
+      (slider.scrollLeft / maxScrollLeft) *
+      (totalSlides - 1),
     );
 
-    setActiveSlide(Math.min(currentIndex, totalSlides - 1));
+    setActiveSlide(
+      Math.min(currentIndex, totalSlides - 1),
+    );
   }, [totalSlides]);
 
   const goToSlide = (index: number) => {
@@ -72,10 +75,14 @@ export default function ProductSection({ theme, products }: Props) {
       return;
     }
 
-    const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
+    const maxScrollLeft =
+      slider.scrollWidth - slider.clientWidth;
 
     const targetLeft =
-      totalSlides <= 1 ? 0 : (maxScrollLeft / (totalSlides - 1)) * index;
+      totalSlides <= 1
+        ? 0
+        : (maxScrollLeft / (totalSlides - 1)) *
+        index;
 
     slider.scrollTo({
       left: targetLeft,
@@ -88,7 +95,9 @@ export default function ProductSection({ theme, products }: Props) {
   useEffect(() => {
     const updateItemsPerView = () => {
       const width = window.innerWidth;
-      const nextItemsPerView = width >= 768 && width < 1280 ? 2 : 1;
+
+      const nextItemsPerView =
+        width >= 768 && width < 1280 ? 2 : 1;
 
       setItemsPerView((current) => {
         if (current === nextItemsPerView) {
@@ -101,10 +110,16 @@ export default function ProductSection({ theme, products }: Props) {
 
     updateItemsPerView();
 
-    window.addEventListener("resize", updateItemsPerView);
+    window.addEventListener(
+      "resize",
+      updateItemsPerView,
+    );
 
     return () => {
-      window.removeEventListener("resize", updateItemsPerView);
+      window.removeEventListener(
+        "resize",
+        updateItemsPerView,
+      );
     };
   }, []);
 
@@ -119,10 +134,13 @@ export default function ProductSection({ theme, products }: Props) {
       left: 0,
       behavior: "auto",
     });
-  }, [language, localizedProducts.length, itemsPerView]);
+  }, [products.length, itemsPerView]);
 
   return (
-    <section id="products" className="relative overflow-hidden py-20 md:py-24">
+    <section
+      id="products"
+      className="relative overflow-hidden py-20 md:py-24"
+    >
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute left-1/2 top-1/2 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/10 blur-3xl" />
       </div>
@@ -130,21 +148,27 @@ export default function ProductSection({ theme, products }: Props) {
       <div className="relative mx-auto max-w-7xl px-4 md:px-6">
         <div className="text-center">
           <p className="text-sm uppercase tracking-[0.3em] text-orange-500">
-            {sectionText.eyebrow}
+            {__("Produk")}
           </p>
 
           <h2
-            className={`mt-4 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl ${theme === "dark" ? "text-white" : "text-zinc-950"
+            className={`mt-4 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl ${theme === "dark"
+              ? "text-white"
+              : "text-zinc-950"
               }`}
           >
-            {sectionText.title}
+            {__("Pilih Paket BBQ Kamu.")}
           </h2>
 
           <p
-            className={`mx-auto mt-5 max-w-2xl text-base md:text-lg ${theme === "dark" ? "text-zinc-400" : "text-zinc-600"
+            className={`mx-auto mt-5 max-w-2xl text-base md:text-lg ${theme === "dark"
+              ? "text-zinc-400"
+              : "text-zinc-600"
               }`}
           >
-            {sectionText.desc}
+            {__(
+              "Pilih paket BBQ atau menu ala carte sesuai kebutuhan acara kamu.",
+            )}
           </p>
         </div>
 
@@ -152,23 +176,26 @@ export default function ProductSection({ theme, products }: Props) {
           ref={sliderRef}
           onScroll={handleScroll}
           className="
-            -mx-4 mt-12 flex snap-x snap-proximity gap-0 overflow-x-auto px-4 pb-5
-            scroll-smooth
-            [-ms-overflow-style:none] [scrollbar-width:none]
+            -mx-4 mt-12 flex snap-x snap-proximity gap-0
+            overflow-x-auto px-4 pb-5 scroll-smooth
+            [-ms-overflow-style:none]
+            [scrollbar-width:none]
             [&::-webkit-scrollbar]:hidden
             md:-mx-6 md:px-6
-            xl:mx-0 xl:grid xl:grid-cols-3 xl:gap-5 xl:overflow-visible xl:px-0 xl:pb-0
+            xl:mx-0 xl:grid xl:grid-cols-3
+            xl:gap-5 xl:overflow-visible
+            xl:px-0 xl:pb-0
           "
         >
-          {localizedProducts.map((product) => {
-            const selectedVariantKey = selectedVariants[product.id];
+          {products.map((product) => {
+            const selectedVariantId =
+              selectedVariants[product.id];
 
             const selectedVariant =
               product.variants.find(
-                (variant) => variant.key === selectedVariantKey,
-              ) ??
-              product.variants.find((variant) => variant.isDefault) ??
-              product.variants[0];
+                (variant) =>
+                  String(variant.id) === selectedVariantId,
+              ) ?? product.variants[0];
 
             return (
               <div
@@ -183,28 +210,30 @@ export default function ProductSection({ theme, products }: Props) {
                 <ProductCard
                   theme={theme}
                   product={product}
-                  selectedVariantKey={selectedVariant?.key}
-                  qty={0}
-                  addButtonLabel={sectionText.addButtonLabel}
-                  detailButtonLabel={sectionText.detailButtonLabel}
-                  onSelectVariant={(variant: LocalizedProductVariant) =>
-                    setSelectedVariants((current) => ({
-                      ...current,
-                      [product.id]: variant.key,
-                    }))
+                  selectedVariantId={
+                    selectedVariant?.id?.toString()
                   }
-                  onDetail={(selectedProduct, selectedProductVariant) =>
+                  detailButtonLabel={__("Detail")}
+                  onSelectVariant={(
+                    variant: ProductVariant,
+                  ) =>
+                    setSelectedVariants(
+                      (current) => ({
+                        ...current,
+                        [product.id]: String(variant.id),
+                      }),
+                    )
+                  }
+                  onDetail={(
+                    selectedProduct,
+                    selectedProductVariant,
+                  ) =>
                     setSelectedDetail({
                       product: selectedProduct,
-                      variant: selectedProductVariant,
+                      variant:
+                        selectedProductVariant,
                     })
                   }
-                  onPlus={() => {
-                    // nanti sambungkan ke cart context/localStorage
-                  }}
-                  onMinus={() => {
-                    // nanti sambungkan ke cart context/localStorage
-                  }}
                 />
               </div>
             );
@@ -213,12 +242,15 @@ export default function ProductSection({ theme, products }: Props) {
 
         {totalSlides > 1 && (
           <div className="mt-2 flex items-center justify-center gap-2 xl:hidden">
-            {Array.from({ length: totalSlides }).map((_, index) => (
+            {Array.from({
+              length: totalSlides,
+            }).map((_, index) => (
               <button
                 key={index}
                 type="button"
                 onClick={() => goToSlide(index)}
-                aria-label={`Go to product page ${index + 1}`}
+                aria-label={`Go to product page ${index + 1
+                  }`}
                 className={`
                   h-2 rounded-full transition-all duration-300
                   ${activeSlide === index
@@ -238,26 +270,22 @@ export default function ProductSection({ theme, products }: Props) {
         <ProductDetailModal
           theme={theme}
           product={selectedDetail.product}
-          selectedVariant={selectedDetail.variant}
+          selectedVariant={
+            selectedDetail.variant
+          }
           text={{
-            modalTitle: sectionText.modalTitle,
-            categoriesLabel: sectionText.categoriesLabel,
-            badgesLabel: sectionText.badgesLabel,
-            variantsLabel: sectionText.variantsLabel,
-            selectedVariantLabel: sectionText.selectedVariantLabel,
-            closeLabel: sectionText.closeLabel,
-            noDataLabel: sectionText.noDataLabel,
+            modalTitle: __("Detail Produk"),
+            categoriesLabel: __("Kategori"),
+            badgesLabel: __("Badge"),
+            variantsLabel: __("Pilihan Paket"),
+            selectedVariantLabel: __(
+              "Pilihan saat ini",
+            ),
+            closeLabel: __("Tutup"),
+            noDataLabel: __("Tidak ada data."),
           }}
-          onClose={() => setSelectedDetail(null)}
-          onSelectVariant={(variant) =>
-            setSelectedDetail((current) =>
-              current
-                ? {
-                  ...current,
-                  variant,
-                }
-                : current,
-            )
+          onClose={() =>
+            setSelectedDetail(null)
           }
         />
       )}

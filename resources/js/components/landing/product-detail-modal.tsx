@@ -1,8 +1,10 @@
 import { formatPrice } from "@/helpers/global";
+
 import type { ThemeMode } from "@/types";
+
 import type {
-  LocalizedProductItem,
-  LocalizedProductVariant,
+  Product,
+  ProductVariant,
 } from "@/types/product";
 
 type ProductDetailModalText = {
@@ -17,16 +19,16 @@ type ProductDetailModalText = {
 
 type ProductDetailModalProps = {
   theme: ThemeMode;
-  product: LocalizedProductItem;
-  selectedVariant: LocalizedProductVariant;
+  product: Product;
+  selectedVariant: ProductVariant;
   text: ProductDetailModalText;
   onClose: () => void;
-  onSelectVariant?: (variant: LocalizedProductVariant) => void;
 };
 
 export default function ProductDetailModal({
   theme,
   product,
+  selectedVariant,
   text,
   onClose,
 }: ProductDetailModalProps) {
@@ -55,11 +57,11 @@ export default function ProductDetailModal({
         <div className="relative h-[34dvh] min-h-[260px] overflow-hidden md:h-80">
           <img
             src={product.image}
-            alt={product.name}
+            alt={product.name ?? "Product Image"}
             className="h-full w-full object-cover"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/10" />
 
           <button
             type="button"
@@ -68,7 +70,8 @@ export default function ProductDetailModal({
             className="
               absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center
               rounded-full bg-black/45 text-2xl font-semibold text-white
-              ring-1 ring-white/15 backdrop-blur-xl transition hover:bg-black/65
+              ring-1 ring-white/15 backdrop-blur-xl transition
+              hover:bg-black/65
             "
           >
             ×
@@ -76,21 +79,51 @@ export default function ProductDetailModal({
 
           <div className="absolute bottom-0 left-0 right-0 p-5 md:p-7">
             <div className="mb-3 flex flex-wrap gap-2">
-              {product.categories.map((category) => (
+              {product.categories?.map((category) => (
                 <span
-                  key={category.key}
-                  className="rounded-full bg-orange-500 px-3 py-1.5 text-xs font-semibold text-white shadow-lg shadow-orange-500/20"
+                  key={category.id}
+                  className="
+                    rounded-full bg-orange-500
+                    px-3 py-1.5 text-xs font-semibold text-white
+                  "
                 >
-                  {category.label}
+                  {category.name}
                 </span>
               ))}
 
-              {product.badges.map((badge) => (
+              {product.new && (
                 <span
-                  key={badge.key}
-                  className="rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold text-white ring-1 ring-white/15 backdrop-blur-xl"
+                  className="
+                    rounded-full bg-red-500
+                    px-3 py-1.5 text-xs font-semibold text-white
+                  "
                 >
-                  {badge.label}
+                  New
+                </span>
+              )}
+
+              {product.featured && (
+                <span
+                  className="
+                    rounded-full bg-white/15
+                    px-3 py-1.5 text-xs font-semibold
+                    text-white backdrop-blur-xl
+                  "
+                >
+                  Featured
+                </span>
+              )}
+
+              {product.badges?.map((badge) => (
+                <span
+                  key={badge.id}
+                  className="
+                    rounded-full bg-white/15
+                    px-3 py-1.5 text-xs font-semibold
+                    text-white backdrop-blur-xl
+                  "
+                >
+                  {badge.name}
                 </span>
               ))}
             </div>
@@ -103,8 +136,8 @@ export default function ProductDetailModal({
               {product.name}
             </h3>
 
-            <p className="mt-2 line-clamp-2 max-w-3xl text-sm leading-6 text-white/80 md:text-base">
-              {product.desc}
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-white/80 md:text-base">
+              {product.description}
             </p>
           </div>
         </div>
@@ -123,123 +156,162 @@ export default function ProductDetailModal({
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p
-                    className={`text-xs font-semibold uppercase tracking-[0.2em] ${isDark ? "text-zinc-400" : "text-zinc-500"
+                    className={`text-xs font-semibold uppercase tracking-[0.2em] ${isDark
+                        ? "text-zinc-400"
+                        : "text-zinc-500"
                       }`}
                   >
                     {text.variantsLabel}
                   </p>
 
                   <h4 className="mt-2 text-lg font-semibold">
-                    Harga Paket
+                    {selectedVariant.name}
                   </h4>
                 </div>
 
-                <div className="hidden rounded-full bg-orange-500/10 px-4 py-2 text-xs font-semibold text-orange-500 md:block">
-                  {product.variants.length} opsi
+                <div className="text-right">
+                  <p className="text-2xl font-bold text-orange-400">
+                    {formatPrice(selectedVariant.rate)}
+                  </p>
+
+                  {(selectedVariant.minPerson ||
+                    selectedVariant.maxPerson) && (
+                      <p
+                        className={`mt-1 text-xs ${isDark
+                            ? "text-zinc-500"
+                            : "text-zinc-500"
+                          }`}
+                      >
+                        {selectedVariant.minPerson}-
+                        {selectedVariant.maxPerson} orang
+                      </p>
+                    )}
                 </div>
               </div>
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                {product.variants.length > 0 ? (
-                  product.variants.map((variant) => (
-                    <div
-                      key={variant.key}
-                      className={`
-                        rounded-2xl border p-4
-                        ${isDark
-                          ? "border-white/10 bg-black/20"
-                          : "border-orange-100 bg-white"
-                        }
-                      `}
-                    >
-                      <p
-                        className={`text-sm font-semibold ${isDark ? "text-white" : "text-zinc-950"
-                          }`}
-                      >
-                        {variant.label}
-                      </p>
+              {product.variants.length > 1 && (
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  {product.variants.map((variant) => {
+                    const isSelected =
+                      selectedVariant.id === variant.id;
 
-                      {typeof variant.originalPrice === "number" &&
-                        variant.originalPrice > variant.price && (
-                          <p
-                            className={`mt-2 text-sm line-through ${isDark ? "text-zinc-500" : "text-zinc-400"
-                              }`}
-                          >
-                            {formatPrice(variant.originalPrice)}
-                          </p>
-                        )}
-
-                      <p className="mt-1 text-2xl font-bold text-orange-400">
-                        {formatPrice(variant.price)}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-sm text-zinc-500">
-                    {text.noDataLabel}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {product.details.length > 0 ? (
-              <div className="space-y-4">
-                {product.details.map((detail, detailIndex) => (
-                  <div
-                    key={`${detail.group}-${detailIndex}`}
-                    className={`
-                      rounded-[28px] border p-5
-                      ${isDark
-                        ? "border-white/10 bg-white/[0.04]"
-                        : "border-zinc-100 bg-white"
-                      }
-                    `}
-                  >
-                    <div className="flex items-center justify-between gap-4">
-                      <h4 className="text-base font-semibold">
-                        {detail.group}
-                      </h4>
-
-                      <span
+                    return (
+                      <div
+                        key={variant.id}
                         className={`
-                          rounded-full px-3 py-1 text-xs font-semibold
-                          ${isDark
-                            ? "bg-white/10 text-zinc-300"
-                            : "bg-zinc-100 text-zinc-500"
+                          rounded-2xl border p-4 transition
+                          ${isSelected
+                            ? "border-orange-400 bg-orange-500/10"
+                            : isDark
+                              ? "border-white/10 bg-black/20"
+                              : "border-orange-100 bg-white"
                           }
                         `}
                       >
-                        {detail.items.length} item
-                      </span>
-                    </div>
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="text-sm font-semibold">
+                              {variant.name}
+                            </p>
 
-                    <div className="mt-4 grid gap-2">
-                      {detail.items.map((item, itemIndex) => (
-                        <div
-                          key={`${item.name}-${itemIndex}`}
-                          className={`
-                            flex items-start justify-between gap-4 rounded-2xl px-4 py-3 text-sm
-                            ${isDark
-                              ? "bg-black/20 text-zinc-300"
-                              : "bg-zinc-50 text-zinc-700"
-                            }
-                          `}
-                        >
-                          <span>{item.name}</span>
+                            {variant.description && (
+                              <p
+                                className={`mt-1 text-xs ${isDark
+                                    ? "text-zinc-400"
+                                    : "text-zinc-500"
+                                  }`}
+                              >
+                                {variant.description}
+                              </p>
+                            )}
+                          </div>
 
-                          {item.qty && (
-                            <span
-                              className={`shrink-0 font-semibold ${isDark ? "text-zinc-400" : "text-zinc-500"
-                                }`}
-                            >
-                              {item.qty}
+                          {isSelected && (
+                            <span className="rounded-full bg-orange-500 px-2 py-1 text-[10px] font-semibold text-white">
+                              Aktif
                             </span>
                           )}
                         </div>
-                      ))}
+
+                        <p className="mt-3 text-xl font-bold text-orange-400">
+                          {formatPrice(variant.rate)}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {product.items.length > 0 ? (
+              <div
+                className={`
+                  rounded-[28px] border p-5
+                  ${isDark
+                    ? "border-white/10 bg-white/[0.04]"
+                    : "border-zinc-100 bg-white"
+                  }
+                `}
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <h4 className="text-lg font-semibold">
+                    Isi Paket
+                  </h4>
+
+                  <span
+                    className={`
+                      rounded-full px-3 py-1 text-xs font-semibold
+                      ${isDark
+                        ? "bg-white/10 text-zinc-300"
+                        : "bg-zinc-100 text-zinc-500"
+                      }
+                    `}
+                  >
+                    {product.items.length} item
+                  </span>
+                </div>
+
+                <div className="mt-4 grid gap-2">
+                  {product.items.map((item) => (
+                    <div
+                      key={item.id}
+                      className={`
+                        flex items-start justify-between gap-4
+                        rounded-2xl px-4 py-3 text-sm
+                        ${isDark
+                          ? "bg-black/20 text-zinc-300"
+                          : "bg-zinc-50 text-zinc-700"
+                        }
+                      `}
+                    >
+                      <div className="min-w-0">
+                        <p className="font-semibold">
+                          {item.name}
+                        </p>
+
+                        {item.description && (
+                          <p
+                            className={`mt-1 text-xs ${isDark
+                                ? "text-zinc-400"
+                                : "text-zinc-500"
+                              }`}
+                          >
+                            {item.description}
+                          </p>
+                        )}
+                      </div>
+
+                      <span
+                        className={`shrink-0 font-semibold ${isDark
+                            ? "text-zinc-400"
+                            : "text-zinc-500"
+                          }`}
+                      >
+                        {item.qty} {item.unit}
+                      </span>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             ) : (
               <div

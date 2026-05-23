@@ -22,7 +22,7 @@ class LandingPageController extends Controller
             'types' => $data['types']->map(fn($item) => $this->generateDataType($item)),
 
             'featuredProduct' => $this->generateDataProduct($products->firstWhere('featured', true)),
-            'products' => $products->where('featured', false)->where('type_id', 'type-package')->take(3)->map(fn($item) => $this->generateDataProduct($item)),
+            'products' => $products->where('featured', false)->where('type_id', 'type-package')->take(3)->values()->map(fn($item) => $this->generateDataProduct($item)),
 
             'categories' => $data['categories']->map(fn($item) => $this->generateDataCategory($item)),
             'badges' => $data['badges']->map(fn($item) => $this->generateDataBadge($item)),

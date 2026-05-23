@@ -80,4 +80,36 @@ return [
   "Halo, saya ingin tanya tentang paket BBQ dan ketersediaan slot booking." => "Hello, I would like to ask about BBQ packages and booking slot availability.",
   "Explore Packages" => "Explore Packages",
   // End CTA
+
+  // FAQ
+  "FAQ" => "FAQ",
+  "Pertanyaan yang Sering Ditanyakan." => "Frequently Asked Questions.",
+  "Temukan jawaban seputar paket BBQ, pemesanan, lokasi, dan ketentuan lainnya." => "Find answers about BBQ packages, orders, locations, and other terms.",
+
+  // FAQ Questions & Answers
+  "Untuk paket dengan kompor, isi apa saja?" => "What is included in the package with a stove?",
+
+  "Paket dengan kompor sudah termasuk perlengkapan grill seperti kompor grill portable, pan grill, capitan atau penjepit BBQ, mangkok, sumpit, kuas, dan gas. Isi detail bisa berbeda sesuai paket yang dipilih." =>
+  "The package with a stove includes grilling equipment such as a portable grill stove, grill pan, BBQ tongs, bowls, chopsticks, brush, and gas canister. The exact items may vary depending on the package you choose.",
+
+  "Apakah sudah termasuk gas?" => "Is gas included?",
+
+  "Ya, untuk paket dengan kompor sudah termasuk gas. Untuk paket tanpa kompor, gas tidak termasuk karena tidak ada perlengkapan kompor." =>
+  "Yes, gas is included for packages with a stove. For packages without a stove, gas is not included because stove equipment is not provided.",
+
+  "Apakah bisa hanya membeli daging saja?" => "Can I buy only the meat?",
+
+  "Bisa. Kamu bisa membeli menu ala carte atau daging saja sesuai ketersediaan stok. Silakan hubungi kami untuk pilihan daging dan harga terbaru." =>
+  "Yes. You can order ala carte items or meat only, depending on stock availability. Please contact us for the latest meat options and prices.",
+
+  "Lokasinya dimana ya?" => "Where are you located?",
+
+  "Kami berada di area Denpasar dan Batubulan. Untuk alamat lengkap, titik lokasi, atau informasi pengambilan, silakan hubungi kami melalui WhatsApp." =>
+  "We are located around the Denpasar and Batubulan areas. For the full address, map location, or pickup information, please contact us via WhatsApp.",
+
+  "Apakah harus DP?" => "Is a down payment required?",
+
+  "DP diperlukan untuk pembelian daging. Selain itu, saat ada event, high season, atau pemesanan sedang ramai, semua pesanan wajib DP agar jadwal dan stok bisa kami amankan." =>
+  "A down payment is required for meat-only purchases. In addition, during events, high season, or busy order periods, all orders require a down payment so we can secure the schedule and stock for you.",
+  // End FAQ
 ];

@@ -1,4 +1,5 @@
-import { useLanguage } from "@/contexts/language-context";
+import { usePage } from "@inertiajs/react";
+import { useTranslation } from "@/helpers/global";
 import { produk } from "@/routes/landing";
 import type { ThemeMode } from "@/types";
 
@@ -7,14 +8,13 @@ type Props = {
 };
 
 export default function CtaSection({ theme }: Props) {
+  const { __ } = useTranslation();
 
-  const { language, text } = useLanguage();
-
-  const t = text.cta;
+  const locale = usePage<any>().props.locale;
 
   const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || "";
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    t.whatsappMessage,
+    __('Halo, saya ingin tanya tentang paket BBQ dan ketersediaan slot booking.'),
   )}`;
 
 
@@ -24,10 +24,10 @@ export default function CtaSection({ theme }: Props) {
 
       <div className="relative mx-auto max-w-4xl px-4 text-center md:px-6">
         <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl md:text-7xl">
-          {t.titlePrefix}
+          {__('Siap untuk')}
           <span className="bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-300 bg-clip-text text-transparent">
             {" "}
-            {t.titleHighlight}
+            {__('BBQ Night Berikutnya?')}
           </span>
         </h2>
 
@@ -35,21 +35,21 @@ export default function CtaSection({ theme }: Props) {
           className={`mx-auto mt-6 max-w-2xl text-base leading-7 md:mt-8 md:text-lg md:leading-8 ${theme === "dark" ? "text-zinc-400" : "text-zinc-600"
             }`}
         >
-          {t.description}
+          {__('Booking cepat dan setup premium untuk event spesialmu.')}
         </p>
 
-        <p className="mt-5 text-orange-400">{t.urgency}</p>
+        <p className="mt-5 text-orange-400">{__('Slot weekend cepat penuh 🔥')}</p>
 
         <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row md:gap-4">
           <a
             href={whatsappUrl}
             className="rounded-full bg-gradient-to-r from-orange-500 to-amber-400 px-8 py-4 font-medium text-white shadow-xl shadow-orange-500/20 transition hover:scale-[1.03] hover:shadow-orange-500/40"
           >
-            {t.whatsapp}
+            {__('Chat WhatsApp')}
           </a>
 
           <a
-            href={produk({ locale: language }).url}
+            href={produk({ locale }).url}
             className={`
               rounded-full border px-8 py-4 font-medium backdrop-blur-xl transition
               ${theme === "dark"
@@ -58,7 +58,7 @@ export default function CtaSection({ theme }: Props) {
               }
             `}
           >
-            {t.packages}
+            {__('Lihat Paket')}
           </a>
         </div>
       </div>

@@ -10,7 +10,6 @@ import {
 import { useMemo, useState } from "react";
 import { useTranslation } from "@/helpers/global";
 import { landing } from "@/routes";
-import { produk } from "@/routes/landing";
 import type { LandingNavItem, ThemeMode } from "@/types";
 import CartDrawer from "./cart-drawer";
 import type { CartItem } from "./cart-drawer";
@@ -20,6 +19,7 @@ type Props = {
   scrolled: boolean;
   onToggleTheme: () => void;
   cartItems?: CartItem[];
+  navItems: LandingNavItem[]
 };
 
 type PageProps = {
@@ -32,6 +32,7 @@ export default function Navbar({
   scrolled,
   onToggleTheme,
   cartItems = [],
+  navItems
 }: Props) {
   const props = usePage<PageProps>().props;
 
@@ -43,23 +44,7 @@ export default function Navbar({
 
   const { __ } = useTranslation();
 
-  const navItems: LandingNavItem[] = [
-    {
-      key: "about",
-      name: __("Tentang"),
-      href: "#home",
-    },
-    {
-      key: "products",
-      name: __("Produk"),
-      href: produk({ locale }).url,
-    },
-    {
-      key: "contact",
-      name: __("Kontak"),
-      href: "#booking",
-    },
-  ];
+
 
   const totalCartQty = useMemo(() => {
     return cartItems.reduce((total, item) => total + (item.qty ?? 1), 0);
