@@ -60,6 +60,7 @@ class LandingPageController extends Controller
             'image' => $item['image'],
             'featured' => $item['featured'],
             'new' => $item['new'],
+            'type' => $item['type']['name'],
             'variants' => $item['variants']->map(fn($variant) => $this->generateDataVariant($variant)),
             'categories' => $item['categories']->map(fn($category) => $this->generateDataCategory($category)),
             'badges' => $item['badges']->map(fn($badge) => $this->generateDataBadge($badge)),

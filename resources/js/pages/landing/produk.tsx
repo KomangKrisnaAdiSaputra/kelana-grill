@@ -14,15 +14,21 @@ import MobileNavbar from "@/components/landing/mobile-navbar";
 import Navbar from "@/components/landing/navbar";
 import ProductCard from "@/components/landing/product-card";
 
+import ProductDetailModal from "@/components/landing/product-detail-modal";
 import AppProvider from "@/contexts/app-provider";
 
 import { useTheme } from "@/contexts/theme-context";
 import { useTranslation } from "@/helpers/global";
 
-import type { Product } from "@/types/product";
+import type { Product, ProductVariant } from "@/types/product";
 
 type ProductCatalogPageProps = {
   products: Product[];
+};
+
+type SelectedDetail = {
+  product: Product;
+  variant: ProductVariant;
 };
 
 type FilterKey = "all" | string;
@@ -32,8 +38,6 @@ const PER_PAGE_OPTIONS = [6, 9, 12, 18];
 function normalizeText(value: unknown) {
   return String(value ?? "").trim();
 }
-
-
 
 function getProductType(product: Product) {
   return normalizeText(product.type);
@@ -47,7 +51,13 @@ function getDefaultVariantId(product: Product) {
     : undefined;
 }
 
-
+export default function ProductCatalogPage() {
+  return (
+    <AppProvider>
+      <ProductCatalogContent />
+    </AppProvider>
+  );
+}
 
 function ProductCatalogContent() {
   const { theme, toggleTheme } = useTheme();
@@ -70,6 +80,10 @@ function ProductCatalogContent() {
   const [page, setPage] = useState(1);
 
   const [perPage, setPerPage] = useState(9);
+
+  const [showFilters, setShowFilters] = useState(false);
+
+  const [selectedDetail, setSelectedDetail] = useState<SelectedDetail | null>(null);
 
   const [selectedVariants, setSelectedVariants] =
     useState<Record<string, string>>({});
@@ -97,13 +111,16 @@ function ProductCatalogContent() {
 
   const categories = useMemo(() => {
     const items = products.flatMap((product) =>
-      product.categories?.reduce<string[]>((acc, category) => {
-        if (category?.id != null) {
-          acc.push(String(category.id));
-        }
+      product.categories?.reduce<string[]>(
+        (acc, category) => {
+          if (category?.id != null) {
+            acc.push(String(category.id));
+          }
 
-        return acc;
-      }, []) ?? [],
+          return acc;
+        },
+        [],
+      ) ?? [],
     );
 
     return ["all", ...Array.from(new Set(items))];
@@ -116,13 +133,16 @@ function ProductCatalogContent() {
       const type = getProductType(product);
 
       const categoryIds =
-        product.categories?.reduce<string[]>((acc, category) => {
-          if (category?.id != null) {
-            acc.push(String(category.id));
-          }
+        product.categories?.reduce<string[]>(
+          (acc, category) => {
+            if (category?.id != null) {
+              acc.push(String(category.id));
+            }
 
-          return acc;
-        }, []) ?? [];
+            return acc;
+          },
+          [],
+        ) ?? [];
 
       const categoryNames =
         product.categories?.map(
@@ -240,22 +260,25 @@ function ProductCatalogContent() {
       .replace(/_/g, " ")
       .replace(/([A-Z])/g, " $1")
       .trim()
-      .replace(/\b\w/g, (char) => char.toUpperCase());
+      .replace(/\b\w/g, (char) =>
+        char.toUpperCase(),
+      );
   }
 
   function getCategoryFilterLabel(
     categoryId: string,
     products: Product[],
   ) {
-
     if (categoryId === "all") {
       return __("Semua Kategori");
     }
 
     for (const product of products) {
-      const category = product.categories?.find(
-        (item) => String(item.id) === categoryId,
-      );
+      const category =
+        product.categories?.find(
+          (item) =>
+            String(item.id) === categoryId,
+        );
 
       if (category) {
         return category.name;
@@ -268,7 +291,7 @@ function ProductCatalogContent() {
   return (
     <div
       className={`
-        min-h-screen overflow-hidden transition-all duration-500
+        min-h-screen transition-all duration-500
         ${theme === "dark"
           ? "bg-[#0F0F10] text-white"
           : "bg-gradient-to-br from-[#fff7ed] via-[#fffaf5] to-[#ffe7c2] text-zinc-900"
@@ -286,165 +309,301 @@ function ProductCatalogContent() {
         cartItems={[]}
       />
 
-      <main className="relative mx-auto max-w-7xl px-4 pb-20 pt-28 md:px-6 md:pt-36">
+      <main className="relative mx-auto max-w-7xl px-4 pb-24 pt-28 md:px-6 md:pt-36">
 
-        <section className="grid gap-6 lg:grid-cols-[1fr_390px] lg:items-end">
+        {/* HERO */}
 
-          <div>
-            <div
-              className={`
-                mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm backdrop-blur-xl
-                ${theme === "dark"
-                  ? "border-orange-400/20 bg-orange-500/10 text-orange-200"
-                  : "border-orange-200 bg-white/70 text-orange-700"
-                }
-              `}
-            >
-              <SlidersHorizontal size={16} />
-              {__("Semua Produk")}
-            </div>
-
-            <h1 className="max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl">
-              {__("Pilih Produk")}
-            </h1>
-
-            <p
-              className={`
-                mt-4 max-w-2xl leading-8
-                ${theme === "dark"
-                  ? "text-zinc-400"
-                  : "text-zinc-600"
-                }
-              `}
-            >
-              {__(
-                "Semua produk dan paket tersedia dalam satu halaman.",
-              )}
-            </p>
-          </div>
+        <section>
 
           <div
             className={`
-              rounded-[28px] border p-4 backdrop-blur-xl
+              inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm backdrop-blur-xl
               ${theme === "dark"
-                ? "border-white/10 bg-white/[0.04]"
-                : "border-orange-100 bg-white/70"
+                ? "border-orange-400/20 bg-orange-500/10 text-orange-200"
+                : "border-orange-200 bg-white/70 text-orange-700"
               }
             `}
           >
-            <div
-              className={`
-                flex items-center gap-3 rounded-2xl px-4 py-3
-                ${theme === "dark"
-                  ? "bg-black/30"
-                  : "bg-orange-50"
-                }
-              `}
-            >
-              <Search
-                size={18}
-                className={
-                  theme === "dark"
-                    ? "text-zinc-500"
-                    : "text-zinc-400"
-                }
-              />
-
-              <input
-                value={query}
-                onChange={(e) =>
-                  setQuery(e.target.value)
-                }
-                placeholder={__(
-                  __("Cari produk..."),
-                )}
-                className={`
-                  w-full bg-transparent text-sm outline-none
-                  ${theme === "dark"
-                    ? "placeholder:text-zinc-500"
-                    : "placeholder:text-zinc-400"
-                  }
-                `}
-              />
-            </div>
+            <SlidersHorizontal size={16} />
+            {__("Semua Produk")}
           </div>
+
+          <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl">
+            {__("Pilih Produk")}
+          </h1>
+
+          <p
+            className={`
+              mt-4 max-w-2xl leading-7 md:leading-8
+              ${theme === "dark"
+                ? "text-zinc-400"
+                : "text-zinc-600"
+              }
+            `}
+          >
+            {__(
+              "Temukan berbagai pilihan produk dan paket terbaik dalam satu halaman yang mudah dicari dan difilter.",
+            )}
+          </p>
+
         </section>
+
+        {/* STICKY SEARCH + FILTER */}
 
         <section
           className={`
-            sticky top-20 z-30 mt-8 rounded-[28px] border p-3 backdrop-blur-xl
-            ${theme === "dark"
-              ? "border-white/10 bg-[#0F0F10]/85"
-              : "border-orange-100 bg-white/80"
-            }
-          `}
+    sticky top-[72px] md:top-24 z-40 mt-6 md:mt-8
+    transition-all duration-300
+  `}
         >
-          <div className="flex gap-2 overflow-x-auto pb-2">
 
-            {productTypes.map((type) => (
-              <button
-                key={type}
-                type="button"
-                onClick={() => {
-                  setActiveType(type);
-                  setPage(1);
-                }}
+          <div
+            className={`
+      overflow-hidden rounded-[28px]
+      backdrop-blur-2xl
+      transition-all duration-300
+      shadow-[0_8px_30px_rgb(0,0,0,0.04)]
+      ${theme === "dark"
+                ? "bg-[#111112]/80 ring-1 ring-white/10"
+                : "bg-white/80 ring-1 ring-orange-100"
+              }
+    `}
+          >
+
+            {/* SEARCH BAR */}
+
+            <div className="p-3">
+
+              <div className="flex items-center gap-3">
+
+                {/* SEARCH */}
+
+                <div
+                  className={`
+            flex flex-1 items-center gap-3 rounded-2xl px-4 py-3
+            transition-all duration-300
+            ${theme === "dark"
+                      ? "bg-white/[0.04] focus-within:bg-white/[0.06]"
+                      : "bg-orange-50/80 focus-within:bg-orange-50"
+                    }
+          `}
+                >
+
+                  <div
+                    className={`
+              flex h-9 w-9 items-center justify-center rounded-xl
+              ${theme === "dark"
+                        ? "bg-white/[0.04]"
+                        : "bg-white"
+                      }
+            `}
+                  >
+                    <Search
+                      size={16}
+                      className={
+                        theme === "dark"
+                          ? "text-zinc-400"
+                          : "text-zinc-500"
+                      }
+                    />
+                  </div>
+
+                  <input
+                    value={query}
+                    onChange={(e) =>
+                      setQuery(e.target.value)
+                    }
+                    placeholder={__(
+                      "Cari produk atau paket...",
+                    )}
+                    className={`
+              w-full bg-transparent text-sm outline-none
+              ${theme === "dark"
+                        ? "placeholder:text-zinc-500"
+                        : "placeholder:text-zinc-400"
+                      }
+            `}
+                  />
+
+                </div>
+
+                {/* FILTER BUTTON */}
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowFilters(
+                      !showFilters,
+                    )
+                  }
+                  className={`
+            flex h-[52px] items-center gap-2 rounded-2xl px-4
+            text-sm font-medium
+            transition-all duration-300
+            ${showFilters
+                      ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20"
+                      : theme === "dark"
+                        ? "bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]"
+                        : "bg-orange-50 text-zinc-700 hover:bg-orange-100"
+                    }
+          `}
+                >
+
+                  <SlidersHorizontal size={16} />
+
+                  <span className="hidden sm:block">
+                    {__("Filter")}
+                  </span>
+
+                </button>
+
+              </div>
+
+            </div>
+
+            {/* COLLAPSIBLE FILTER */}
+
+            <div
+              className={`
+        overflow-hidden transition-all duration-500 ease-in-out
+        ${showFilters
+                  ? "max-h-[500px] opacity-100"
+                  : "max-h-0 opacity-0"
+                }
+      `}
+            >
+
+              <div
                 className={`
-                  shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition
+          border-t px-3 pb-4 pt-3
+          ${theme === "dark"
+                    ? "border-white/10"
+                    : "border-orange-100"
+                  }
+        `}
+              >
+
+                {/* PRODUCT TYPES */}
+
+                <div>
+
+                  <p
+                    className={`
+              mb-3 text-[11px] font-semibold uppercase tracking-[0.2em]
+              ${theme === "dark"
+                        ? "text-zinc-500"
+                        : "text-zinc-400"
+                      }
+            `}
+                  >
+                    {__("Tipe Produk")}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+
+                    {productTypes.map((type) => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => {
+                          setActiveType(type);
+                          setPage(1);
+                        }}
+                        className={`
+                  rounded-2xl px-4 py-2.5
+                  text-xs md:text-sm font-semibold
+                  transition-all duration-300
                   ${activeType === type
-                    ? "bg-orange-500 text-white"
-                    : theme === "dark"
-                      ? "bg-white/5 text-zinc-300"
-                      : "bg-orange-50 text-zinc-700"
-                  }
+                            ? "bg-gradient-to-r from-orange-500 to-amber-400 text-white shadow-lg shadow-orange-500/20"
+                            : theme === "dark"
+                              ? "bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]"
+                              : "bg-orange-50 text-zinc-700 hover:bg-orange-100"
+                          }
                 `}
-              >
-                {labelFromValue(type)}
-              </button>
-            ))}
+                      >
+                        {labelFromValue(type)}
+                      </button>
+                    ))}
 
-          </div>
+                  </div>
 
-          <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
+                </div>
 
-            {categories.map((category) => (
-              <button
-                key={category}
-                type="button"
-                onClick={() => {
-                  setActiveCategory(category);
-                  setPage(1);
-                }}
-                className={`
-                  shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition
+                {/* CATEGORIES */}
+
+                <div className="mt-5">
+
+                  <p
+                    className={`
+              mb-3 text-[11px] font-semibold uppercase tracking-[0.2em]
+              ${theme === "dark"
+                        ? "text-zinc-500"
+                        : "text-zinc-400"
+                      }
+            `}
+                  >
+                    {__("Kategori")}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+
+                    {categories.map((category) => (
+                      <button
+                        key={category}
+                        type="button"
+                        onClick={() => {
+                          setActiveCategory(category);
+                          setPage(1);
+                        }}
+                        className={`
+                  rounded-2xl px-4 py-2.5
+                  text-xs md:text-sm font-medium
+                  transition-all duration-300
                   ${activeCategory === category
-                    ? "bg-zinc-950 text-white"
-                    : theme === "dark"
-                      ? "bg-white/5 text-zinc-300"
-                      : "bg-white text-zinc-700"
-                  }
+                            ? theme === "dark"
+                              ? "bg-white text-zinc-950 shadow-lg"
+                              : "bg-zinc-950 text-white shadow-lg shadow-zinc-950/10"
+                            : theme === "dark"
+                              ? "bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08]"
+                              : "bg-white text-zinc-600 hover:bg-orange-50"
+                          }
                 `}
-              >
-                {getCategoryFilterLabel(
-                  category,
-                  products,
-                )}
-              </button>
-            ))}
+                      >
+                        {getCategoryFilterLabel(
+                          category,
+                          products,
+                        )}
+                      </button>
+                    ))}
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
 
           </div>
+
         </section>
 
-        <section className="mt-8 flex items-center justify-between">
+        {/* HEADER */}
+
+        <section className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
           <div>
             <p
-              className={`text-sm ${theme === "dark"
-                ? "text-zinc-500"
-                : "text-zinc-500"
-                }`}
+              className={`
+                text-sm
+                ${theme === "dark"
+                  ? "text-zinc-500"
+                  : "text-zinc-500"
+                }
+              `}
             >
-              {totalProducts} {__("Produk")}
+              {totalProducts}{" "}
+              {__("Produk")}
             </p>
           </div>
 
@@ -459,6 +618,7 @@ function ProductCatalogContent() {
             }}
             className={`
               rounded-2xl border px-4 py-3 text-sm outline-none
+              transition-all
               ${theme === "dark"
                 ? "border-white/10 bg-white/[0.04] text-white"
                 : "border-orange-100 bg-white/70 text-zinc-700"
@@ -471,13 +631,17 @@ function ProductCatalogContent() {
                 value={option}
                 className="text-zinc-900"
               >
-                {option} / {__("halaman")}
+                {option} /{" "}
+                {__("halaman")}
               </option>
             ))}
           </select>
+
         </section>
 
-        <section className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        {/* PRODUCTS */}
+
+        <section className="mt-6 grid gap-4 md:gap-5 sm:grid-cols-2 xl:grid-cols-3">
 
           {paginatedProducts.length > 0 ? (
             paginatedProducts.map((product) => (
@@ -493,38 +657,67 @@ function ProductCatalogContent() {
                     product,
                   )
                 }
-                onSelectVariant={(variant) =>
+                onSelectVariant={(
+                  variant,
+                ) =>
                   setSelectedVariants(
                     (current) => ({
                       ...current,
                       [product.id]:
-                        String(variant.id),
+                        String(
+                          variant.id,
+                        ),
                     }),
                   )
+                }
+                onDetail={(
+                  selectedProduct,
+                  selectedProductVariant,
+                ) =>
+                  setSelectedDetail({
+                    product: selectedProduct,
+                    variant:
+                      selectedProductVariant,
+                  })
                 }
               />
             ))
           ) : (
-            <div className="col-span-full py-20 text-center">
+            <div className="col-span-full py-24 text-center">
 
               <p className="text-xl font-semibold">
-                {__("Produk tidak ditemukan")}
+                {__(
+                  "Produk tidak ditemukan",
+                )}
               </p>
 
             </div>
           )}
+
         </section>
 
+        {/* PAGINATION */}
+
         {totalPages > 1 && (
-          <section className="mt-10 flex items-center justify-center gap-2">
+          <section className="mt-12 flex flex-wrap items-center justify-center gap-2">
 
             <button
               type="button"
-              disabled={currentPage <= 1}
-              onClick={() =>
-                setPage(currentPage - 1)
+              disabled={
+                currentPage <= 1
               }
-              className="flex h-11 w-11 items-center justify-center rounded-2xl border"
+              onClick={() =>
+                setPage(
+                  currentPage - 1,
+                )
+              }
+              className={`
+                flex h-11 w-11 items-center justify-center rounded-2xl border transition-all
+                ${theme === "dark"
+                  ? "border-white/10 bg-white/[0.04] hover:bg-white/[0.08]"
+                  : "border-orange-100 bg-white hover:bg-orange-50"
+                }
+              `}
             >
               <ChevronLeft size={18} />
             </button>
@@ -537,12 +730,12 @@ function ProductCatalogContent() {
                   setPage(number)
                 }
                 className={`
-                  h-11 min-w-11 rounded-2xl px-4 text-sm font-semibold
+                  h-11 min-w-11 rounded-2xl px-4 text-sm font-semibold transition-all
                   ${currentPage === number
-                    ? "bg-orange-500 text-white"
+                    ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20"
                     : theme === "dark"
-                      ? "bg-white/5"
-                      : "bg-white"
+                      ? "bg-white/5 hover:bg-white/10"
+                      : "bg-white hover:bg-orange-50"
                   }
                 `}
               >
@@ -553,18 +746,28 @@ function ProductCatalogContent() {
             <button
               type="button"
               disabled={
-                currentPage >= totalPages
+                currentPage >=
+                totalPages
               }
               onClick={() =>
-                setPage(currentPage + 1)
+                setPage(
+                  currentPage + 1,
+                )
               }
-              className="flex h-11 w-11 items-center justify-center rounded-2xl border"
+              className={`
+                flex h-11 w-11 items-center justify-center rounded-2xl border transition-all
+                ${theme === "dark"
+                  ? "border-white/10 bg-white/[0.04] hover:bg-white/[0.08]"
+                  : "border-orange-100 bg-white hover:bg-orange-50"
+                }
+              `}
             >
               <ChevronRight size={18} />
             </button>
 
           </section>
         )}
+
       </main>
 
       <MobileNavbar theme={theme} />
@@ -572,14 +775,30 @@ function ProductCatalogContent() {
       <div className="h-24 xl:hidden" />
 
       <Footer theme={theme} />
-    </div>
-  );
-}
 
-export default function ProductCatalogPage() {
-  return (
-    <AppProvider>
-      <ProductCatalogContent />
-    </AppProvider>
+      {selectedDetail && (
+        <ProductDetailModal
+          theme={theme}
+          product={selectedDetail.product}
+          selectedVariant={
+            selectedDetail.variant
+          }
+          text={{
+            modalTitle: __("Detail Produk"),
+            categoriesLabel: __("Kategori"),
+            badgesLabel: __("Badge"),
+            variantsLabel: __("Pilihan Paket"),
+            selectedVariantLabel: __(
+              "Pilihan saat ini",
+            ),
+            closeLabel: __("Tutup"),
+            noDataLabel: __("Tidak ada data."),
+          }}
+          onClose={() =>
+            setSelectedDetail(null)
+          }
+        />
+      )}
+    </div>
   );
 }
