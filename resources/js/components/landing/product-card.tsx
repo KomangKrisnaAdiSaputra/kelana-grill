@@ -1,5 +1,9 @@
+import { ShoppingBag } from "lucide-react";
+
 import { formatPrice } from "@/helpers/global";
+
 import type { ThemeMode } from "@/types";
+
 import type {
   Product,
   ProductVariant,
@@ -7,13 +11,23 @@ import type {
 
 type ProductCardProps = {
   theme: ThemeMode;
+
   product: Product;
-  qty?: number;
+
   selectedVariantId?: string;
-  addButtonLabel?: string;
-  detailButtonLabel?: string;
-  onSelectVariant?: (variant: ProductVariant) => void;
+
+  onSelectVariant?: (
+    variant: ProductVariant,
+  ) => void;
+
   onDetail?: (
+    product: Product,
+    variant: ProductVariant,
+  ) => void;
+
+  cartQty?: number;
+
+  onAddToCart?: (
     product: Product,
     variant: ProductVariant,
   ) => void;
@@ -25,7 +39,9 @@ function getDefaultVariant(
 ) {
   return (
     product.variants.find(
-      (variant) => variant.id === selectedVariantId,
+      (variant) =>
+        String(variant.id) ===
+        String(selectedVariantId),
     ) ?? product.variants[0]
   );
 }
@@ -34,25 +50,31 @@ export default function ProductCard({
   theme,
   product,
   selectedVariantId,
-  detailButtonLabel = "Detail",
   onSelectVariant,
   onDetail,
+  onAddToCart,
+  cartQty = 0,
 }: ProductCardProps) {
-  const selectedVariant = getDefaultVariant(
-    product,
-    selectedVariantId,
-  );
+  const selectedVariant =
+    getDefaultVariant(
+      product,
+      selectedVariantId,
+    );
 
-  const category = product.categories?.[0];
+  const category =
+    product.categories?.[0];
 
   return (
     <article
       className={`
-        group overflow-hidden rounded-[30px] border transition duration-300
-        hover:-translate-y-1 hover:shadow-2xl hover:shadow-orange-500/10
+        group overflow-hidden rounded-[30px]
+        border transition-all duration-300
+        hover:-translate-y-1
+        hover:shadow-2xl
+        hover:shadow-orange-500/10
         ${theme === "dark"
-          ? "border-white/10 bg-white/[0.04] hover:bg-white/[0.07]"
-          : "border-orange-100 bg-white/80 hover:bg-white"
+          ? "border-white/10 bg-white/[0.04]"
+          : "border-orange-100 bg-white"
         }
       `}
     >
@@ -63,150 +85,106 @@ export default function ProductCard({
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
 
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-
-        <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-          {category && (
-            <span className="rounded-full bg-orange-500 px-3 py-1.5 text-xs font-semibold text-white">
+        {category && (
+          <div className="absolute left-4 top-4">
+            <span className="rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-white">
               {category.name}
             </span>
-          )}
-
-          {product.new && (
-            <span
-              className="
-                rounded-full bg-red-500 px-3 py-1.5
-                text-xs font-semibold text-white
-              "
-            >
-              New
-            </span>
-          )}
-
-          {product.featured && (
-            <span
-              className="
-                rounded-full bg-black/40 px-3 py-1.5
-                text-xs font-semibold text-white backdrop-blur-xl
-              "
-            >
-              Featured
-            </span>
-          )}
-
-          {product.badges?.map((badge) => (
-            <span
-              key={badge.id}
-              className="
-                rounded-full bg-black/40 px-3 py-1.5
-                text-xs font-semibold text-white backdrop-blur-xl
-              "
-            >
-              {badge.name}
-            </span>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
 
       <div className="p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0 flex-1">
-            <h3
-              className={`line-clamp-1 text-xl font-semibold ${theme === "dark"
-                  ? "text-white"
-                  : "text-zinc-950"
-                }`}
-            >
-              {product.name}
-            </h3>
+        <h3 className="text-xl font-semibold">
+          {product.name}
+        </h3>
 
-            <p
-              className={`mt-2 line-clamp-2 text-sm leading-6 ${theme === "dark"
-                  ? "text-zinc-400"
-                  : "text-zinc-600"
-                }`}
-            >
-              {product.description}
-            </p>
-          </div>
-        </div>
+        <p className="mt-2 line-clamp-2 text-sm opacity-70">
+          {product.description}
+        </p>
 
         {product.variants.length > 1 && (
-          <div
-            className="
-              mt-5 flex gap-2 overflow-x-auto pb-1
-              [-ms-overflow-style:none]
-              [scrollbar-width:none]
-              [&::-webkit-scrollbar]:hidden
-            "
-          >
-            {product.variants.map((variant) => {
-              const isActive =
-                selectedVariant?.id === variant.id;
+          <div className="mt-5 flex flex-wrap gap-2">
+            {product.variants.map(
+              (variant) => {
+                const isActive =
+                  selectedVariant?.id ===
+                  variant.id;
 
-              return (
-                <button
-                  key={variant.id}
-                  type="button"
-                  onClick={() => onSelectVariant?.(variant)}
-                  className={`
-                    shrink-0 rounded-full border px-3 py-1.5
-                    text-xs font-semibold transition
-                    ${isActive
-                      ? "border-orange-400 bg-orange-500 text-white"
-                      : theme === "dark"
-                        ? "border-white/10 bg-white/5 text-zinc-300 hover:bg-white/10"
-                        : "border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100"
+                return (
+                  <button
+                    key={
+                      variant.id
                     }
-                  `}
-                >
-                  {variant.name}
-                </button>
-              );
-            })}
+                    onClick={() =>
+                      onSelectVariant?.(
+                        variant,
+                      )
+                    }
+                    className={`
+                      rounded-full border px-3 py-1 text-xs
+                      ${isActive
+                        ? "bg-orange-500 text-white"
+                        : "bg-zinc-100"
+                      }
+                    `}
+                  >
+                    {
+                      variant.name
+                    }
+                  </button>
+                );
+              },
+            )}
           </div>
         )}
 
-        <div className="mt-5 flex items-end justify-between gap-4">
+        <div className="mt-5 flex items-center justify-between">
           <div>
-            <p className="text-2xl font-bold text-orange-400">
+            <p className="text-2xl font-bold text-orange-500">
               {formatPrice(
-                selectedVariant?.rate ?? product.rate,
+                selectedVariant?.rate ??
+                0,
               )}
             </p>
-
-            {(selectedVariant?.minPerson ||
-              selectedVariant?.maxPerson) && (
-                <p
-                  className={`mt-1 text-xs ${theme === "dark"
-                      ? "text-zinc-500"
-                      : "text-zinc-500"
-                    }`}
-                >
-                  {selectedVariant.minPerson}-
-                  {selectedVariant.maxPerson} orang
-                </p>
-              )}
           </div>
 
-          {onDetail && selectedVariant && (
-            <button
-              type="button"
-              onClick={() =>
-                onDetail(product, selectedVariant)
-              }
-              className={`
-                rounded-2xl px-4 py-3 text-sm font-semibold transition
-                ${theme === "dark"
-                  ? "bg-white/10 text-white ring-1 ring-white/10 hover:bg-white/15"
-                  : "bg-orange-50 text-orange-600 ring-1 ring-orange-100 hover:bg-orange-100"
-                }
-              `}
-            >
-              {detailButtonLabel}
-            </button>
-          )}
+          <button
+            onClick={() =>
+              onDetail?.(
+                product,
+                selectedVariant,
+              )
+            }
+            className="rounded-xl bg-orange-50 px-4 py-2 text-sm font-semibold text-orange-600"
+          >
+            Detail
+          </button>
         </div>
+
+        <button
+          onClick={() =>
+            onAddToCart?.(
+              product,
+              selectedVariant,
+            )
+          }
+          className="
+            mt-5 flex h-12 w-full items-center justify-center gap-2
+            rounded-2xl bg-gradient-to-r from-orange-500 to-amber-400
+            text-sm font-semibold text-white
+          "
+        >
+          <ShoppingBag size={16} />
+
+          Tambah
+
+          {cartQty > 0 && (
+            <div className="rounded-full bg-white/20 px-2 py-0.5 text-xs">
+              {cartQty}
+            </div>
+          )}
+        </button>
       </div>
     </article>
   );

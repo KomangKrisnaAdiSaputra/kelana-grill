@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { ThemeProvider } from "@/contexts/theme-context";
+import { CartProvider } from "./cart-context";
 
 type AppProviderProps = {
   children: ReactNode;
@@ -8,6 +9,10 @@ type AppProviderProps = {
 
 export default function AppProvider({ children }: AppProviderProps) {
   return (
-    <ThemeProvider>{children}</ThemeProvider>
+    <ThemeProvider>
+      <CartProvider>
+        {children}
+      </CartProvider>
+    </ThemeProvider>
   );
 }

@@ -102,21 +102,6 @@ export default function MobileNavbar({ theme }: Props) {
     );
   };
 
-  const handleNavClick = (href: string) => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    if (!href.includes("#")) {
-      return;
-    }
-
-    const hash = href.substring(href.indexOf("#"));
-
-    setCurrentHash(hash);
-    setCurrentPath(window.location.pathname);
-  };
-
   return (
     <div
       className={`
@@ -137,7 +122,6 @@ export default function MobileNavbar({ theme }: Props) {
               key={item.href}
               href={item.href}
               aria-current={isActive ? "page" : undefined}
-              onClick={() => handleNavClick(item.href)}
               className={`
                 rounded-2xl py-2 text-center text-xs font-semibold transition
                 ${isActive

@@ -1,16 +1,24 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import ProductCard from "@/components/landing/product-card";
+
 import ProductDetailModal from "@/components/landing/product-detail-modal";
 
+import { useCart } from "@/contexts/cart-context";
+
 import { useTranslation } from "@/helpers/global";
+
 import type { ThemeMode } from "@/types";
 
 import type {
   Product,
   ProductVariant,
 } from "@/types/product";
-
 
 type Props = {
   theme: ThemeMode;
@@ -28,17 +36,36 @@ export default function ProductSection({
 }: Props) {
   const { __ } = useTranslation();
 
-  const sliderRef = useRef<HTMLDivElement | null>(null);
+  const {
+    addToCart,
+    getItemQty,
+  } = useCart();
 
-  const [activeSlide, setActiveSlide] = useState(0);
+  const sliderRef =
+    useRef<HTMLDivElement | null>(
+      null,
+    );
 
-  const [itemsPerView, setItemsPerView] = useState(1);
+  const [activeSlide, setActiveSlide] =
+    useState(0);
 
-  const [selectedDetail, setSelectedDetail] =
-    useState<SelectedDetail | null>(null);
+  const [itemsPerView, setItemsPerView] =
+    useState(1);
 
-  const [selectedVariants, setSelectedVariants] =
-    useState<Record<string, string>>({});
+  const [
+    selectedDetail,
+    setSelectedDetail,
+  ] =
+    useState<SelectedDetail | null>(
+      null,
+    );
+
+  const [
+    selectedVariants,
+    setSelectedVariants,
+  ] = useState<
+    Record<string, string>
+  >({});
 
   const totalSlides = Math.ceil(
     products.length / itemsPerView,
@@ -47,41 +74,54 @@ export default function ProductSection({
   const handleScroll = useCallback(() => {
     const slider = sliderRef.current;
 
-    if (!slider || totalSlides <= 1) {
+    if (
+      !slider ||
+      totalSlides <= 1
+    ) {
       return setActiveSlide(0);
     }
 
     const maxScrollLeft =
-      slider.scrollWidth - slider.clientWidth;
+      slider.scrollWidth -
+      slider.clientWidth;
 
     if (maxScrollLeft <= 0) {
       return setActiveSlide(0);
     }
 
     const currentIndex = Math.round(
-      (slider.scrollLeft / maxScrollLeft) *
+      (slider.scrollLeft /
+        maxScrollLeft) *
       (totalSlides - 1),
     );
 
     setActiveSlide(
-      Math.min(currentIndex, totalSlides - 1),
+      Math.min(
+        currentIndex,
+        totalSlides - 1,
+      ),
     );
   }, [totalSlides]);
 
-  const goToSlide = (index: number) => {
-    const slider = sliderRef.current;
+  const goToSlide = (
+    index: number,
+  ) => {
+    const slider =
+      sliderRef.current;
 
     if (!slider) {
       return;
     }
 
     const maxScrollLeft =
-      slider.scrollWidth - slider.clientWidth;
+      slider.scrollWidth -
+      slider.clientWidth;
 
     const targetLeft =
       totalSlides <= 1
         ? 0
-        : (maxScrollLeft / (totalSlides - 1)) *
+        : (maxScrollLeft /
+          (totalSlides - 1)) *
         index;
 
     slider.scrollTo({
@@ -93,20 +133,30 @@ export default function ProductSection({
   };
 
   useEffect(() => {
-    const updateItemsPerView = () => {
-      const width = window.innerWidth;
+    const updateItemsPerView =
+      () => {
+        const width =
+          window.innerWidth;
 
-      const nextItemsPerView =
-        width >= 768 && width < 1280 ? 2 : 1;
+        const nextItemsPerView =
+          width >= 768 &&
+            width < 1280
+            ? 2
+            : 1;
 
-      setItemsPerView((current) => {
-        if (current === nextItemsPerView) {
-          return current;
-        }
+        setItemsPerView(
+          (current) => {
+            if (
+              current ===
+              nextItemsPerView
+            ) {
+              return current;
+            }
 
-        return nextItemsPerView;
-      });
-    };
+            return nextItemsPerView;
+          },
+        );
+      };
 
     updateItemsPerView();
 
@@ -124,7 +174,8 @@ export default function ProductSection({
   }, []);
 
   useEffect(() => {
-    const slider = sliderRef.current;
+    const slider =
+      sliderRef.current;
 
     if (!slider) {
       return;
@@ -134,7 +185,10 @@ export default function ProductSection({
       left: 0,
       behavior: "auto",
     });
-  }, [products.length, itemsPerView]);
+  }, [
+    products.length,
+    itemsPerView,
+  ]);
 
   return (
     <section
@@ -152,18 +206,22 @@ export default function ProductSection({
           </p>
 
           <h2
-            className={`mt-4 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl ${theme === "dark"
-              ? "text-white"
-              : "text-zinc-950"
+            className={`mt-4 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl ${theme ===
+                "dark"
+                ? "text-white"
+                : "text-zinc-950"
               }`}
           >
-            {__("Pilih Paket BBQ Kamu.")}
+            {__(
+              "Pilih Paket BBQ Kamu.",
+            )}
           </h2>
 
           <p
-            className={`mx-auto mt-5 max-w-2xl text-base md:text-lg ${theme === "dark"
-              ? "text-zinc-400"
-              : "text-zinc-600"
+            className={`mx-auto mt-5 max-w-2xl text-base md:text-lg ${theme ===
+                "dark"
+                ? "text-zinc-400"
+                : "text-zinc-600"
               }`}
           >
             {__(
@@ -174,7 +232,9 @@ export default function ProductSection({
 
         <div
           ref={sliderRef}
-          onScroll={handleScroll}
+          onScroll={
+            handleScroll
+          }
           className="
             -mx-4 mt-12 flex snap-x snap-proximity gap-0
             overflow-x-auto px-4 pb-5 scroll-smooth
@@ -187,81 +247,126 @@ export default function ProductSection({
             xl:px-0 xl:pb-0
           "
         >
-          {products.map((product) => {
-            const selectedVariantId =
-              selectedVariants[product.id];
+          {products.map(
+            (product) => {
+              const selectedVariantId =
+                selectedVariants[
+                product.id
+                ];
 
-            const selectedVariant =
-              product.variants.find(
-                (variant) =>
-                  String(variant.id) === selectedVariantId,
-              ) ?? product.variants[0];
+              const selectedVariant =
+                product.variants.find(
+                  (
+                    variant,
+                  ) =>
+                    String(
+                      variant.id,
+                    ) ===
+                    selectedVariantId,
+                ) ??
+                product
+                  .variants[0];
 
-            return (
-              <div
-                key={product.id}
-                data-product-slide
-                className="
-                  w-full shrink-0 snap-start
-                  md:w-1/2 md:pr-5
-                  xl:w-auto xl:shrink xl:pr-0
-                "
-              >
-                <ProductCard
-                  theme={theme}
-                  product={product}
-                  selectedVariantId={
-                    selectedVariant?.id?.toString()
+              return (
+                <div
+                  key={
+                    product.id
                   }
-                  detailButtonLabel={__("Detail")}
-                  onSelectVariant={(
-                    variant: ProductVariant,
-                  ) =>
-                    setSelectedVariants(
-                      (current) => ({
-                        ...current,
-                        [product.id]: String(variant.id),
-                      }),
-                    )
-                  }
-                  onDetail={(
-                    selectedProduct,
-                    selectedProductVariant,
-                  ) =>
-                    setSelectedDetail({
-                      product: selectedProduct,
-                      variant:
-                        selectedProductVariant,
-                    })
-                  }
-                />
-              </div>
-            );
-          })}
+                  data-product-slide
+                  className="
+                    w-full shrink-0 snap-start
+                    md:w-1/2 md:pr-5
+                    xl:w-auto xl:shrink xl:pr-0
+                  "
+                >
+                  <ProductCard
+                    theme={
+                      theme
+                    }
+                    product={
+                      product
+                    }
+                    selectedVariantId={String(
+                      selectedVariant?.id,
+                    )}
+                    cartQty={getItemQty(
+                      `${product.id}-${selectedVariant?.id}`,
+                    )}
+                    onAddToCart={
+                      addToCart
+                    }
+                    onSelectVariant={(
+                      variant: ProductVariant,
+                    ) =>
+                      setSelectedVariants(
+                        (
+                          current,
+                        ) => ({
+                          ...current,
+                          [product.id]:
+                            String(
+                              variant.id,
+                            ),
+                        }),
+                      )
+                    }
+                    onDetail={(
+                      selectedProduct,
+                      selectedProductVariant,
+                    ) =>
+                      setSelectedDetail(
+                        {
+                          product:
+                            selectedProduct,
+                          variant:
+                            selectedProductVariant,
+                        },
+                      )
+                    }
+                  />
+                </div>
+              );
+            },
+          )}
         </div>
 
         {totalSlides > 1 && (
           <div className="mt-2 flex items-center justify-center gap-2 xl:hidden">
             {Array.from({
-              length: totalSlides,
-            }).map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => goToSlide(index)}
-                aria-label={`Go to product page ${index + 1
-                  }`}
-                className={`
-                  h-2 rounded-full transition-all duration-300
-                  ${activeSlide === index
-                    ? "w-8 bg-orange-500"
-                    : theme === "dark"
-                      ? "w-2 bg-white/20 hover:bg-white/40"
-                      : "w-2 bg-zinc-300 hover:bg-zinc-400"
+              length:
+                totalSlides,
+            }).map(
+              (
+                _,
+                index,
+              ) => (
+                <button
+                  key={
+                    index
                   }
-                `}
-              />
-            ))}
+                  type="button"
+                  onClick={() =>
+                    goToSlide(
+                      index,
+                    )
+                  }
+                  aria-label={`Go to product page ${index +
+                    1
+                    }`}
+                  className={`
+                    h-2 rounded-full transition-all duration-300
+                    ${activeSlide ===
+                      index
+                      ? "w-8 bg-orange-500"
+                      : theme ===
+                        "dark"
+                        ? "w-2 bg-white/20 hover:bg-white/40"
+                        : "w-2 bg-zinc-300 hover:bg-zinc-400"
+                    }
+                  `}
+                />
+              ),
+            )}
           </div>
         )}
       </div>
@@ -269,23 +374,42 @@ export default function ProductSection({
       {selectedDetail && (
         <ProductDetailModal
           theme={theme}
-          product={selectedDetail.product}
+          product={
+            selectedDetail.product
+          }
           selectedVariant={
             selectedDetail.variant
           }
           text={{
-            modalTitle: __("Detail Produk"),
-            categoriesLabel: __("Kategori"),
-            badgesLabel: __("Badge"),
-            variantsLabel: __("Pilihan Paket"),
-            selectedVariantLabel: __(
-              "Pilihan saat ini",
-            ),
-            closeLabel: __("Tutup"),
-            noDataLabel: __("Tidak ada data."),
+            modalTitle:
+              __(
+                "Detail Produk",
+              ),
+            categoriesLabel:
+              __(
+                "Kategori",
+              ),
+            badgesLabel:
+              __("Badge"),
+            variantsLabel:
+              __(
+                "Pilihan Paket",
+              ),
+            selectedVariantLabel:
+              __(
+                "Pilihan saat ini",
+              ),
+            closeLabel:
+              __("Tutup"),
+            noDataLabel:
+              __(
+                "Tidak ada data.",
+              ),
           }}
           onClose={() =>
-            setSelectedDetail(null)
+            setSelectedDetail(
+              null,
+            )
           }
         />
       )}

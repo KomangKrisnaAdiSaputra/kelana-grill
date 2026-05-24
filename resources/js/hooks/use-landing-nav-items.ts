@@ -7,7 +7,7 @@ import { produk } from '@/routes/landing';
 import type { LandingNavItem } from '@/types';
 
 export default function useLandingNavItems() {
-    const locale = usePage<any>().props.locale;
+    const locale = usePage<any>().props.params.locale;
 
     const { __ } = useTranslation();
 
