@@ -31,12 +31,10 @@ class LandingPageController extends Controller
 
     public function indexProduk(Request $request)
     {
-        $language = $request->get('lang', 'id');
+        $data = KelanaGrillData::get();
 
         return Inertia::render('landing/produk', [
-            'products' => $this->getProductData([
-                'language' => $language,
-            ]),
+            'products' => collect($data['products'] ?? [])->map(fn($item) => $this->generateDataProduct($item)),
         ]);
     }
 

@@ -69,6 +69,13 @@ return [
   "Pilihan saat ini" => "Current Option",
   "Tutup" => "Close",
   "Tidak ada data." => "No data.",
+  "Semua Produk" => "All Products",
+  "Pilih Produk" => "Choose Product",
+  "Semua produk dan paket tersedia dalam satu halaman." => "All products and packages available in one page.",
+  "Cari produk..." => "Search products...",
+  "Semua" => "All",
+  "Semua Kategori" => "All Categories",
+  "halaman" => "page",
   // End Product
 
   // CTA

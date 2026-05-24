@@ -2,17 +2,18 @@ import { usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 import { useTranslation } from "@/helpers/global";
+import useLandingNavItems from "@/hooks/use-landing-nav-items";
 import { landing } from "@/routes";
 import type { LandingNavItem, ThemeMode } from "@/types";
 
 type Props = {
   theme: ThemeMode;
-  navItems: LandingNavItem[];
 };
 
-export default function MobileNavbar({ theme, navItems }: Props) {
+export default function MobileNavbar({ theme }: Props) {
   const locale = usePage<any>().props.locale;
   const { __ } = useTranslation();
+  const navItems = useLandingNavItems();
 
   const [currentHash, setCurrentHash] = useState(() => {
     if (typeof window === "undefined") {

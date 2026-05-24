@@ -12,9 +12,6 @@ import Navbar from "@/components/landing/navbar";
 import ProductSection from "@/components/landing/product-section";
 import AppProvider from "@/contexts/app-provider";
 import { useTheme } from "@/contexts/theme-context";
-import { useTranslation } from "@/helpers/global";
-import { produk } from "@/routes/landing";
-import type { LandingNavItem } from "@/types";
 import type { Product } from "@/types/product";
 
 export type LandingPageProps = {
@@ -24,33 +21,11 @@ export type LandingPageProps = {
 
 
 function PremiumRentalGrillLandingContent() {
-  const locale = usePage<any>().props.locale;
-
   const { theme, toggleTheme } = useTheme();
 
   const [scrolled, setScrolled] = useState(false);
 
   const { featuredProduct, products } = usePage<LandingPageProps>().props;
-
-  const { __ } = useTranslation();
-
-  const navItems: LandingNavItem[] = [
-    {
-      key: "about",
-      name: __("Tentang"),
-      href: "#home",
-    },
-    {
-      key: "products",
-      name: __("Produk"),
-      href: produk({ locale }).url,
-    },
-    {
-      key: "contact",
-      name: __("Kontak"),
-      href: "#booking",
-    },
-  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,7 +56,6 @@ function PremiumRentalGrillLandingContent() {
         scrolled={scrolled}
         onToggleTheme={toggleTheme}
         cartItems={[]}
-        navItems={navItems}
       />
 
       <main>
@@ -102,7 +76,7 @@ function PremiumRentalGrillLandingContent() {
         </section>
       </main>
 
-      <MobileNavbar theme={theme} navItems={navItems} />
+      <MobileNavbar theme={theme} />
 
       <div className="h-24 xl:hidden" />
 

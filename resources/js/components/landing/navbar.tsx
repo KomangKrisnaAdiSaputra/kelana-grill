@@ -9,8 +9,9 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "@/helpers/global";
+import useLandingNavItems from "@/hooks/use-landing-nav-items";
 import { landing } from "@/routes";
-import type { LandingNavItem, ThemeMode } from "@/types";
+import type { ThemeMode } from "@/types";
 import CartDrawer from "./cart-drawer";
 import type { CartItem } from "./cart-drawer";
 
@@ -19,7 +20,6 @@ type Props = {
   scrolled: boolean;
   onToggleTheme: () => void;
   cartItems?: CartItem[];
-  navItems: LandingNavItem[]
 };
 
 type PageProps = {
@@ -32,7 +32,6 @@ export default function Navbar({
   scrolled,
   onToggleTheme,
   cartItems = [],
-  navItems
 }: Props) {
   const props = usePage<PageProps>().props;
 
@@ -43,8 +42,7 @@ export default function Navbar({
   const [cartOpen, setCartOpen] = useState(false);
 
   const { __ } = useTranslation();
-
-
+  const navItems = useLandingNavItems();
 
   const totalCartQty = useMemo(() => {
     return cartItems.reduce((total, item) => total + (item.qty ?? 1), 0);
