@@ -2,6 +2,8 @@
 
 return [
   "Promo" => "Promo",
+  "Keranjang kosong" => "Your cart is empty",
+  "Tambahkan produk favoritmu ke dalam keranjang." => "Add your favorite products to your cart.",
 
   // Navbar
   "Premium BBQ Rental" => "Premium BBQ Rental",
@@ -71,11 +73,13 @@ return [
   "Tidak ada data." => "No data.",
   "Semua Produk" => "All Products",
   "Pilih Produk" => "Choose Product",
-  "Semua produk dan paket tersedia dalam satu halaman." => "All products and packages available in one page.",
-  "Cari produk..." => "Search products...",
+  "Temukan berbagai pilihan produk dan paket terbaik dalam satu halaman yang mudah dicari dan difilter." => "Find various product and package options in one easy-to-search and filter page.",
+  "Cari produk atau paket..." => "Search products or packages...",
   "Semua" => "All",
   "Semua Kategori" => "All Categories",
   "halaman" => "page",
+  "produk" => "products",
+  "per paket" => "per package",
   // End Product
 
   // CTA

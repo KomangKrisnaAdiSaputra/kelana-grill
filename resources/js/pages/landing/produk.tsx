@@ -445,6 +445,8 @@ function ProductCatalogContent() {
       />
 
       <main className="relative mx-auto max-w-7xl px-4 pb-24 pt-28 md:px-6 md:pt-36">
+        {/* HERO */}
+
         <section>
           <div
             className={`
@@ -485,31 +487,41 @@ function ProductCatalogContent() {
           </p>
         </section>
 
+        {/* FILTER */}
+
         <section className="sticky top-[72px] z-40 mt-6 md:top-24 md:mt-8">
           <div
             className={`
-            overflow-hidden rounded-[28px] backdrop-blur-2xl
-            ${theme === "dark"
+              overflow-hidden rounded-[28px] backdrop-blur-2xl
+              ${theme === "dark"
                 ? "bg-[#111112]/80 ring-1 ring-white/10"
                 : "bg-white/80 ring-1 ring-orange-100"
               }
-          `}
+            `}
           >
             <div className="p-3">
               <div className="flex items-center gap-3">
+                {/* SEARCH */}
+
                 <div
                   className={`
-                  flex flex-1 items-center gap-3 rounded-2xl px-4 py-3
-                  ${theme ===
+                    flex flex-1 items-center gap-3 rounded-2xl px-4 py-3
+                    ${theme ===
                       "dark"
                       ? "bg-white/[0.04]"
                       : "bg-orange-50/80"
                     }
-                `}
+                  `}
                 >
                   <Search
                     size={
                       16
+                    }
+                    className={
+                      theme ===
+                        "dark"
+                        ? "text-zinc-400"
+                        : "text-zinc-500"
                     }
                   />
 
@@ -529,9 +541,18 @@ function ProductCatalogContent() {
                     placeholder={__(
                       "Cari produk atau paket...",
                     )}
-                    className="w-full bg-transparent text-sm outline-none"
+                    className={`
+                      w-full bg-transparent text-sm outline-none
+                      ${theme ===
+                        "dark"
+                        ? "text-white placeholder:text-zinc-500"
+                        : "text-zinc-800 placeholder:text-zinc-400"
+                      }
+                    `}
                   />
                 </div>
+
+                {/* FILTER BUTTON */}
 
                 <button
                   onClick={() =>
@@ -539,7 +560,12 @@ function ProductCatalogContent() {
                       !showFilters,
                     )
                   }
-                  className="flex h-[52px] items-center gap-2 rounded-2xl bg-orange-500 px-4 text-white"
+                  className="
+                    flex h-[52px] items-center gap-2 rounded-2xl
+                    bg-orange-500 px-4 text-white
+                    transition-all duration-300
+                    hover:bg-orange-600
+                  "
                 >
                   <SlidersHorizontal
                     size={
@@ -552,8 +578,20 @@ function ProductCatalogContent() {
               </div>
             </div>
 
+            {/* FILTER CONTENT */}
+
             {showFilters && (
-              <div className="border-t border-orange-100 px-3 pb-4 pt-3">
+              <div
+                className={`
+                  border-t px-3 pb-4 pt-3
+                  ${theme === "dark"
+                    ? "border-white/10"
+                    : "border-orange-100"
+                  }
+                `}
+              >
+                {/* TYPE */}
+
                 <div className="flex flex-wrap gap-2">
                   {productTypes.map(
                     (
@@ -573,11 +611,22 @@ function ProductCatalogContent() {
                           );
                         }}
                         className={`
-                          rounded-2xl px-4 py-2 text-sm
+                          rounded-2xl px-4 py-2 text-sm transition-all
                           ${activeType ===
                             type
                             ? "bg-orange-500 text-white"
-                            : "bg-orange-50"
+                            : theme ===
+                              "dark"
+                              ? `
+                                  bg-white/[0.04]
+                                  text-zinc-300
+                                  hover:bg-white/[0.08]
+                                `
+                              : `
+                                  bg-orange-50
+                                  text-zinc-700
+                                  hover:bg-orange-100
+                                `
                           }
                         `}
                       >
@@ -588,6 +637,8 @@ function ProductCatalogContent() {
                     ),
                   )}
                 </div>
+
+                {/* CATEGORY */}
 
                 <div className="mt-4 flex flex-wrap gap-2">
                   {categories.map(
@@ -608,11 +659,22 @@ function ProductCatalogContent() {
                           );
                         }}
                         className={`
-                          rounded-2xl px-4 py-2 text-sm
+                          rounded-2xl px-4 py-2 text-sm transition-all
                           ${activeCategory ===
                             category
-                            ? "bg-zinc-900 text-white"
-                            : "bg-white"
+                            ? "bg-orange-500 text-white"
+                            : theme ===
+                              "dark"
+                              ? `
+                                  bg-white/[0.04]
+                                  text-zinc-300
+                                  hover:bg-white/[0.08]
+                                `
+                              : `
+                                  bg-white
+                                  text-zinc-700
+                                  hover:bg-orange-50
+                                `
                           }
                         `}
                       >
@@ -629,12 +691,22 @@ function ProductCatalogContent() {
           </div>
         </section>
 
+        {/* HEADER */}
+
         <section className="mt-8 flex items-center justify-between">
-          <p className="text-sm opacity-70">
+          <p
+            className={`
+              text-sm
+              ${theme === "dark"
+                ? "text-zinc-400"
+                : "text-zinc-500"
+              }
+            `}
+          >
             {
               totalProducts
             }{" "}
-            produk
+            {__("produk")}
           </p>
 
           <select
@@ -650,7 +722,21 @@ function ProductCatalogContent() {
 
               setPage(1);
             }}
-            className="rounded-2xl border px-4 py-3 text-sm"
+            className={`
+              rounded-2xl border px-4 py-3 text-sm outline-none transition-all
+              ${theme === "dark"
+                ? `
+                      border-white/10
+                      bg-white/[0.04]
+                      text-white
+                    `
+                : `
+                      border-orange-100
+                      bg-white
+                      text-zinc-800
+                    `
+              }
+            `}
           >
             {PER_PAGE_OPTIONS.map(
               (
@@ -668,12 +754,14 @@ function ProductCatalogContent() {
                     option
                   }{" "}
                   /
-                  halaman
+                  {__("halaman")}
                 </option>
               ),
             )}
           </select>
         </section>
+
+        {/* PRODUCTS */}
 
         <section className="mt-6 grid gap-4 md:gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {paginatedProducts.map(
@@ -742,6 +830,8 @@ function ProductCatalogContent() {
           )}
         </section>
 
+        {/* PAGINATION */}
+
         {totalPages > 1 && (
           <section className="mt-12 flex flex-wrap items-center justify-center gap-2">
             <button
@@ -755,7 +845,23 @@ function ProductCatalogContent() {
                   1,
                 )
               }
-              className="flex h-11 w-11 items-center justify-center rounded-2xl border"
+              className={`
+                flex h-11 w-11 items-center justify-center rounded-2xl border transition-all
+                ${theme === "dark"
+                  ? `
+                        border-white/10
+                        bg-white/[0.04]
+                        text-zinc-300
+                        hover:bg-white/[0.08]
+                      `
+                  : `
+                        border-orange-100
+                        bg-white
+                        text-zinc-700
+                        hover:bg-orange-50
+                      `
+                }
+              `}
             >
               <ChevronLeft
                 size={18}
@@ -776,11 +882,24 @@ function ProductCatalogContent() {
                     )
                   }
                   className={`
-                    h-11 min-w-11 rounded-2xl px-4 text-sm font-semibold
+                    h-11 min-w-11 rounded-2xl px-4 text-sm font-semibold transition-all
                     ${currentPage ===
                       number
                       ? "bg-orange-500 text-white"
-                      : "bg-white"
+                      : theme ===
+                        "dark"
+                        ? `
+                            border border-white/10
+                            bg-white/[0.04]
+                            text-zinc-300
+                            hover:bg-white/[0.08]
+                          `
+                        : `
+                            border border-orange-100
+                            bg-white
+                            text-zinc-700
+                            hover:bg-orange-50
+                          `
                     }
                   `}
                 >
@@ -802,7 +921,23 @@ function ProductCatalogContent() {
                   1,
                 )
               }
-              className="flex h-11 w-11 items-center justify-center rounded-2xl border"
+              className={`
+                flex h-11 w-11 items-center justify-center rounded-2xl border transition-all
+                ${theme === "dark"
+                  ? `
+                        border-white/10
+                        bg-white/[0.04]
+                        text-zinc-300
+                        hover:bg-white/[0.08]
+                      `
+                  : `
+                        border-orange-100
+                        bg-white
+                        text-zinc-700
+                        hover:bg-orange-50
+                      `
+                }
+              `}
             >
               <ChevronRight
                 size={18}
@@ -817,6 +952,8 @@ function ProductCatalogContent() {
       <div className="h-24 xl:hidden" />
 
       <Footer theme={theme} />
+
+      {/* MODAL */}
 
       {selectedDetail && (
         <ProductDetailModal
