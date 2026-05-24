@@ -1,9 +1,9 @@
+import { motion } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
 
 import { formatPrice, useTranslation } from "@/helpers/global";
 
 import type { ThemeMode } from "@/types";
-
 import type {
   Product,
   ProductVariant,
@@ -232,17 +232,31 @@ export default function ProductCard({
           <div className="flex items-center gap-2">
             {/* DETAIL */}
 
-            <button
+            <motion.button
+              layoutId={`product-detail-button-${product.id}`}
+              whileTap={{
+                scale: 0.97,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 500,
+                damping: 35,
+              }}
               onClick={() =>
                 onDetail?.(
                   product,
                   selectedVariant,
                 )
               }
+              style={{
+                position: "relative",
+                zIndex: 20,
+              }}
               className={`
-                h-11 rounded-2xl px-4
+                relative z-20
+  h-11 rounded-2xl px-4
                 text-sm font-medium
-                transition-all duration-300
+                transition-colors duration-200
                 ${theme === "dark"
                   ? `
                         border border-white/10
@@ -260,7 +274,7 @@ export default function ProductCard({
               `}
             >
               Detail
-            </button>
+            </motion.button>
 
             {/* ADD TO CART */}
 

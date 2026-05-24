@@ -830,6 +830,51 @@ function ProductCatalogContent() {
           )}
         </section>
 
+        {/* MODAL */}
+
+        {selectedDetail && (
+          <ProductDetailModal
+            theme={theme}
+            product={
+              selectedDetail.product
+            }
+            selectedVariant={
+              selectedDetail.variant
+            }
+            text={{
+              modalTitle:
+                __(
+                  "Detail Produk",
+                ),
+              categoriesLabel:
+                __(
+                  "Kategori",
+                ),
+              badgesLabel:
+                __("Badge"),
+              variantsLabel:
+                __(
+                  "Pilihan Paket",
+                ),
+              selectedVariantLabel:
+                __(
+                  "Pilihan saat ini",
+                ),
+              closeLabel:
+                __("Tutup"),
+              noDataLabel:
+                __(
+                  "Tidak ada data.",
+                ),
+            }}
+            onClose={() =>
+              setSelectedDetail(
+                null,
+              )
+            }
+          />
+        )}
+
         {/* PAGINATION */}
 
         {totalPages > 1 && (
@@ -952,51 +997,6 @@ function ProductCatalogContent() {
       <div className="h-24 xl:hidden" />
 
       <Footer theme={theme} />
-
-      {/* MODAL */}
-
-      {selectedDetail && (
-        <ProductDetailModal
-          theme={theme}
-          product={
-            selectedDetail.product
-          }
-          selectedVariant={
-            selectedDetail.variant
-          }
-          text={{
-            modalTitle:
-              __(
-                "Detail Produk",
-              ),
-            categoriesLabel:
-              __(
-                "Kategori",
-              ),
-            badgesLabel:
-              __("Badge"),
-            variantsLabel:
-              __(
-                "Pilihan Paket",
-              ),
-            selectedVariantLabel:
-              __(
-                "Pilihan saat ini",
-              ),
-            closeLabel:
-              __("Tutup"),
-            noDataLabel:
-              __(
-                "Tidak ada data.",
-              ),
-          }}
-          onClose={() =>
-            setSelectedDetail(
-              null,
-            )
-          }
-        />
-      )}
     </div>
   );
 }

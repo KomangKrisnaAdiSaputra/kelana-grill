@@ -207,9 +207,9 @@ export default function ProductSection({
 
           <h2
             className={`mt-4 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl ${theme ===
-                "dark"
-                ? "text-white"
-                : "text-zinc-950"
+              "dark"
+              ? "text-white"
+              : "text-zinc-950"
               }`}
           >
             {__(
@@ -219,9 +219,9 @@ export default function ProductSection({
 
           <p
             className={`mx-auto mt-5 max-w-2xl text-base md:text-lg ${theme ===
-                "dark"
-                ? "text-zinc-400"
-                : "text-zinc-600"
+              "dark"
+              ? "text-zinc-400"
+              : "text-zinc-600"
               }`}
           >
             {__(
