@@ -132,6 +132,14 @@ function ProductCatalogContent() {
     );
 
   const [
+    selectedButton,
+    setSelectedButton,
+  ] =
+    useState<HTMLButtonElement | null>(
+      null,
+    );
+
+  const [
     selectedVariants,
     setSelectedVariants,
   ] = useState<
@@ -334,7 +342,7 @@ function ProductCatalogContent() {
     ]);
 
   const pageNumbers = useMemo(() => {
-    const maxVisible = 5;
+    const maxVisible = 4;
 
     const pages: number[] = [];
 
@@ -808,16 +816,15 @@ function ProductCatalogContent() {
                   onDetail={(
                     selectedProduct,
                     selectedVariant,
-                  ) =>
-                    setSelectedDetail(
-                      {
-                        product:
-                          selectedProduct,
-                        variant:
-                          selectedVariant,
-                      },
-                    )
-                  }
+                    buttonEl,
+                  ) => {
+                    setSelectedButton(buttonEl);
+
+                    setSelectedDetail({
+                      product: selectedProduct,
+                      variant: selectedVariant,
+                    });
+                  }}
                   cartQty={getItemQty(
                     `${product.id}-${selectedVariantId}`,
                   )}
@@ -834,6 +841,7 @@ function ProductCatalogContent() {
 
         {selectedDetail && (
           <ProductDetailModal
+            buttonEl={selectedButton}
             theme={theme}
             product={
               selectedDetail.product

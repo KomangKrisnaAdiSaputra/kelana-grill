@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
+import { useRef } from "react";
 
 import { formatPrice, useTranslation } from "@/helpers/global";
 
@@ -23,6 +23,7 @@ type ProductCardProps = {
   onDetail?: (
     product: Product,
     variant: ProductVariant,
+    buttonEl: HTMLButtonElement,
   ) => void;
 
   cartQty?: number;
@@ -63,6 +64,7 @@ export default function ProductCard({
 
   const category = product.categories?.[0];
   const { __ } = useTranslation();
+  const detailButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <article
@@ -232,29 +234,26 @@ export default function ProductCard({
           <div className="flex items-center gap-2">
             {/* DETAIL */}
 
-            <motion.button
-              layoutId={`product-detail-button-${product.id}`}
-              whileTap={{
-                scale: 0.97,
-              }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 35,
-              }}
-              onClick={() =>
+            <button
+              ref={detailButtonRef}
+              onClick={() => {
+                if (!detailButtonRef.current) {
+                  return;
+                }
+
                 onDetail?.(
                   product,
                   selectedVariant,
-                )
-              }
+                  detailButtonRef.current,
+                );
+              }}
               style={{
                 position: "relative",
                 zIndex: 20,
               }}
               className={`
                 relative z-20
-  h-11 rounded-2xl px-4
+                h-11 rounded-2xl px-4
                 text-sm font-medium
                 transition-colors duration-200
                 ${theme === "dark"
@@ -274,7 +273,7 @@ export default function ProductCard({
               `}
             >
               Detail
-            </motion.button>
+            </button>
 
             {/* ADD TO CART */}
 

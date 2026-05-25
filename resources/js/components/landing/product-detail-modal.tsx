@@ -1,7 +1,9 @@
 import {
-  AnimatePresence,
-  motion,
-} from "framer-motion";
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
 
 import { formatPrice } from "@/helpers/global";
 
@@ -27,80 +29,158 @@ type ProductDetailModalProps = {
   product: Product;
   selectedVariant: ProductVariant;
   text: ProductDetailModalText;
+  buttonEl: HTMLButtonElement | null;
   onClose: () => void;
 };
+
 
 export default function ProductDetailModal({
   theme,
   product,
   selectedVariant,
   text,
+  buttonEl,
   onClose,
 }: ProductDetailModalProps) {
   const isDark = theme === "dark";
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  const [showContent, setShowContent] = useState(false);
+
+  const getButtonRect = useCallback(() => {
+    if (!buttonEl) {
+      return {
+        top: window.innerHeight / 2,
+        left: window.innerWidth / 2,
+        width: 0,
+        height: 0,
+      };
+    }
+
+    const rect = buttonEl.getBoundingClientRect();
+
+    return rect;
+  }, [buttonEl]);
+
+  useEffect(() => {
+    const modal = modalRef.current;
+
+    if (!modal) {
+      return;
+    }
+
+    const rect = getButtonRect();
+
+    // RESET
+    modal.style.transition = "none";
+
+    modal.style.top = `${rect.top}px`;
+    modal.style.left = `${rect.left}px`;
+
+    modal.style.width = `${rect.width}px`;
+    modal.style.height = `${rect.height}px`;
+
+    modal.style.borderRadius = `18px`;
+
+    modal.style.opacity = `1`;
+
+    void modal.offsetHeight;
+
+    modal.style.transition = `
+    top .45s cubic-bezier(.2,.8,.2,1),
+    left .45s cubic-bezier(.2,.8,.2,1),
+    width .45s cubic-bezier(.2,.8,.2,1),
+    height .45s cubic-bezier(.2,.8,.2,1),
+    border-radius .45s cubic-bezier(.2,.8,.2,1)
+  `;
+
+    requestAnimationFrame(() => {
+      const modalWidth =
+        Math.min(
+          window.innerWidth - 32,
+          1100,
+        );
+
+      const modalHeight =
+        window.innerHeight - 40;
+
+      modal.style.top = `20px`;
+
+      modal.style.left = `${window.innerWidth / 2 -
+        modalWidth / 2
+        }px`;
+
+      modal.style.width = `${modalWidth}px`;
+
+      modal.style.height = `${modalHeight}px`;
+
+      modal.style.borderRadius = `34px`;
+
+      setTimeout(() => {
+        setShowContent(true);
+      }, 180);
+    });
+  }, [getButtonRect]);
+
+  function handleClose() {
+    const modal = modalRef.current;
+
+    if (!modal) {
+      onClose();
+
+      return;
+    }
+
+    setShowContent(false);
+
+    const rect = getButtonRect();
+
+    modal.style.top = `${rect.top}px`;
+    modal.style.left = `${rect.left}px`;
+
+    modal.style.width = `${rect.width}px`;
+    modal.style.height = `${rect.height}px`;
+
+    modal.style.borderRadius = `18px`;
+
+    setTimeout(() => {
+      onClose();
+    }, 450);
+  }
 
   return (
-    <AnimatePresence initial={false}>
-      <motion.div
-        initial={{
-          opacity: 0,
-          backdropFilter: "blur(0px)",
-        }}
-        animate={{
-          opacity: 1,
-          backdropFilter: "blur(10px)",
-        }}
-        exit={{
-          opacity: 0,
-          backdropFilter: "blur(0px)",
-        }}
-        transition={{
-          duration: 0.18,
-        }}
-        className="
-          fixed inset-0 z-50
-          flex items-center justify-center
-          bg-black/70
-          md:items-center md:px-6 md:py-6
-        "
-        onClick={onClose}
-      >
-        <motion.div
-          layoutId={`product-detail-button-${product.id}`}
-          initial={{
-            opacity: 0,
-            scale: 0.92,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-            y: 0,
-          }}
-          exit={{
-            opacity: 0,
-            scale: 0.96,
-            y: 10,
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 320,
-            damping: 28,
-          }}
-          style={{
-            willChange: "transform, opacity",
-          }}
-          onClick={(event) =>
-            event.stopPropagation()
+    <div
+      className="
+        fixed inset-0 z-50
+        bg-black/70
+        backdrop-blur-md
+      "
+      onClick={handleClose}
+    >
+      <div
+        ref={modalRef}
+        onClick={(event) =>
+          event.stopPropagation()
+        }
+        className={`
+          fixed z-[60]
+          flex flex-col overflow-hidden border shadow-2xl
+          will-change-[top,left,width,height]
+          ${isDark
+            ? "border-white/10 bg-zinc-950 text-white"
+            : "border-orange-100 bg-white text-zinc-950"
           }
+        `}
+      >
+        <div
           className={`
-  flex w-full max-h-[100dvh] flex-col overflow-hidden border shadow-2xl
-  md:max-h-[92vh] md:max-w-4xl md:rounded-[34px]
-  ${isDark
-              ? "border-white/10 bg-zinc-950 text-white"
-              : "border-orange-100 bg-white text-zinc-950"
+            flex h-full flex-col
+            transition-all duration-300
+            ${showContent
+              ? "translate-y-0 opacity-100"
+              : "translate-y-4 opacity-0"
             }
-`}
+          `}
         >
           {/* IMAGE */}
 
@@ -120,7 +200,7 @@ export default function ProductDetailModal({
 
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               aria-label={
                 text.closeLabel
               }
@@ -467,7 +547,7 @@ export default function ProductDetailModal({
           >
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               className={`
                 w-full rounded-2xl px-5 py-3 text-sm font-semibold transition
                 ${isDark
@@ -479,8 +559,8 @@ export default function ProductDetailModal({
               {text.closeLabel}
             </button>
           </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+        </div>
+      </div>
+    </div>
   );
 }
