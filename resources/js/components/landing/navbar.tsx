@@ -372,7 +372,6 @@ export default function Navbar({
 
       <CartDrawer
         open={cartOpen}
-        theme={theme}
         onClose={() =>
           setCartOpen(false)
         }

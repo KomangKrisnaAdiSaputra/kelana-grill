@@ -29,13 +29,72 @@ class LandingPageController extends Controller
         ]);
     }
 
-    public function indexProduk(Request $request)
+    public function indexProduct(Request $request)
     {
         $data = KelanaGrillData::get();
 
-        return Inertia::render('landing/produk', [
+        return Inertia::render('landing/product', [
             'products' => collect($data['products'] ?? [])->map(fn($item) => $this->generateDataProduct($item)),
         ]);
+    }
+
+    public function indexContact()
+    {
+        return Inertia::render('landing/contact', [
+            "booking" => Inertia::optional(fn(Request $request) => $this->booking($request))
+        ]);
+    }
+
+    function booking(Request $request)
+    {
+        $cartText = '';
+
+        foreach ($request->cart as $item) {
+
+            $qty = $item['qty'] ?? 1;
+
+            $name = $item['product']['name'] ?? '-';
+            $secName = $item['variant']['name'] ?? '-';
+
+            $price = number_format(
+                $item['variant']['rate'] ?? 0,
+                0,
+                ',',
+                '.'
+            );
+
+            $cartText .=
+                "- {$name} ({$secName}) x{$qty} (Rp {$price})\n";
+        }
+
+        $message =
+            "FORMAT PEMESANAN 'Kelana Grill'\n\n" .
+
+            "Nama : {$request->firstname} {$request->lastname}\n" .
+
+            "No Tlpn : {$request->phone}\n" .
+
+            "Alamat : {$request->address}\n\n" .
+
+            "Pesanan :\n{$cartText}\n" .
+
+            "Hari/Tanggal/Jam Pengambilan : {$request->pickupdate}\n" .
+
+            "Hari/Tanggal/Jam Pengembalian : {$request->returndate}\n" .
+
+            "Lokasi Pengambilan : {$request->pickuplocation}\n" .
+
+            "Jaminan : {$request->guarantee}\n" .
+
+            "Pembayaran : {$request->payment}\n\n" .
+
+            "Catatan : {$request->note}";
+
+        $whatsappNumber = config('app.landing.contact.whatsapp_number');
+        $url =
+            'https://wa.me/' . $whatsappNumber . '?text=' .
+            urlencode($message);
+        dd($request->all(), $url);
     }
 
     function generateDataType($item)

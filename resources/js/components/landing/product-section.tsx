@@ -71,6 +71,8 @@ export default function ProductSection({
     products.length / itemsPerView,
   );
 
+  const [selectedButton, setSelectedButton,] = useState<HTMLButtonElement | null>(null,);
+
   const handleScroll = useCallback(() => {
     const slider = sliderRef.current;
 
@@ -312,17 +314,16 @@ export default function ProductSection({
                     }
                     onDetail={(
                       selectedProduct,
-                      selectedProductVariant,
-                    ) =>
-                      setSelectedDetail(
-                        {
-                          product:
-                            selectedProduct,
-                          variant:
-                            selectedProductVariant,
-                        },
-                      )
-                    }
+                      selectedVariant,
+                      buttonEl,
+                    ) => {
+                      setSelectedButton(buttonEl);
+
+                      setSelectedDetail({
+                        product: selectedProduct,
+                        variant: selectedVariant,
+                      });
+                    }}
                   />
                 </div>
               );
@@ -373,6 +374,7 @@ export default function ProductSection({
 
       {selectedDetail && (
         <ProductDetailModal
+          buttonEl={selectedButton}
           theme={theme}
           product={
             selectedDetail.product

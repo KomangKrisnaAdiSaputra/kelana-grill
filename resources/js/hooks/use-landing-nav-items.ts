@@ -2,7 +2,7 @@ import { usePage } from '@inertiajs/react';
 
 import { useTranslation } from '@/helpers/global';
 
-import { produk } from '@/routes/landing';
+import { contact, produk } from '@/routes/landing';
 
 import type { LandingNavItem } from '@/types';
 
@@ -25,7 +25,7 @@ export default function useLandingNavItems() {
         {
             key: 'contact',
             name: __('Kontak'),
-            href: '#booking',
+            href: contact({ locale }).url,
         },
     ] satisfies LandingNavItem[];
 }

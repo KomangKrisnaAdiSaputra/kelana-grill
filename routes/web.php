@@ -16,7 +16,9 @@ Route::prefix('{locale?}')->middleware(Locale::class)->where(['locale' => 'id|en
 
     Route::controller(LandingPageController::class)->name('landing')->group(function () {
         Route::get('/', 'index');
-        Route::get('produk', 'indexProduk')->name('.produk');
+        Route::get('product', 'indexProduct')->name('.produk');
+        Route::get('contact', 'indexContact')->name('.contact');
+        Route::post('contact/booking', 'indexContact')->name('.contact.booking');
     });
 });
 
