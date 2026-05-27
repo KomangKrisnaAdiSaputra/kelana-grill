@@ -62,11 +62,11 @@ class HandleInertiaRequests extends Middleware
         $queryString = $request->getQueryString();
 
         $switchUrl = $request->getSchemeAndHttpHost() . '/' . $newPath;
-        $currentLocaleUrl = $request->getSchemeAndHttpHost() . '/' . $currentLocale . '/' . implode('/', $segments);
+        // $currentLocaleUrl = $request->getSchemeAndHttpHost() . '/' . $currentLocale . '/' . implode('/', $segments);
 
         if ($queryString) {
             $switchUrl .= '?' . $queryString;
-            $currentLocaleUrl .= '?' . $queryString;
+            // $currentLocaleUrl .= '?' . $queryString;
         }
 
         return [
@@ -79,7 +79,7 @@ class HandleInertiaRequests extends Middleware
             'language' => fn() => $locale != 'id' ? translations() : [],
             "params" => [...$request->route()->parameters(), ...$request->query()],
             "switchUrl" => $switchUrl,
-            "currentLocaleUrl" => $currentLocaleUrl,
+            // "currentLocaleUrl" => $currentLocaleUrl,
         ];
     }
 }

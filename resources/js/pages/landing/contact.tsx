@@ -41,14 +41,12 @@ export default function ContactPage() {
 
 type PageProps = {
     params: any;
-    currentLocaleUrl: string;
 };
 
 function ContactContent() {
     const cartName = 'kelana-grill-cart';
     const props = usePage<PageProps>().props;
     const locale = props.params.locale;
-    const currentLocaleUrl = props.currentLocaleUrl;
 
     const { theme, toggleTheme } = useTheme();
 
@@ -112,21 +110,23 @@ function ContactContent() {
 
         post(booking({ locale }).url, {
             preserveScroll: true,
-            // only: ['booking'],
-            onSuccess: (res: any) => {
-                return console.log(res);
-                // const dataRes = res.props.booking;
-                // const url = dataRes.data.url;
-                // if (url) {
-                //     localStorage.removeItem(cartName);
-                //     window.location.href = url;
-                // }
+
+            only: ['booking'],
+
+            onSuccess: (page: any) => {
+                const bookingData = page.props.booking;
+
+                if (bookingData?.success) {
+                    localStorage.removeItem(cartName);
+
+                    window.location.href = bookingData.data.url;
+                }
             },
 
-            onError: (res: any) => {
-                console.log(currentLocaleUrl, res);
+            onError: (errors) => {
+                console.log(errors);
 
-                toast.error(__('Mohon periksa kembali form booking'));
+                toast.error('Mohon periksa kembali form booking');
             },
         });
     };

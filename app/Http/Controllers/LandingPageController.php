@@ -42,7 +42,7 @@ class LandingPageController extends Controller
     public function indexContact()
     {
         return Inertia::render('landing/contact', [
-            'booking' => Inertia::optional(fn(Request $request) => $this->booking($request)),
+            'booking' => session('booking'),
         ]);
     }
 
@@ -212,15 +212,17 @@ class LandingPageController extends Controller
         $whatsappNumber = config('app.landing.contact.whatsapp_number');
 
         $url = 'https://wa.me/' . $whatsappNumber . '?text=' . urlencode($message);
-        return [
-            'result' => 'success',
-            'success' => true,
-            'code' => 200,
-            'data' => [
-                'url' => $url,
-            ],
-            'message' => 'Booking berhasil, silakan lanjutkan ke WhatsApp untuk mengirimkan pesan pemesanan',
-        ];
+        return redirect()->back()->with([
+            'booking' => [
+                'result' => 'success',
+                'success' => true,
+                'code' => 200,
+                'data' => [
+                    'url' => $url,
+                ],
+                'message' => 'Booking berhasil, silakan lanjutkan ke WhatsApp untuk mengirimkan pesan pemesanan',
+            ]
+        ]);
     }
 
     function generateDataType($item)
