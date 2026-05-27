@@ -27,6 +27,12 @@ type DateTimePickerProps = {
   minHour?: number;
 
   maxHour?: number;
+
+  minuteStep?: number;
+
+  minDate?: string;
+
+  maxDate?: string;
 };
 
 export default function DateTimePicker({
@@ -37,6 +43,9 @@ export default function DateTimePicker({
   label,
   minHour = 8,
   maxHour = 22,
+  minuteStep = 1,
+  minDate,
+  maxDate,
 }: DateTimePickerProps) {
   const wrapperRef =
     useRef<HTMLDivElement>(null);
@@ -169,10 +178,32 @@ export default function DateTimePicker({
     return `${currentYear}-${month}-${date}`;
   };
 
-  const buildDateTime = (
+  const isDateDisabled = (
     date: string,
   ) => {
-    return `${date} ${selectedHour}:${selectedMinute}`;
+    if (
+      minDate &&
+      date < minDate
+    ) {
+      return true;
+    }
+
+    if (
+      maxDate &&
+      date > maxDate
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const buildDateTime = (
+    date: string,
+    hour = selectedHour,
+    minute = selectedMinute,
+  ) => {
+    return `${date} ${hour}:${minute}`;
   };
 
   const isBlocked = (
@@ -219,6 +250,25 @@ export default function DateTimePicker({
     }
   };
 
+  const selectedDate =
+    value.split(" ")[0];
+
+  const minuteOptions =
+    Array.from(
+      {
+        length:
+          Math.ceil(
+            60 /
+            minuteStep,
+          ),
+      },
+      (_, i) =>
+        String(
+          i *
+          minuteStep,
+        ).padStart(2, "0"),
+    );
+
   return (
     <div
       ref={wrapperRef}
@@ -246,30 +296,45 @@ export default function DateTimePicker({
           setOpen(!open)
         }
         className={`
-          flex w-full items-center justify-between rounded-3xl border px-5 py-4 text-left transition-all
+          flex w-full items-center justify-between rounded-3xl border px-5 py-4 text-left transition-all duration-300
+
           ${theme === "dark"
             ? `
               border-white/10
-              bg-white/[0.04]
+              bg-[#151515]
               text-white
+              hover:bg-[#1b1b1b]
             `
             : `
               border-orange-100
-              bg-orange-50/50
+              bg-orange-50/60
               text-zinc-800
+              hover:bg-orange-100/60
             `
           }
         `}
       >
         <div>
-          <p className="text-sm font-medium">
+          <p
+            className={`
+              text-xs
+              ${theme === "dark"
+                ? "text-zinc-500"
+                : "text-zinc-500"
+              }
+            `}
+          >
+            Jadwal Booking
+          </p>
+
+          <p className="mt-1 text-sm font-semibold">
             {value ||
               "Pilih tanggal & jam"}
           </p>
         </div>
 
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-500 text-white">
-          <Clock3 size={18} />
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-500 text-white shadow-lg shadow-orange-500/30">
+          <Clock3 size={20} />
         </div>
       </button>
 
@@ -278,337 +343,553 @@ export default function DateTimePicker({
       {open && (
         <div
           className={`
-            absolute z-50 mt-3 w-full overflow-hidden rounded-[32px] border p-5 shadow-2xl backdrop-blur-2xl
-            ${theme === "dark"
+    absolute left-0 top-full z-[99999] mt-3
+
+    w-full
+    lg:min-w-[min(720px,calc(100vw-48px))]
+
+    rounded-[28px]
+    border
+    p-3 sm:p-4 lg:p-5
+    shadow-2xl
+    backdrop-blur-2xl
+
+    lg:max-h-none
+    lg:overflow-visible
+
+    max-lg:max-h-[70dvh]
+    max-md:max-h-[75dvh]
+    max-lg:overflow-y-auto
+    max-lg:overscroll-contain
+    max-lg:touch-pan-y
+    max-lg:[-webkit-overflow-scrolling:touch]
+
+    ${theme === "dark"
               ? `
-                border-white/10
-                bg-[#111112]
-              `
+        border-white/10
+        bg-[#111112]
+      `
               : `
-                border-orange-100
-                bg-white
-              `
+        border-orange-100
+        bg-white
+      `
             }
-          `}
+  `}
         >
-          {/* HEADER */}
+          <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[1fr_240px]">
+            {/* CALENDAR */}
 
-          <div className="mb-5 flex items-center justify-between">
-            <button
-              type="button"
-              onClick={
-                previousMonth
-              }
-              className={`
-                flex h-11 w-11 items-center justify-center rounded-2xl transition-all
-                ${theme === "dark"
-                  ? "bg-white/[0.05] hover:bg-white/[0.08]"
-                  : "bg-orange-50 hover:bg-orange-100"
-                }
-              `}
-            >
-              <ChevronLeft
-                size={18}
-              />
-            </button>
+            <div>
+              {/* HEADER */}
 
-            <h3 className="font-semibold">
-              {
-                monthNames[
-                currentMonth
-                ]
-              }{" "}
-              {currentYear}
-            </h3>
-
-            <button
-              type="button"
-              onClick={
-                nextMonth
-              }
-              className={`
-                flex h-11 w-11 items-center justify-center rounded-2xl transition-all
-                ${theme === "dark"
-                  ? "bg-white/[0.05] hover:bg-white/[0.08]"
-                  : "bg-orange-50 hover:bg-orange-100"
-                }
-              `}
-            >
-              <ChevronRight
-                size={18}
-              />
-            </button>
-          </div>
-
-          {/* DAY LABEL */}
-
-          <div className="grid grid-cols-7 gap-2">
-            {days.map((day) => (
-              <div
-                key={day}
-                className={`
-                  py-2 text-center text-xs font-semibold
-                  ${theme === "dark"
-                    ? "text-zinc-500"
-                    : "text-zinc-400"
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={
+                    previousMonth
                   }
-                `}
-              >
-                {day}
-              </div>
-            ))}
+                  className={`
+                    flex h-9 w-9 sm:h-10 sm:w-10 lg:h-11 lg:w-11 items-center justify-center rounded-2xl transition-all
 
-            {/* DATES */}
-
-            {dates.map(
-              (day, index) => {
-                if (!day) {
-                  return (
-                    <div
-                      key={index}
-                    />
-                  );
-                }
-
-                const blocked =
-                  isBlocked(
-                    day,
-                  );
-
-                const selected =
-                  isSelected(
-                    day,
-                  );
-
-                const currentDate =
-                  formatDate(
-                    day,
-                  );
-
-                const isToday =
-                  currentDate ===
-                  `${today.getFullYear()}-${String(
-                    today.getMonth() +
-                    1,
-                  ).padStart(
-                    2,
-                    "0",
-                  )}-${String(
-                    today.getDate(),
-                  ).padStart(
-                    2,
-                    "0",
-                  )}`;
-
-                return (
-                  <button
-                    key={day}
-                    type="button"
-                    disabled={
-                      blocked
+                    ${theme === "dark"
+                      ? `
+                        bg-white/[0.05]
+                        hover:bg-white/[0.08]
+                      `
+                      : `
+                        bg-orange-50
+                        hover:bg-orange-100
+                      `
                     }
-                    onClick={() => {
-                      onChange(
-                        buildDateTime(
-                          currentDate,
-                        ),
+                  `}
+                >
+                  <ChevronLeft
+                    size={18}
+                  />
+                </button>
+
+                <h3 className="text-lg font-bold">
+                  {
+                    monthNames[
+                    currentMonth
+                    ]
+                  }{" "}
+                  {currentYear}
+                </h3>
+
+                <button
+                  type="button"
+                  onClick={
+                    nextMonth
+                  }
+                  className={`
+                    flex h-11 w-11 items-center justify-center rounded-2xl transition-all
+
+                    ${theme === "dark"
+                      ? `
+                        bg-white/[0.05]
+                        hover:bg-white/[0.08]
+                      `
+                      : `
+                        bg-orange-50
+                        hover:bg-orange-100
+                      `
+                    }
+                  `}
+                >
+                  <ChevronRight
+                    size={18}
+                  />
+                </button>
+              </div>
+
+              {/* DAYS */}
+
+              <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+                {days.map(
+                  (day) => (
+                    <div
+                      key={day}
+                      className={`
+                        py-2 text-center text-xs font-semibold
+
+                        ${theme ===
+                          "dark"
+                          ? "text-zinc-500"
+                          : "text-zinc-400"
+                        }
+                      `}
+                    >
+                      {day}
+                    </div>
+                  ),
+                )}
+
+                {/* DATES */}
+
+                {dates.map(
+                  (
+                    day,
+                    index,
+                  ) => {
+                    if (!day) {
+                      return (
+                        <div
+                          key={
+                            index
+                          }
+                        />
+                      );
+                    }
+
+                    const currentDate =
+                      formatDate(
+                        day,
                       );
 
-                      setOpen(
-                        false,
+                    const blocked =
+                      isBlocked(
+                        day,
+                      ) ||
+                      isDateDisabled(
+                        currentDate,
                       );
-                    }}
-                    className={`
-                      relative flex h-12 items-center justify-center rounded-2xl text-sm font-medium transition-all
 
-                      ${blocked
-                        ? `
-                            cursor-not-allowed
-                            bg-red-500/10
-                            text-red-400
-                            line-through
-                          `
-                        : selected
-                          ? `
-                              bg-orange-500
-                              text-white
-                              shadow-lg
-                            `
-                          : theme ===
-                            "dark"
+                    const selected =
+                      isSelected(
+                        day,
+                      );
+
+                    const isToday =
+                      currentDate ===
+                      `${today.getFullYear()}-${String(
+                        today.getMonth() +
+                        1,
+                      ).padStart(
+                        2,
+                        "0",
+                      )}-${String(
+                        today.getDate(),
+                      ).padStart(
+                        2,
+                        "0",
+                      )}`;
+
+                    return (
+                      <button
+                        key={day}
+                        type="button"
+                        disabled={
+                          blocked
+                        }
+                        onClick={() => {
+                          onChange(
+                            buildDateTime(
+                              currentDate,
+                            ),
+                          );
+                        }}
+                        className={`
+                          relative flex h-9 sm:h-10 lg:h-12 items-center justify-center rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold transition-all duration-200
+
+                          ${blocked
                             ? `
-                                bg-white/[0.04]
-                                text-white
-                                hover:bg-white/[0.08]
+                                cursor-not-allowed
+                                bg-zinc-500/10
+                                text-zinc-400
+                                opacity-50
+                                line-through
                               `
-                            : `
-                                bg-orange-50/70
-                                text-zinc-700
-                                hover:bg-orange-100
-                              `
+                            : selected
+                              ? `
+                                  bg-orange-500
+                                  text-white
+                                  shadow-lg shadow-orange-500/30
+                                `
+                              : theme ===
+                                "dark"
+                                ? `
+                                    bg-white/[0.04]
+                                    text-white
+                                    hover:bg-white/[0.08]
+                                  `
+                                : `
+                                    bg-orange-50/70
+                                    text-zinc-700
+                                    hover:bg-orange-100
+                                  `
+                          }
+                        `}
+                      >
+                        {day}
+
+                        {isToday &&
+                          !selected && (
+                            <div className="absolute bottom-1 h-1.5 w-1.5 rounded-full bg-orange-500" />
+                          )}
+                      </button>
+                    );
+                  },
+                )}
+              </div>
+            </div>
+
+            {/* TIME PANEL */}
+
+            <div
+              className={`
+               rounded-[24px] border p-3 sm:p-4
+
+                ${theme === "dark"
+                  ? `
+                    border-white/10
+                    bg-white/[0.03]
+                  `
+                  : `
+                    border-orange-100
+                    bg-orange-50/40
+                  `
+                }
+              `}
+            >
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-500 text-white">
+                  <Clock3
+                    size={18}
+                  />
+                </div>
+
+                <div>
+                  <h4
+                    className={`
+                      text-sm font-semibold
+                      ${theme ===
+                        "dark"
+                        ? "text-white"
+                        : "text-zinc-800"
                       }
                     `}
                   >
-                    {day}
+                    Pilih Jam
+                  </h4>
 
-                    {isToday &&
-                      !selected && (
-                        <div className="absolute bottom-1 h-1.5 w-1.5 rounded-full bg-orange-500" />
-                      )}
-                  </button>
-                );
-              },
-            )}
-          </div>
+                  <p
+                    className={`
+                      text-xs
+                      ${theme ===
+                        "dark"
+                        ? "text-zinc-500"
+                        : "text-zinc-500"
+                      }
+                    `}
+                  >
+                    Atur waktu
+                    booking
+                  </p>
+                </div>
+              </div>
 
-          {/* TIME */}
-
-          <div className="mt-6">
-            <h4
-              className={`
-                mb-3 text-sm font-semibold
-                ${theme === "dark"
-                  ? "text-zinc-300"
-                  : "text-zinc-700"
-                }
-              `}
-            >
-              Pilih Jam
-            </h4>
-
-            <div className="grid grid-cols-2 gap-3">
               {/* HOUR */}
 
-              <select
-                value={
-                  selectedHour
-                }
-                onChange={(e) =>
-                  setSelectedHour(
-                    e.target
-                      .value,
-                  )
-                }
+              <div className="space-y-4">
+                <div>
+                  <p
+                    className={`
+                      mb-2 text-xs font-medium
+
+                      ${theme ===
+                        "dark"
+                        ? "text-zinc-400"
+                        : "text-zinc-500"
+                      }
+                    `}
+                  >
+                    Jam
+                  </p>
+
+                  <select
+                    value={
+                      selectedHour
+                    }
+                    onChange={(
+                      e,
+                    ) => {
+                      const hour =
+                        e.target
+                          .value;
+
+                      setSelectedHour(
+                        hour,
+                      );
+
+                      if (
+                        selectedDate
+                      ) {
+                        onChange(
+                          buildDateTime(
+                            selectedDate,
+                            hour,
+                            selectedMinute,
+                          ),
+                        );
+                      }
+                    }}
+                    className={`
+                      h-12 sm:h-13 lg:h-14 w-full rounded-2xl border px-4 text-sm font-medium outline-none transition-all
+
+                      ${theme ===
+                        "dark"
+                        ? `
+                          border-white/10
+                          bg-[#1a1a1b]
+                          text-white
+                          focus:border-orange-500
+                        `
+                        : `
+                          border-orange-100
+                          bg-white
+                          text-zinc-700
+                          focus:border-orange-400
+                        `
+                      }
+                    `}
+                  >
+                    {Array.from(
+                      {
+                        length:
+                          maxHour -
+                          minHour +
+                          1,
+                      },
+                      (_, i) =>
+                        i +
+                        minHour,
+                    ).map(
+                      (
+                        hour,
+                      ) => (
+                        <option
+                          key={
+                            hour
+                          }
+                          value={String(
+                            hour,
+                          ).padStart(
+                            2,
+                            "0",
+                          )}
+                        >
+                          {String(
+                            hour,
+                          ).padStart(
+                            2,
+                            "0",
+                          )}
+                        </option>
+                      ),
+                    )}
+                  </select>
+                </div>
+
+                {/* MINUTE */}
+
+                <div>
+                  <p
+                    className={`
+                      mb-2 text-xs font-medium
+
+                      ${theme ===
+                        "dark"
+                        ? "text-zinc-400"
+                        : "text-zinc-500"
+                      }
+                    `}
+                  >
+                    Menit
+                  </p>
+
+                  <select
+                    value={
+                      selectedMinute
+                    }
+                    onChange={(
+                      e,
+                    ) => {
+                      const minute =
+                        e.target
+                          .value;
+
+                      setSelectedMinute(
+                        minute,
+                      );
+
+                      if (
+                        selectedDate
+                      ) {
+                        onChange(
+                          buildDateTime(
+                            selectedDate,
+                            selectedHour,
+                            minute,
+                          ),
+                        );
+                      }
+                    }}
+                    className={`
+                      h-14 w-full rounded-2xl border px-4 text-sm font-medium outline-none transition-all
+
+                      ${theme ===
+                        "dark"
+                        ? `
+                          border-white/10
+                          bg-[#1a1a1b]
+                          text-white
+                          focus:border-orange-500
+                        `
+                        : `
+                          border-orange-100
+                          bg-white
+                          text-zinc-700
+                          focus:border-orange-400
+                        `
+                      }
+                    `}
+                  >
+                    {minuteOptions.map(
+                      (
+                        minute,
+                      ) => (
+                        <option
+                          key={
+                            minute
+                          }
+                          value={
+                            minute
+                          }
+                        >
+                          {minute}
+                        </option>
+                      ),
+                    )}
+                  </select>
+                </div>
+              </div>
+
+              {/* PREVIEW */}
+
+              <div
                 className={`
-                  rounded-2xl border px-4 py-3 text-sm outline-none
-                  ${theme === "dark"
-                    ? `
-                      border-white/10
-                      bg-white/[0.04]
-                      text-white
-                    `
-                    : `
-                      border-orange-100
-                      bg-orange-50
-                      text-zinc-700
-                    `
+                  mt-5 rounded-2xl p-4
+
+                  ${theme ===
+                    "dark"
+                    ? "bg-black/30"
+                    : "bg-white"
                   }
                 `}
               >
-                {Array.from(
+                <p
+                  className={`
+                    text-xs
+
+                    ${theme ===
+                      "dark"
+                      ? "text-zinc-500"
+                      : "text-zinc-500"
+                    }
+                  `}
+                >
+                  Waktu Dipilih
+                </p>
+
+                <h3
+                  className={`
+                    mt-1 text-xl sm:text-2xl font-bold tracking-wide
+
+                    ${theme ===
+                      "dark"
+                      ? "text-white"
+                      : "text-zinc-800"
+                    }
+                  `}
+                >
+                  {selectedHour}
+                  :
                   {
-                    length:
-                      maxHour -
-                      minHour +
-                      1,
-                  },
-                  (_, i) =>
-                    i + minHour,
-                ).map(
-                  (hour) => (
-                    <option
-                      key={hour}
-                      value={String(
-                        hour,
-                      ).padStart(
-                        2,
-                        "0",
-                      )}
-                    >
-                      {String(
-                        hour,
-                      ).padStart(
-                        2,
-                        "0",
-                      )}
-                    </option>
-                  ),
-                )}
-              </select>
+                    selectedMinute
+                  }
+                </h3>
+              </div>
 
-              {/* MINUTE */}
+              {/* INFO */}
 
-              <select
-                value={
-                  selectedMinute
-                }
-                onChange={(e) =>
-                  setSelectedMinute(
-                    e.target
-                      .value,
-                  )
-                }
+              <div
                 className={`
-                  rounded-2xl border px-4 py-3 text-sm outline-none
-                  ${theme === "dark"
+                  mt-4 rounded-2xl p-4 text-sm
+
+                  ${theme ===
+                    "dark"
                     ? `
-                      border-white/10
                       bg-white/[0.04]
-                      text-white
+                      text-zinc-400
                     `
                     : `
-                      border-orange-100
-                      bg-orange-50
-                      text-zinc-700
+                      bg-orange-100/50
+                      text-zinc-600
                     `
                   }
                 `}
               >
-                {[
-                  "00",
-                  "15",
-                  "30",
-                  "45",
-                ].map(
-                  (
-                    minute,
-                  ) => (
-                    <option
-                      key={
-                        minute
-                      }
-                      value={
-                        minute
-                      }
-                    >
-                      {minute}
-                    </option>
-                  ),
-                )}
-              </select>
-            </div>
-          </div>
+                <div className="flex items-start gap-3">
+                  <div className="mt-1 h-3 w-3 rounded-full bg-red-400" />
 
-          {/* FOOTER */}
-
-          <div
-            className={`
-              mt-5 rounded-2xl p-4 text-sm
-              ${theme === "dark"
-                ? "bg-white/[0.04] text-zinc-400"
-                : "bg-orange-50 text-zinc-600"
-              }
-            `}
-          >
-            <div className="flex items-center gap-3">
-              <div className="h-3 w-3 rounded-full bg-red-400" />
-
-              <p>
-                Tanggal yang
-                diblok tidak
-                tersedia untuk
-                booking
-              </p>
+                  <p className="leading-relaxed">
+                    Tanggal yang
+                    diblok tidak
+                    tersedia.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

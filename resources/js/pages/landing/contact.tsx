@@ -136,7 +136,7 @@ function ContactContent() {
         }
       />
 
-      <main className="relative mx-auto max-w-7xl px-4 pb-24 pt-28 md:px-6 md:pt-36">
+      <main className="relative mx-auto max-w-7xl px-4 pb-[500px] pt-28 md:px-6 md:pt-36">
         {/* HERO */}
 
         <section className="max-w-3xl">
@@ -181,8 +181,7 @@ function ContactContent() {
         <section className="mt-12 grid gap-8 lg:grid-cols-[420px_1fr]">
           {/* LEFT */}
 
-          <div className="space-y-6">
-            {/* INFO */}
+          <div className="order-2 space-y-6 lg:order-1">
 
             <div
               className={`
@@ -468,16 +467,9 @@ function ContactContent() {
           </div>
 
           {/* RIGHT */}
-
-          <div
-            className={`
-              overflow-hidden rounded-[36px] p-6 md:p-8 backdrop-blur-2xl
-              ${theme === "dark"
-                ? "bg-[#111112]/80 ring-1 ring-white/10"
-                : "bg-white/80 ring-1 ring-orange-100"
-              }
-            `}
-          >
+          <div className={`order-1 rounded-[36px] p-6 md:p-8 backdrop-blur-2xl lg:order-2 ${theme === "dark"
+            ? "bg-[#111112]/80 ring-1 ring-white/10"
+            : "bg-white/80 ring-1 ring-orange-100"}`}>
             <div className="mb-8 flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-orange-500">
@@ -653,6 +645,7 @@ function ContactContent() {
                       "2026-05-29",
                       "2026-06-02",
                     ]}
+                    minDate={new Date().toISOString().split("T")[0]}
                     minHour={8}
                     maxHour={22}
                   />
