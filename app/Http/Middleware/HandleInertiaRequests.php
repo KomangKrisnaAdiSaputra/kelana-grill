@@ -61,7 +61,9 @@ class HandleInertiaRequests extends Middleware
         // Bawa query string otomatis
         $queryString = $request->getQueryString();
 
-        $switchUrl = $request->getSchemeAndHttpHost() . '/' . $newPath;
+        $scheme = config("app.env") !== "local" ? 'https' : 'http';
+
+        $switchUrl = $scheme . '://' . $request->getHttpHost() . '/' . $newPath;
         // $currentLocaleUrl = $request->getSchemeAndHttpHost() . '/' . $currentLocale . '/' . implode('/', $segments);
 
         if ($queryString) {

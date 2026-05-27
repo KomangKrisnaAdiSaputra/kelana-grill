@@ -2,7 +2,7 @@ import { usePage } from '@inertiajs/react';
 
 import { useTranslation } from '@/helpers/global';
 
-import { contact, produk } from '@/routes/landing';
+import { about, contact, produk } from '@/routes/landing';
 
 import type { LandingNavItem } from '@/types';
 
@@ -15,7 +15,7 @@ export default function useLandingNavItems() {
         {
             key: 'about',
             name: __('Tentang'),
-            href: '#home',
+            href: about({ locale }).url,
         },
         {
             key: 'products',

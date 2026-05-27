@@ -46,6 +46,11 @@ class LandingPageController extends Controller
         ]);
     }
 
+    public function indexAbout()
+    {
+        return Inertia::render('landing/about');
+    }
+
     public function booking(Request $request)
     {
         $validator = Validator::make($request->all(), [
