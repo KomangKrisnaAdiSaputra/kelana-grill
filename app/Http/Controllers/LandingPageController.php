@@ -6,6 +6,7 @@ use App\Data\KelanaGrillData;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class LandingPageController extends Controller
@@ -45,26 +46,115 @@ class LandingPageController extends Controller
         ]);
     }
 
-    function booking(Request $request)
+    public function booking(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'firstname' => ['required', 'string', 'max:100'],
+            'lastname' => ['required', 'string', 'max:100'],
+            'phone' => ['required', 'numeric', 'digits_between:8,15'],
+            'email' => ['required', 'email'],
+            'address' => ['required', 'string'],
+            'pickupdate' => ['required', 'date'],
+            'returndate' => [
+                'required',
+                'date',
+                'after_or_equal:pickupdate'
+            ],
+            'pickuplocation' => ['required', 'string'],
+            'guarantee' => ['required', 'string'],
+            'payment' => ['required', 'in:Cash,Transfer'],
+            'cart' => ['required', 'array', 'min:1'],
+        ], [
+            'firstname.required' => 'First name wajib diisi',
+            'lastname.required' => 'Last name wajib diisi',
+            'phone.required' => 'Nomor phone wajib diisi',
+            'phone.numeric' => 'Nomor phone hanya angka',
+            'email.email' => 'Format email tidak valid',
+            'returndate.after_or_equal' =>
+            'Tanggal pengembalian tidak valid',
+            'cart.min' => 'Keranjang masih kosong',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors(
+                $validator
+            );
+        }
+
+        /*
+    |--------------------------------------------------------------------------
+    | ORDER DATA
+    |--------------------------------------------------------------------------
+    */
+
+        $orderData = [
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'address' => $request->address,
+            'pickup_date' => $request->pickupdate,
+            'return_date' => $request->returndate,
+            'pickup_location' => $request->pickuplocation,
+            'guarantee' => $request->guarantee,
+            'payment_method' => $request->payment,
+            'note' => $request->note,
+            'status' => 'pending',
+            'total' => collect($request->cart)->sum(function ($item) {
+                return ($item['variant']['rate'] ?? 0)
+                    * ($item['qty'] ?? 1);
+            }),
+        ];
+
+        /*
+    |--------------------------------------------------------------------------
+    | ORDER DETAILS
+    |--------------------------------------------------------------------------
+    */
+
+        $orderDetails = collect($request->cart)->map(function ($item) {
+            return [
+                'product_id' => $item['product']['id'] ?? null,
+                'variant_id' => $item['variant']['id'] ?? null,
+                'product_name' => $item['product']['name'] ?? '',
+                'variant_name' => $item['variant']['name'] ?? '',
+                'qty' => $item['qty'] ?? 1,
+                'price' => $item['variant']['rate'] ?? 0,
+                'subtotal' => ($item['variant']['rate'] ?? 0)
+                    * ($item['qty'] ?? 1),
+            ];
+        })->values();
+
+        /*
+    |--------------------------------------------------------------------------
+    | SAVE TO DATABASE
+    |--------------------------------------------------------------------------
+    */
+
+        // $order = Order::create($orderData);
+
+        // foreach ($orderDetails as $detail) {
+        //     $order->details()->create($detail);
+        // }
+
+        /*
+    |--------------------------------------------------------------------------
+    | WHATSAPP MESSAGE
+    |--------------------------------------------------------------------------
+    */
+
         $cartText = '';
 
-        foreach ($request->cart as $item) {
-
-            $qty = $item['qty'] ?? 1;
-
-            $name = $item['product']['name'] ?? '-';
-            $secName = $item['variant']['name'] ?? '-';
-
+        foreach ($orderDetails as $detail) {
             $price = number_format(
-                $item['variant']['rate'] ?? 0,
+                $detail['price'],
                 0,
                 ',',
                 '.'
             );
 
             $cartText .=
-                "- {$name} ({$secName}) x{$qty} (Rp {$price})\n";
+                "- {$detail['product_name']} ({$detail['variant_name']}) x{$detail['qty']} (Rp {$price})\n";
         }
 
         $message =
@@ -90,11 +180,17 @@ class LandingPageController extends Controller
 
             "Catatan : {$request->note}";
 
-        $whatsappNumber = config('app.landing.contact.whatsapp_number');
+        $whatsappNumber = config(
+            'app.landing.contact.whatsapp_number'
+        );
+
         $url =
-            'https://wa.me/' . $whatsappNumber . '?text=' .
+            'https://wa.me/' .
+            $whatsappNumber .
+            '?text=' .
             urlencode($message);
-        dd($request->all(), $url);
+        dd($url, $orderData, $orderDetails);
+        return redirect()->away($url);
     }
 
     function generateDataType($item)
