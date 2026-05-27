@@ -1,4 +1,10 @@
-import { ChevronLeft, ChevronRight, Clock3 } from 'lucide-react';
+import {
+    ChevronDown,
+    ChevronLeft,
+    ChevronRight,
+    Clock3,
+    Timer,
+} from 'lucide-react';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from '@/helpers/global';
@@ -314,7 +320,11 @@ export default function DateTimePicker({
 
                                     return (
                                         <button
-                                            key={day}
+                                            key={
+                                                monthNames[currentMonth] +
+                                                day +
+                                                currentYear
+                                            }
                                             type="button"
                                             disabled={blocked}
                                             onClick={() => {
@@ -394,46 +404,80 @@ export default function DateTimePicker({
                                         {__('Jam')}
                                     </p>
 
-                                    <select
-                                        value={selectedHour}
-                                        onChange={(e) => {
-                                            const hour = e.target.value;
+                                    <div className="relative">
+                                        <Clock3
+                                            size={18}
+                                            className={`pointer-events-none absolute top-1/2 left-4 z-10 -translate-y-1/2 ${
+                                                theme === 'dark'
+                                                    ? 'text-zinc-300'
+                                                    : 'text-zinc-500'
+                                            }`}
+                                        />
 
-                                            setSelectedHour(hour);
+                                        <select
+                                            value={selectedHour}
+                                            onChange={(e) => {
+                                                const hour = e.target.value;
 
-                                            if (selectedDate) {
-                                                onChange(
-                                                    buildDateTime(
-                                                        selectedDate,
+                                                setSelectedHour(hour);
+
+                                                if (selectedDate) {
+                                                    onChange(
+                                                        buildDateTime(
+                                                            selectedDate,
+                                                            hour,
+                                                            selectedMinute,
+                                                        ),
+                                                    );
+                                                }
+                                            }}
+                                            className={`h-12 w-full appearance-none rounded-2xl border pr-12 pl-12 text-sm font-medium transition-all outline-none sm:h-13 lg:h-14 ${
+                                                theme === 'dark'
+                                                    ? 'border-white/10 bg-[#1a1a1b] text-white focus:border-orange-500'
+                                                    : 'border-orange-100 bg-white text-zinc-700 focus:border-orange-400'
+                                            }`}
+                                            style={{
+                                                colorScheme:
+                                                    theme === 'dark'
+                                                        ? 'dark'
+                                                        : 'light',
+                                            }}
+                                        >
+                                            {Array.from(
+                                                {
+                                                    length:
+                                                        maxHour - minHour + 1,
+                                                },
+                                                (_, i) => i + minHour,
+                                            ).map((hour) => (
+                                                <option
+                                                    key={hour}
+                                                    value={String(
                                                         hour,
-                                                        selectedMinute,
-                                                    ),
-                                                );
-                                            }
-                                        }}
-                                        className={`h-12 w-full rounded-2xl border px-4 text-sm font-medium transition-all outline-none sm:h-13 lg:h-14 ${
-                                            theme === 'dark'
-                                                ? `border-white/10 bg-[#1a1a1b] text-white focus:border-orange-500`
-                                                : `border-orange-100 bg-white text-zinc-700 focus:border-orange-400`
-                                        } `}
-                                    >
-                                        {Array.from(
-                                            {
-                                                length: maxHour - minHour + 1,
-                                            },
-                                            (_, i) => i + minHour,
-                                        ).map((hour) => (
-                                            <option
-                                                key={hour}
-                                                value={String(hour).padStart(
-                                                    2,
-                                                    '0',
-                                                )}
-                                            >
-                                                {String(hour).padStart(2, '0')}
-                                            </option>
-                                        ))}
-                                    </select>
+                                                    ).padStart(2, '0')}
+                                                    className={
+                                                        theme === 'dark'
+                                                            ? 'bg-[#1a1a1a] text-white'
+                                                            : 'bg-white text-zinc-800'
+                                                    }
+                                                >
+                                                    {String(hour).padStart(
+                                                        2,
+                                                        '0',
+                                                    )}
+                                                </option>
+                                            ))}
+                                        </select>
+
+                                        <ChevronDown
+                                            size={18}
+                                            className={`pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 ${
+                                                theme === 'dark'
+                                                    ? 'text-zinc-400'
+                                                    : 'text-zinc-500'
+                                            }`}
+                                        />
+                                    </div>
                                 </div>
 
                                 {/* MINUTE */}
@@ -449,35 +493,69 @@ export default function DateTimePicker({
                                         {__('Menit')}
                                     </p>
 
-                                    <select
-                                        value={selectedMinute}
-                                        onChange={(e) => {
-                                            const minute = e.target.value;
+                                    <div className="relative">
+                                        <Timer
+                                            size={18}
+                                            className={`pointer-events-none absolute top-1/2 left-4 z-10 -translate-y-1/2 ${
+                                                theme === 'dark'
+                                                    ? 'text-zinc-300'
+                                                    : 'text-zinc-500'
+                                            }`}
+                                        />
 
-                                            setSelectedMinute(minute);
+                                        <select
+                                            value={selectedMinute}
+                                            onChange={(e) => {
+                                                const minute = e.target.value;
 
-                                            if (selectedDate) {
-                                                onChange(
-                                                    buildDateTime(
-                                                        selectedDate,
-                                                        selectedHour,
-                                                        minute,
-                                                    ),
-                                                );
-                                            }
-                                        }}
-                                        className={`h-14 w-full rounded-2xl border px-4 text-sm font-medium transition-all outline-none ${
-                                            theme === 'dark'
-                                                ? `border-white/10 bg-[#1a1a1b] text-white focus:border-orange-500`
-                                                : `border-orange-100 bg-white text-zinc-700 focus:border-orange-400`
-                                        } `}
-                                    >
-                                        {minuteOptions.map((minute) => (
-                                            <option key={minute} value={minute}>
-                                                {minute}
-                                            </option>
-                                        ))}
-                                    </select>
+                                                setSelectedMinute(minute);
+
+                                                if (selectedDate) {
+                                                    onChange(
+                                                        buildDateTime(
+                                                            selectedDate,
+                                                            selectedHour,
+                                                            minute,
+                                                        ),
+                                                    );
+                                                }
+                                            }}
+                                            className={`h-14 w-full appearance-none rounded-2xl border pr-12 pl-12 text-sm font-medium transition-all outline-none ${
+                                                theme === 'dark'
+                                                    ? 'border-white/10 bg-[#1a1a1b] text-white focus:border-orange-500'
+                                                    : 'border-orange-100 bg-white text-zinc-700 focus:border-orange-400'
+                                            }`}
+                                            style={{
+                                                colorScheme:
+                                                    theme === 'dark'
+                                                        ? 'dark'
+                                                        : 'light',
+                                            }}
+                                        >
+                                            {minuteOptions.map((minute) => (
+                                                <option
+                                                    key={minute}
+                                                    value={minute}
+                                                    className={
+                                                        theme === 'dark'
+                                                            ? 'bg-[#1a1a1a] text-white'
+                                                            : 'bg-white text-zinc-800'
+                                                    }
+                                                >
+                                                    {minute}
+                                                </option>
+                                            ))}
+                                        </select>
+
+                                        <ChevronDown
+                                            size={18}
+                                            className={`pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 ${
+                                                theme === 'dark'
+                                                    ? 'text-zinc-400'
+                                                    : 'text-zinc-500'
+                                            }`}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 

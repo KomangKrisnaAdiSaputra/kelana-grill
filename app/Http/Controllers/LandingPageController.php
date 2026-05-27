@@ -41,9 +41,7 @@ class LandingPageController extends Controller
 
     public function indexContact()
     {
-        return Inertia::render('landing/contact', [
-            "booking" => Inertia::optional(fn(Request $request) => $this->booking($request))
-        ]);
+        return Inertia::render('landing/contact');
     }
 
     public function booking(Request $request)

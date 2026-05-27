@@ -251,7 +251,7 @@ function ContactContent() {
                                         <p
                                             className={
                                                 theme === 'dark'
-                                                    ? 'text-sm text-zinc-400'
+                                                    ? 'text-sm text-zinc-200'
                                                     : 'text-sm text-zinc-500'
                                             }
                                         >
@@ -280,7 +280,7 @@ function ContactContent() {
                                         <p
                                             className={
                                                 theme === 'dark'
-                                                    ? 'text-sm text-zinc-400'
+                                                    ? 'text-sm text-zinc-200'
                                                     : 'text-sm text-zinc-500'
                                             }
                                         >
@@ -296,11 +296,11 @@ function ContactContent() {
                                 <div
                                     className={`flex items-center gap-4 rounded-3xl p-4 ${
                                         theme === 'dark'
-                                            ? 'bg-white/[0.04]'
-                                            : 'bg-orange-50/70'
-                                    } `}
+                                            ? 'bg-white/[0.04] hover:bg-white/[0.06]'
+                                            : 'bg-orange-50/70 hover:bg-orange-100/70'
+                                    }`}
                                 >
-                                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500">
+                                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500 text-white">
                                         <MapPin size={22} />
                                     </div>
 
