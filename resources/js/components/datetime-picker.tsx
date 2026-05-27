@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight, Clock3 } from 'lucide-react';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from '@/helpers/global';
 
 type DateTimePickerProps = {
     value: string;
@@ -22,6 +23,8 @@ type DateTimePickerProps = {
     minDate?: string;
 
     maxDate?: string;
+
+    error?: string;
 };
 
 export default function DateTimePicker({
@@ -35,6 +38,7 @@ export default function DateTimePicker({
     minuteStep = 1,
     minDate,
     maxDate,
+    error,
 }: DateTimePickerProps) {
     const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -87,6 +91,8 @@ export default function DateTimePicker({
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
     const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+
+    const { __ } = useTranslation();
 
     const dates = useMemo(() => {
         const arr = [];
@@ -185,26 +191,38 @@ export default function DateTimePicker({
                 type="button"
                 onClick={() => setOpen(!open)}
                 className={`flex w-full items-center justify-between rounded-3xl border px-5 py-4 text-left transition-all duration-300 ${
-                    theme === 'dark'
-                        ? `border-white/10 bg-[#151515] text-white hover:bg-[#1b1b1b]`
-                        : `border-orange-100 bg-orange-50/60 text-zinc-800 hover:bg-orange-100/60`
-                } `}
+                    error
+                        ? 'border-red-400 ring-2 ring-red-400/20'
+                        : theme === 'dark'
+                          ? 'border-white/10 bg-[#151515] text-white hover:bg-[#1b1b1b]'
+                          : 'border-orange-100 bg-orange-50/60 text-zinc-800 hover:bg-orange-100/60'
+                }`}
             >
                 <div>
                     <p
                         className={`text-xs ${
-                            theme === 'dark' ? 'text-zinc-500' : 'text-zinc-500'
-                        } `}
+                            theme === 'dark' ? 'text-zinc-200' : 'text-zinc-500'
+                        }`}
                     >
-                        Jadwal Booking
+                        {__('Jadwal Booking')}
                     </p>
 
                     <p className="mt-1 text-sm font-semibold">
-                        {value || 'Pilih tanggal & jam'}
+                        {value || __('Pilih tanggal & jam')}
                     </p>
+
+                    {error && (
+                        <p className="mt-2 text-sm text-red-500">{__(error)}</p>
+                    )}
                 </div>
 
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-500 text-white shadow-lg shadow-orange-500/30">
+                <div
+                    className={`flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-lg ${
+                        error
+                            ? 'bg-red-500 shadow-red-500/30'
+                            : 'bg-orange-500 shadow-orange-500/30'
+                    }`}
+                >
                     <Clock3 size={20} />
                 </div>
             </button>
@@ -239,7 +257,7 @@ export default function DateTimePicker({
                                 </button>
 
                                 <h3 className="text-lg font-bold">
-                                    {monthNames[currentMonth]} {currentYear}
+                                    {__(monthNames[currentMonth])} {currentYear}
                                 </h3>
 
                                 <button
@@ -263,11 +281,11 @@ export default function DateTimePicker({
                                         key={day}
                                         className={`py-2 text-center text-xs font-semibold ${
                                             theme === 'dark'
-                                                ? 'text-zinc-500'
+                                                ? 'text-zinc-200'
                                                 : 'text-zinc-400'
                                         } `}
                                     >
-                                        {day}
+                                        {__(day)}
                                     </div>
                                 ))}
 
@@ -347,17 +365,17 @@ export default function DateTimePicker({
                                                 : 'text-zinc-800'
                                         } `}
                                     >
-                                        Pilih Jam
+                                        {__('Pilih Jam')}
                                     </h4>
 
                                     <p
                                         className={`text-xs ${
                                             theme === 'dark'
-                                                ? 'text-zinc-500'
+                                                ? 'text-zinc-200'
                                                 : 'text-zinc-500'
                                         } `}
                                     >
-                                        Atur waktu booking
+                                        {__('Atur waktu booking')}
                                     </p>
                                 </div>
                             </div>
@@ -369,11 +387,11 @@ export default function DateTimePicker({
                                     <p
                                         className={`mb-2 text-xs font-medium ${
                                             theme === 'dark'
-                                                ? 'text-zinc-400'
+                                                ? 'text-zinc-200'
                                                 : 'text-zinc-500'
                                         } `}
                                     >
-                                        Jam
+                                        {__('Jam')}
                                     </p>
 
                                     <select
@@ -424,11 +442,11 @@ export default function DateTimePicker({
                                     <p
                                         className={`mb-2 text-xs font-medium ${
                                             theme === 'dark'
-                                                ? 'text-zinc-400'
+                                                ? 'text-zinc-200'
                                                 : 'text-zinc-500'
                                         } `}
                                     >
-                                        Menit
+                                        {__('Menit')}
                                     </p>
 
                                     <select
@@ -475,11 +493,11 @@ export default function DateTimePicker({
                                 <p
                                     className={`text-xs ${
                                         theme === 'dark'
-                                            ? 'text-zinc-500'
+                                            ? 'text-zinc-200'
                                             : 'text-zinc-500'
                                     } `}
                                 >
-                                    Waktu Dipilih
+                                    {__('Waktu Dipilih')}
                                 </p>
 
                                 <h3
@@ -498,7 +516,7 @@ export default function DateTimePicker({
                             <div
                                 className={`mt-4 rounded-2xl p-4 text-sm ${
                                     theme === 'dark'
-                                        ? `bg-white/[0.04] text-zinc-400`
+                                        ? `bg-white/[0.04] text-zinc-200`
                                         : `bg-orange-100/50 text-zinc-600`
                                 } `}
                             >
@@ -506,7 +524,9 @@ export default function DateTimePicker({
                                     <div className="mt-1 h-3 w-3 rounded-full bg-red-400" />
 
                                     <p className="leading-relaxed">
-                                        Tanggal yang diblok tidak tersedia.
+                                        {__(
+                                            'Tanggal yang diblok tidak tersedia.',
+                                        )}
                                     </p>
                                 </div>
                             </div>

@@ -65,13 +65,53 @@ class LandingPageController extends Controller
             'payment' => ['required', 'in:Cash,Transfer'],
             'cart' => ['required', 'array', 'min:1'],
         ], [
-            'firstname.required' => 'First name wajib diisi',
-            'lastname.required' => 'Last name wajib diisi',
-            'phone.required' => 'Nomor phone wajib diisi',
-            'phone.numeric' => 'Nomor phone hanya angka',
+            // Firstname
+            'firstname.required' => 'Nama depan wajib diisi',
+            'firstname.string' => 'Nama depan tidak valid',
+            'firstname.max' => 'Nama depan maksimal 100 karakter',
+
+            // Lastname
+            'lastname.required' => 'Nama belakang wajib diisi',
+            'lastname.string' => 'Nama belakang tidak valid',
+            'lastname.max' => 'Nama belakang maksimal 100 karakter',
+
+            // Phone
+            'phone.required' => 'Nomor telepon wajib diisi',
+            'phone.numeric' => 'Nomor telepon hanya boleh berisi angka',
+            'phone.digits_between' => 'Nomor telepon harus terdiri dari 8 sampai 15 digit',
+
+            // Email
+            'email.required' => 'Email wajib diisi',
             'email.email' => 'Format email tidak valid',
-            'returndate.after_or_equal' =>
-            'Tanggal pengembalian tidak valid',
+
+            // Address
+            'address.required' => 'Alamat wajib diisi',
+            'address.string' => 'Alamat tidak valid',
+
+            // Pickup Date
+            'pickupdate.required' => 'Tanggal pengambilan wajib diisi',
+            'pickupdate.date' => 'Tanggal pengambilan tidak valid',
+
+            // Return Date
+            'returndate.required' => 'Tanggal pengembalian wajib diisi',
+            'returndate.date' => 'Tanggal pengembalian tidak valid',
+            'returndate.after_or_equal' => 'Tanggal pengembalian tidak boleh sebelum tanggal pengambilan',
+
+            // Pickup Location
+            'pickuplocation.required' => 'Lokasi pengambilan wajib dipilih',
+            'pickuplocation.string' => 'Lokasi pengambilan tidak valid',
+
+            // Guarantee
+            'guarantee.required' => 'Jaminan wajib dipilih',
+            'guarantee.string' => 'Jaminan tidak valid',
+
+            // Payment
+            'payment.required' => 'Metode pembayaran wajib dipilih',
+            'payment.in' => 'Metode pembayaran tidak valid',
+
+            // Cart
+            'cart.required' => 'Keranjang wajib diisi',
+            'cart.array' => 'Data keranjang tidak valid',
             'cart.min' => 'Keranjang masih kosong',
         ]);
 

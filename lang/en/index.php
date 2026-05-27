@@ -123,4 +123,106 @@ return [
   "DP diperlukan untuk pembelian daging. Selain itu, saat ada event, high season, atau pemesanan sedang ramai, semua pesanan wajib DP agar jadwal dan stok bisa kami amankan." =>
   "A down payment is required for meat-only purchases. In addition, during events, high season, or busy order periods, all orders require a down payment so we can secure the schedule and stock for you.",
   // End FAQ
+
+  // Contact
+  "Kontak Kami" => "Contact Us",
+  "Booking Alat Grill Jadi Lebih Mudah" => "Grill Rental Made Easy",
+  "Isi form booking berikut dan tim kami akan langsung menghubungi anda melalui WhatsApp untuk proses konfirmasi pesanan." => "Fill out the booking form below and our team will contact you via WhatsApp for order confirmation.",
+  "Booking Cepat" => "Fast Booking",
+  "Sewa alat grill untuk acara apapun" => "Rent grill equipment for any event",
+  "Cocok untuk gathering, camping, barbecue, acara keluarga." => "Perfect for gatherings, camping, barbecues, family events.",
+  "Respon Cepat via WhatsApp" => "Fast response WhatsApp",
+  "Alat bersih & siap pakai" => "Clean & ready-to-use equipment",
+  "Booking harian" => "Daily booking",
+  "Informasi Kontak" => "Contact Information",
+  "Telepon" => "Phone",
+  "Lokasi" => "Location",
+  "Form Booking" => "Booking Form",
+  "Lengkapi data booking" => "Complete your booking details",
+  "Informasi Pribadi" => "Personal Information",
+  "Nama Pertama" => "First Name",
+  "Nama Terakhir" => "Last Name",
+  "Alamat" => "Address",
+  "Detail Booking" => "Booking Details",
+  "Tanggal Pengambilan" => "Pickup Date",
+  "Tanggal Pengembalian" => "Return Date",
+  "Pilih Lokasi Pengambilan" => "Select Pickup Location",
+  "Lokasi Pengambilan" => "Pickup Location",
+  "Jaminan" => "Guarantee",
+  "Pembayaran" => "Payment",
+  "Catatan" => "Notes",
+  "Tulis kebutuhan tambahan anda..." => "Write your additional needs...",
+  "Kirim Booking Sekarang" => "Send Booking Now",
+  "Mengirim..." => "Sending...",
+
+  // Validation
+  "Nama depan wajib diisi" => "First name is required",
+  "Nama depan tidak valid" => "First name is invalid",
+  "Nama depan maksimal 100 karakter" => "First name may not be greater than 100 characters",
+
+  "Nama belakang wajib diisi" => "Last name is required",
+  "Nama belakang tidak valid" => "Last name is invalid",
+  "Nama belakang maksimal 100 karakter" => "Last name may not be greater than 100 characters",
+
+  "Nomor telepon wajib diisi" => "Phone number is required",
+  "Nomor telepon hanya boleh berisi angka" => "Phone number must contain only numbers",
+  "Nomor telepon harus terdiri dari 8 sampai 15 digit" => "Phone number must be between 8 and 15 digits",
+
+  "Email wajib diisi" => "Email is required",
+  "Format email tidak valid" => "Invalid email format",
+
+  "Alamat wajib diisi" => "Address is required",
+  "Alamat tidak valid" => "Address is invalid",
+
+  "Tanggal pengambilan wajib diisi" => "Pickup date is required",
+  "Tanggal pengambilan tidak valid" => "Pickup date is invalid",
+
+  "Tanggal pengembalian wajib diisi" => "Return date is required",
+  "Tanggal pengembalian tidak valid" => "Return date is invalid",
+  "Tanggal pengembalian tidak boleh sebelum tanggal pengambilan" => "Return date cannot be before pickup date",
+
+  "Lokasi pengambilan wajib dipilih" => "Pickup location is required",
+  "Lokasi pengambilan tidak valid" => "Pickup location is invalid",
+
+  "Jaminan wajib dipilih" => "Guarantee is required",
+  "Jaminan tidak valid" => "Guarantee is invalid",
+
+  "Metode pembayaran wajib dipilih" => "Payment method is required",
+  "Metode pembayaran tidak valid" => "Invalid payment method",
+
+  "Keranjang wajib diisi" => "Cart is required",
+  "Data keranjang tidak valid" => "Cart data is invalid",
+  // End Validation
+
+  // End Contact
+
+  // Datetime Picker
+  "Januari" => "January",
+  "Februari" => "February",
+  "Maret" => "March",
+  "April" => "April",
+  "Mei" => "May",
+  "Juni" => "June",
+  "Juli" => "July",
+  "Agustus" => "August",
+  "September" => "September",
+  "Oktober" => "October",
+  "November" => "November",
+  "Desember" => "December",
+  "Min" => "Sun",
+  "Sen" => "Mon",
+  "Sel" => "Tue",
+  "Rab" => "Wed",
+  "Kam" => "Thu",
+  "Jum" => "Fri",
+  "Sab" => "Sat",
+  "Jadwal Booking" => "Booking Schedule",
+  "Pilih Jam" => "Select Time",
+  "Pilih tanggal & jam" => "Select date & time",
+  "Atur waktu booking" => "Set booking time",
+  "Jam" => "Time",
+  "Menit" => "Minute",
+  "Waktu Dipilih" => "Selected Time",
+  "Tanggal yang diblok tidak tersedia." => "Blocked dates are not available.",
+  // End Datetime Picker
 ];

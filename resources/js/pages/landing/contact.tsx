@@ -1,6 +1,15 @@
 import { Head, useForm, usePage } from '@inertiajs/react';
 
-import { Mail, MapPin, Phone, Shield, User } from 'lucide-react';
+import {
+    ChevronDown,
+    CreditCard,
+    Mail,
+    MapPin,
+    Phone,
+    Shield,
+    SlidersHorizontal,
+    User,
+} from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
@@ -17,7 +26,8 @@ import AppProvider from '@/contexts/app-provider';
 
 import { useTheme } from '@/contexts/theme-context';
 
-import { formatPrice } from '@/helpers/global';
+import { formatPrice, useTranslation } from '@/helpers/global';
+import { produk } from '@/routes/landing';
 import { booking } from '@/routes/landing/contact';
 
 export default function ContactPage() {
@@ -34,6 +44,11 @@ function ContactContent() {
     const { theme, toggleTheme } = useTheme();
 
     const [scrolled, setScrolled] = useState(false);
+
+    const { __ } = useTranslation();
+
+    const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '-';
+    const email = import.meta.env.VITE_EMAIL || '-';
 
     useEffect(() => {
         const handleScroll = () => {
@@ -128,11 +143,12 @@ function ContactContent() {
                                 : 'border-orange-200 bg-white/70 text-orange-700'
                         } `}
                     >
-                        Kelana Grill
+                        <SlidersHorizontal size={16} />
+                        {__('Kontak Kami')}
                     </div>
 
                     <h1 className="mt-5 text-4xl font-semibold tracking-tight md:text-6xl">
-                        Booking Alat Grill Jadi Lebih Mudah
+                        {__('Booking Alat Grill Jadi Lebih Mudah')}
                     </h1>
 
                     <p
@@ -140,9 +156,9 @@ function ContactContent() {
                             theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'
                         } `}
                     >
-                        Isi form booking berikut dan tim kami akan langsung
-                        menghubungi anda melalui WhatsApp untuk proses
-                        konfirmasi pesanan.
+                        {__(
+                            'Isi form booking berikut dan tim kami akan langsung menghubungi anda melalui WhatsApp untuk proses konfirmasi pesanan.',
+                        )}
                     </p>
                 </section>
 
@@ -160,11 +176,11 @@ function ContactContent() {
                             } `}
                         >
                             <div className="inline-flex items-center rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-white">
-                                Fast Booking
+                                {__('Booking Cepat')}
                             </div>
 
                             <h2 className="mt-5 text-3xl leading-tight font-semibold">
-                                Sewa alat grill untuk acara apapun
+                                {__('Sewa alat grill untuk acara apapun')}
                             </h2>
 
                             <p
@@ -174,16 +190,16 @@ function ContactContent() {
                                         : 'text-zinc-600'
                                 } `}
                             >
-                                Cocok untuk gathering, camping, barbecue, acara
-                                keluarga, hingga event besar.
+                                {__(
+                                    'Cocok untuk gathering, camping, barbecue, acara keluarga.',
+                                )}
                             </p>
 
                             <div className="mt-8 space-y-4">
                                 {[
-                                    'Fast response WhatsApp',
+                                    'Respon Cepat via WhatsApp',
                                     'Alat bersih & siap pakai',
                                     'Booking harian',
-                                    'Support event besar',
                                 ].map((item) => (
                                     <div
                                         key={item}
@@ -198,7 +214,7 @@ function ContactContent() {
                                                     : 'text-zinc-700'
                                             }
                                         >
-                                            {item}
+                                            {__(item)}
                                         </p>
                                     </div>
                                 ))}
@@ -215,7 +231,7 @@ function ContactContent() {
                             } `}
                         >
                             <h3 className="text-2xl font-semibold">
-                                Contact Information
+                                {__('Informasi Kontak')}
                             </h3>
 
                             <div className="mt-7 space-y-5">
@@ -239,11 +255,11 @@ function ContactContent() {
                                                     : 'text-sm text-zinc-500'
                                             }
                                         >
-                                            Phone
+                                            {__('Telepon')}
                                         </p>
 
                                         <h4 className="font-semibold">
-                                            +62 812 3456 789
+                                            {whatsappNumber}
                                         </h4>
                                     </div>
                                 </a>
@@ -272,7 +288,7 @@ function ContactContent() {
                                         </p>
 
                                         <h4 className="font-semibold">
-                                            hello@kelanagrill.com
+                                            {email}
                                         </h4>
                                     </div>
                                 </a>
@@ -284,7 +300,7 @@ function ContactContent() {
                                             : 'bg-orange-50/70'
                                     } `}
                                 >
-                                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500 text-white">
+                                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500">
                                         <MapPin size={22} />
                                     </div>
 
@@ -292,15 +308,18 @@ function ContactContent() {
                                         <p
                                             className={
                                                 theme === 'dark'
-                                                    ? 'text-sm text-zinc-400'
+                                                    ? 'text-sm text-zinc-200'
                                                     : 'text-sm text-zinc-500'
                                             }
                                         >
-                                            Location
+                                            {__('Lokasi')}
                                         </p>
 
                                         <h4 className="font-semibold">
                                             Denpasar, Bali
+                                        </h4>
+                                        <h4 className="font-semibold">
+                                            Batubulan, Bali
                                         </h4>
                                     </div>
                                 </div>
@@ -318,7 +337,7 @@ function ContactContent() {
                         >
                             <div className="flex items-center justify-between">
                                 <h3 className="text-2xl font-semibold">
-                                    Keranjang
+                                    {__('Keranjang')}
                                 </h3>
 
                                 <div className="rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-white">
@@ -383,11 +402,11 @@ function ContactContent() {
                                         <p
                                             className={
                                                 theme === 'dark'
-                                                    ? 'text-zinc-400'
+                                                    ? 'text-zinc-200'
                                                     : 'text-zinc-500'
                                             }
                                         >
-                                            Belum ada item dalam keranjang
+                                            {__('Keranjang masih kosong')}
                                         </p>
                                     </div>
                                 )}
@@ -406,11 +425,11 @@ function ContactContent() {
                         <div className="mb-8 flex items-center justify-between">
                             <div>
                                 <p className="text-sm font-medium text-orange-500">
-                                    Booking Form
+                                    {__('Form Booking')}
                                 </p>
 
                                 <h2 className="mt-2 text-3xl font-semibold">
-                                    Lengkapi data booking
+                                    {__('Lengkapi data booking')}
                                 </h2>
                             </div>
                         </div>
@@ -420,14 +439,14 @@ function ContactContent() {
 
                             <div>
                                 <h3 className="mb-5 text-lg font-semibold">
-                                    Informasi Pribadi
+                                    {__('Informasi Pribadi')}
                                 </h3>
 
                                 <div className="grid gap-5 md:grid-cols-2">
                                     <InputField
                                         theme={theme}
                                         icon={<User size={18} />}
-                                        label="First Name"
+                                        label={__('Nama Pertama')}
                                         value={data.firstname}
                                         error={errors.firstname}
                                         onChange={(e) => {
@@ -443,7 +462,7 @@ function ContactContent() {
                                     <InputField
                                         theme={theme}
                                         icon={<User size={18} />}
-                                        label="Last Name"
+                                        label={__('Nama Terakhir')}
                                         value={data.lastname}
                                         error={errors.lastname}
                                         onChange={(e) => {
@@ -459,14 +478,14 @@ function ContactContent() {
 
                             <div>
                                 <h3 className="mb-5 text-lg font-semibold">
-                                    Kontak
+                                    {__('Kontak')}
                                 </h3>
 
                                 <div className="grid gap-5 md:grid-cols-2">
                                     <InputField
                                         theme={theme}
                                         icon={<Phone size={18} />}
-                                        label="Phone"
+                                        label={__('Telepon')}
                                         type="tel"
                                         value={data.phone}
                                         error={errors.phone}
@@ -506,7 +525,7 @@ function ContactContent() {
                                     <InputField
                                         theme={theme}
                                         icon={<MapPin size={18} />}
-                                        label="Alamat"
+                                        label={__('Alamat')}
                                         value={data.address}
                                         error={errors.address}
                                         onChange={(e) => {
@@ -522,107 +541,158 @@ function ContactContent() {
 
                             <div>
                                 <h3 className="mb-5 text-lg font-semibold">
-                                    Detail Booking
+                                    {__('Detail Booking')}
                                 </h3>
 
-                                <div className="grid gap-5 md:grid-cols-2">
-                                    <div>
-                                        <DateTimePicker
-                                            theme={theme}
-                                            label="Tanggal Pengambilan"
-                                            value={data.pickupdate}
-                                            onChange={(value) => {
-                                                setData('pickupdate', value);
+                                <div className="mb-5 grid gap-5 md:grid-cols-2">
+                                    <DateTimePicker
+                                        theme={theme}
+                                        label={__('Tanggal Pengambilan')}
+                                        value={data.pickupdate}
+                                        onChange={(value) => {
+                                            setData('pickupdate', value);
 
-                                                clearErrors('pickupdate');
-                                            }}
-                                            blockedDates={[
-                                                '2026-05-28',
-                                                '2026-05-29',
-                                                '2026-06-02',
-                                            ]}
-                                            minDate={
-                                                new Date()
-                                                    .toISOString()
-                                                    .split('T')[0]
-                                            }
-                                            maxDate={
-                                                data.returndate
-                                                    ? data.returndate.split(
-                                                          ' ',
-                                                      )[0]
-                                                    : undefined
-                                            }
-                                            minHour={8}
-                                            maxHour={22}
-                                        />
+                                            clearErrors('pickupdate');
+                                        }}
+                                        blockedDates={[
+                                            '2026-05-28',
+                                            '2026-05-29',
+                                            '2026-06-02',
+                                        ]}
+                                        minDate={
+                                            new Date()
+                                                .toISOString()
+                                                .split('T')[0]
+                                        }
+                                        maxDate={
+                                            data.returndate
+                                                ? data.returndate.split(' ')[0]
+                                                : undefined
+                                        }
+                                        minHour={8}
+                                        maxHour={22}
+                                        error={errors.pickupdate || ''}
+                                    />
 
-                                        {errors.pickupdate && (
-                                            <p className="mt-2 text-sm text-red-500">
-                                                {errors.pickupdate}
-                                            </p>
-                                        )}
-                                    </div>
+                                    <DateTimePicker
+                                        theme={theme}
+                                        label={__('Tanggal Pengembalian')}
+                                        value={data.returndate}
+                                        onChange={(value) => {
+                                            setData('returndate', value);
 
-                                    <div>
-                                        <DateTimePicker
-                                            theme={theme}
-                                            label="Tanggal Pengembalian"
-                                            value={data.returndate}
-                                            onChange={(value) => {
-                                                setData('returndate', value);
-
-                                                clearErrors('returndate');
-                                            }}
-                                            blockedDates={[
-                                                '2026-05-28',
-                                                '2026-05-29',
-                                            ]}
-                                            minDate={
-                                                data.pickupdate
-                                                    ? data.pickupdate.split(
-                                                          ' ',
-                                                      )[0]
-                                                    : new Date()
-                                                          .toISOString()
-                                                          .split('T')[0]
-                                            }
-                                            minHour={8}
-                                            maxHour={22}
-                                        />
-
-                                        {errors.returndate && (
-                                            <p className="mt-2 text-sm text-red-500">
-                                                {errors.returndate}
-                                            </p>
-                                        )}
-                                    </div>
+                                            clearErrors('returndate');
+                                        }}
+                                        blockedDates={[
+                                            '2026-05-28',
+                                            '2026-05-29',
+                                        ]}
+                                        minDate={
+                                            data.pickupdate
+                                                ? data.pickupdate.split(' ')[0]
+                                                : new Date()
+                                                      .toISOString()
+                                                      .split('T')[0]
+                                        }
+                                        minHour={8}
+                                        maxHour={22}
+                                        error={errors.returndate || ''}
+                                    />
                                 </div>
 
-                                <div className="mt-5">
-                                    <InputField
-                                        theme={theme}
-                                        icon={<MapPin size={18} />}
-                                        label="Lokasi Pengambilan"
-                                        value={data.pickuplocation}
-                                        error={errors.pickuplocation}
-                                        onChange={(e) => {
-                                            setData(
-                                                'pickuplocation',
-                                                e.target.value,
-                                            );
+                                <div>
+                                    <h3 className="mb-5 text-lg font-semibold">
+                                        {__('Lokasi Pengambilan')}
+                                    </h3>
 
-                                            clearErrors('pickuplocation');
-                                        }}
-                                    />
+                                    <div className="relative">
+                                        <MapPin
+                                            size={18}
+                                            className={`pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 ${
+                                                theme === 'dark'
+                                                    ? 'text-zinc-200'
+                                                    : 'text-zinc-500'
+                                            }`}
+                                        />
+
+                                        <select
+                                            value={data.pickuplocation}
+                                            onChange={(e) => {
+                                                setData(
+                                                    'pickuplocation',
+                                                    e.target.value,
+                                                );
+
+                                                clearErrors('pickuplocation');
+                                            }}
+                                            className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none ${
+                                                theme === 'dark'
+                                                    ? 'border-white/10 bg-white/[0.04] text-zinc-200'
+                                                    : 'border-orange-100 bg-orange-50/50 text-zinc-800'
+                                            } ${
+                                                errors.pickuplocation
+                                                    ? 'border-red-500 focus:border-red-500'
+                                                    : ''
+                                            }`}
+                                            style={{
+                                                colorScheme:
+                                                    theme === 'dark'
+                                                        ? 'dark'
+                                                        : 'light',
+                                            }}
+                                        >
+                                            <option
+                                                value=""
+                                                className={
+                                                    theme === 'dark'
+                                                        ? 'bg-[#1a1a1a] text-white'
+                                                        : 'bg-white text-zinc-800'
+                                                }
+                                            >
+                                                {__('Pilih Lokasi Pengambilan')}
+                                            </option>
+
+                                            {[
+                                                'Jl. Siulan, Batubulan, Bali',
+                                                'Jl. Antasura, Denpasar, Bali',
+                                            ].map((location) => (
+                                                <option
+                                                    key={location}
+                                                    value={location}
+                                                    className={
+                                                        theme === 'dark'
+                                                            ? 'bg-[#1a1a1a] text-white'
+                                                            : 'bg-white text-zinc-800'
+                                                    }
+                                                >
+                                                    {location}
+                                                </option>
+                                            ))}
+                                        </select>
+
+                                        <ChevronDown
+                                            size={18}
+                                            className={`pointer-events-none absolute top-1/2 right-5 -translate-y-1/2 ${
+                                                theme === 'dark'
+                                                    ? 'text-zinc-400'
+                                                    : 'text-zinc-500'
+                                            }`}
+                                        />
+                                    </div>
+
+                                    {errors.pickuplocation && (
+                                        <p className="mt-2 text-sm text-red-500">
+                                            {__(errors.pickuplocation)}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="mt-5">
                                     <InputField
                                         theme={theme}
                                         icon={<Shield size={18} />}
-                                        label="Jaminan"
-                                        placeholder="KTP / SIM / dll"
+                                        label={__('Jaminan')}
+                                        placeholder="KTP / SIM / Paspor / Other ID"
                                         value={data.guarantee}
                                         error={errors.guarantee}
                                         onChange={(e) => {
@@ -641,30 +711,70 @@ function ContactContent() {
 
                             <div>
                                 <h3 className="mb-5 text-lg font-semibold">
-                                    Pembayaran
+                                    {__('Pembayaran')}
                                 </h3>
 
-                                <select
-                                    value={data.payment}
-                                    onChange={(e) => {
-                                        setData('payment', e.target.value);
+                                <div className="relative">
+                                    <CreditCard
+                                        size={18}
+                                        className={`pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 ${
+                                            theme === 'dark'
+                                                ? 'text-zinc-200'
+                                                : 'text-zinc-500'
+                                        }`}
+                                    />
 
-                                        clearErrors('payment');
-                                    }}
-                                    className={`w-full rounded-3xl border px-5 py-4 text-sm transition-all outline-none ${
-                                        theme === 'dark'
-                                            ? `border-white/10 bg-white/[0.04] text-white`
-                                            : `border-orange-100 bg-orange-50/50 text-zinc-800`
-                                    } `}
-                                >
-                                    <option value="Cash">Cash</option>
+                                    <select
+                                        value={data.payment}
+                                        onChange={(e) => {
+                                            setData('payment', e.target.value);
 
-                                    <option value="Transfer">Transfer</option>
-                                </select>
+                                            clearErrors('payment');
+                                        }}
+                                        className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none ${
+                                            theme === 'dark'
+                                                ? 'border-white/10 bg-white/[0.04] text-zinc-200'
+                                                : 'border-orange-100 bg-orange-50/50 text-zinc-800'
+                                        } ${
+                                            errors.payment
+                                                ? 'border-red-500 focus:border-red-500'
+                                                : ''
+                                        }`}
+                                        style={{
+                                            colorScheme:
+                                                theme === 'dark'
+                                                    ? 'dark'
+                                                    : 'light',
+                                        }}
+                                    >
+                                        {['Cash', 'Transfer'].map((method) => (
+                                            <option
+                                                key={method}
+                                                value={method}
+                                                className={
+                                                    theme === 'dark'
+                                                        ? 'bg-[#1a1a1a] text-white'
+                                                        : 'bg-white text-zinc-800'
+                                                }
+                                            >
+                                                {__(method)}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    <ChevronDown
+                                        size={18}
+                                        className={`pointer-events-none absolute top-1/2 right-5 -translate-y-1/2 ${
+                                            theme === 'dark'
+                                                ? 'text-zinc-400'
+                                                : 'text-zinc-500'
+                                        }`}
+                                    />
+                                </div>
 
                                 {errors.payment && (
                                     <p className="mt-2 text-sm text-red-500">
-                                        {errors.payment}
+                                        {__(errors.payment)}
                                     </p>
                                 )}
                             </div>
@@ -673,7 +783,7 @@ function ContactContent() {
 
                             <div>
                                 <h3 className="mb-5 text-lg font-semibold">
-                                    Catatan
+                                    {__('Catatan')}
                                 </h3>
 
                                 <textarea
@@ -684,24 +794,33 @@ function ContactContent() {
 
                                         clearErrors('note');
                                     }}
-                                    placeholder="Tulis kebutuhan tambahan anda..."
+                                    placeholder={__(
+                                        'Tulis kebutuhan tambahan anda...',
+                                    )}
                                     className={`w-full resize-none rounded-3xl border px-5 py-4 text-sm transition-all outline-none ${
                                         theme === 'dark'
-                                            ? `border-white/10 bg-white/[0.04] text-white placeholder:text-zinc-500`
+                                            ? `border-white/10 bg-white/[0.04] text-white placeholder:text-zinc-200`
                                             : `border-orange-100 bg-orange-50/50 text-zinc-800 placeholder:text-zinc-400`
                                     } `}
                                 />
 
                                 {errors.note && (
                                     <p className="mt-2 text-sm text-red-500">
-                                        {errors.note}
+                                        {__(errors.note)}
                                     </p>
                                 )}
                             </div>
 
                             {errors.cart && (
-                                <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-500">
-                                    {errors.cart}
+                                <div className="flex flex-col gap-4 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-500 sm:flex-row sm:items-center sm:justify-between">
+                                    <div>{__(errors.cart)}</div>
+
+                                    <a
+                                        href={produk({ locale }).url}
+                                        className="inline-flex items-center justify-center rounded-xl bg-red-500 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-red-600"
+                                    >
+                                        {__('Pilih Produk')}
+                                    </a>
                                 </div>
                             )}
 
@@ -716,8 +835,8 @@ function ContactContent() {
 
                                 <span className="relative z-10">
                                     {processing
-                                        ? 'Mengirim...'
-                                        : 'Kirim Booking Sekarang'}
+                                        ? __('Mengirim...')
+                                        : __('Kirim Booking Sekarang')}
                                 </span>
                             </button>
                         </form>
@@ -755,6 +874,8 @@ function InputField({
     error,
     onChange,
 }: InputFieldProps) {
+    const { __ } = useTranslation();
+
     return (
         <div>
             <label
@@ -774,7 +895,7 @@ function InputField({
             >
                 <div
                     className={
-                        theme === 'dark' ? 'text-zinc-400' : 'text-zinc-500'
+                        theme === 'dark' ? 'text-zinc-200' : 'text-zinc-500'
                     }
                 >
                     {icon}
@@ -787,13 +908,13 @@ function InputField({
                     placeholder={placeholder}
                     className={`w-full bg-transparent text-sm outline-none ${
                         theme === 'dark'
-                            ? 'placeholder:text-zinc-500'
+                            ? 'placeholder:text-zinc-200'
                             : 'placeholder:text-zinc-400'
                     } `}
                 />
             </div>
 
-            {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
+            {error && <p className="mt-2 text-sm text-red-500">{__(error)}</p>}
         </div>
     );
 }
