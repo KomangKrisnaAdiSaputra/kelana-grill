@@ -41,7 +41,9 @@ class LandingPageController extends Controller
 
     public function indexContact()
     {
-        return Inertia::render('landing/contact');
+        return Inertia::render('landing/contact', [
+            'booking' => Inertia::optional(fn(Request $request) => $this->booking($request)),
+        ]);
     }
 
     public function booking(Request $request)
@@ -113,17 +115,13 @@ class LandingPageController extends Controller
             'cart.min' => 'Keranjang masih kosong',
         ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors(
-                $validator
-            );
-        }
+        $validator->validate();
 
         /*
-    |--------------------------------------------------------------------------
-    | ORDER DATA
-    |--------------------------------------------------------------------------
-    */
+        |--------------------------------------------------------------------------
+        | ORDER DATA
+        |--------------------------------------------------------------------------
+        */
 
         $orderData = [
             'firstname' => $request->firstname,
@@ -138,36 +136,30 @@ class LandingPageController extends Controller
             'payment_method' => $request->payment,
             'note' => $request->note,
             'status' => 'pending',
-            'total' => collect($request->cart)->sum(function ($item) {
-                return ($item['variant']['rate'] ?? 0)
-                    * ($item['qty'] ?? 1);
-            }),
+            'total' => collect($request->cart)->sum(fn($item) => ($item['variant']['rate'] ?? 0) * ($item['qty'] ?? 1)),
         ];
 
         /*
-    |--------------------------------------------------------------------------
-    | ORDER DETAILS
-    |--------------------------------------------------------------------------
-    */
+        |--------------------------------------------------------------------------
+        | ORDER DETAILS
+        |--------------------------------------------------------------------------
+        */
 
-        $orderDetails = collect($request->cart)->map(function ($item) {
-            return [
-                'product_id' => $item['product']['id'] ?? null,
-                'variant_id' => $item['variant']['id'] ?? null,
-                'product_name' => $item['product']['name'] ?? '',
-                'variant_name' => $item['variant']['name'] ?? '',
-                'qty' => $item['qty'] ?? 1,
-                'price' => $item['variant']['rate'] ?? 0,
-                'subtotal' => ($item['variant']['rate'] ?? 0)
-                    * ($item['qty'] ?? 1),
-            ];
-        })->values();
+        $orderDetails = collect($request->cart)->map(fn($item) => [
+            'product_id' => $item['product']['id'] ?? null,
+            'variant_id' => $item['variant']['id'] ?? null,
+            'product_name' => $item['product']['name'] ?? '',
+            'variant_name' => $item['variant']['name'] ?? '',
+            'qty' => $item['qty'] ?? 1,
+            'price' => $item['variant']['rate'] ?? 0,
+            'subtotal' => ($item['variant']['rate'] ?? 0) * ($item['qty'] ?? 1),
+        ])->values();
 
         /*
-    |--------------------------------------------------------------------------
-    | SAVE TO DATABASE
-    |--------------------------------------------------------------------------
-    */
+        |--------------------------------------------------------------------------
+        | SAVE TO DATABASE
+        |--------------------------------------------------------------------------
+        */
 
         // $order = Order::create($orderData);
 
@@ -176,10 +168,10 @@ class LandingPageController extends Controller
         // }
 
         /*
-    |--------------------------------------------------------------------------
-    | WHATSAPP MESSAGE
-    |--------------------------------------------------------------------------
-    */
+        |--------------------------------------------------------------------------
+        | WHATSAPP MESSAGE
+        |--------------------------------------------------------------------------
+        */
 
         $cartText = '';
 
@@ -191,8 +183,7 @@ class LandingPageController extends Controller
                 '.'
             );
 
-            $cartText .=
-                "- {$detail['product_name']} ({$detail['variant_name']}) x{$detail['qty']} (Rp {$price})\n";
+            $cartText .= "- {$detail['product_name']} ({$detail['variant_name']}) x{$detail['qty']} (Rp {$price})\n";
         }
 
         $message =
@@ -218,17 +209,18 @@ class LandingPageController extends Controller
 
             "Catatan : {$request->note}";
 
-        $whatsappNumber = config(
-            'app.landing.contact.whatsapp_number'
-        );
+        $whatsappNumber = config('app.landing.contact.whatsapp_number');
 
-        $url =
-            'https://wa.me/' .
-            $whatsappNumber .
-            '?text=' .
-            urlencode($message);
-        dd($url, $orderData, $orderDetails);
-        return redirect()->away($url);
+        $url = 'https://wa.me/' . $whatsappNumber . '?text=' . urlencode($message);
+        return [
+            'result' => 'success',
+            'success' => true,
+            'code' => 200,
+            'data' => [
+                'url' => $url,
+            ],
+            'message' => 'Booking berhasil, silakan lanjutkan ke WhatsApp untuk mengirimkan pesan pemesanan',
+        ];
     }
 
     function generateDataType($item)

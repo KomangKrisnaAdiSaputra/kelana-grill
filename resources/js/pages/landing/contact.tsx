@@ -13,6 +13,7 @@ import {
 
 import { useEffect, useState } from 'react';
 
+import { toast } from 'sonner';
 import DateTimePicker from '@/components/datetime-picker';
 import AmbientBackground from '@/components/landing/ambient-background';
 
@@ -38,8 +39,16 @@ export default function ContactPage() {
     );
 }
 
+type PageProps = {
+    params: any;
+    currentLocaleUrl: string;
+};
+
 function ContactContent() {
-    const locale = usePage<any>().props.params.locale;
+    const cartName = 'kelana-grill-cart';
+    const props = usePage<PageProps>().props;
+    const locale = props.params.locale;
+    const currentLocaleUrl = props.currentLocaleUrl;
 
     const { theme, toggleTheme } = useTheme();
 
@@ -78,9 +87,7 @@ function ContactContent() {
     });
 
     useEffect(() => {
-        const cart = JSON.parse(
-            localStorage.getItem('kelana-grill-cart') || '[]',
-        );
+        const cart = JSON.parse(localStorage.getItem(cartName) || '[]');
 
         setData('cart', cart);
     }, [setData]);
@@ -105,11 +112,21 @@ function ContactContent() {
 
         post(booking({ locale }).url, {
             preserveScroll: true,
-            onSuccess: (res) => {
-                console.log(res);
+            // only: ['booking'],
+            onSuccess: (res: any) => {
+                return console.log(res);
+                // const dataRes = res.props.booking;
+                // const url = dataRes.data.url;
+                // if (url) {
+                //     localStorage.removeItem(cartName);
+                //     window.location.href = url;
+                // }
             },
-            onError: (errors) => {
-                console.log(errors);
+
+            onError: (res: any) => {
+                console.log(currentLocaleUrl, res);
+
+                toast.error(__('Mohon periksa kembali form booking'));
             },
         });
     };

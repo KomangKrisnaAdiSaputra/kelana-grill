@@ -192,6 +192,7 @@ return [
 
   "Keranjang wajib diisi" => "Cart is required",
   "Data keranjang tidak valid" => "Cart data is invalid",
+  "Mohon periksa kembali form booking" => "Please check the booking form again",
   // End Validation
 
   // End Contact
