@@ -200,8 +200,8 @@ export default function DateTimePicker({
                     error
                         ? 'border-red-400 ring-2 ring-red-400/20'
                         : theme === 'dark'
-                          ? 'border-white/10 bg-[#151515] text-white hover:bg-[#1b1b1b]'
-                          : 'border-orange-100 bg-orange-50/60 text-zinc-800 hover:bg-orange-100/60'
+                          ? 'theme-card-dark'
+                          : 'theme-card-light'
                 }`}
             >
                 <div>

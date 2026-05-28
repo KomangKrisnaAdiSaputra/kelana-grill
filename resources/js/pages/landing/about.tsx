@@ -91,11 +91,7 @@ function AboutMeContent() {
 
     return (
         <div
-            className={`min-h-screen overflow-hidden transition-all duration-500 ${
-                theme === 'dark'
-                    ? 'bg-[#090909] text-white'
-                    : 'bg-[#FFF8F1] text-zinc-900'
-            }`}
+            className={`min-h-screen overflow-hidden transition-all duration-500 ${theme === 'dark' ? 'bg-theme-dark' : 'bg-theme-light'} `}
         >
             <Head title={__('About Us')} />
 
@@ -114,8 +110,8 @@ function AboutMeContent() {
                     <div
                         className={`absolute inset-0 ${
                             theme === 'dark'
-                                ? 'bg-gradient-to-br from-orange-500/10 via-black to-black'
-                                : 'bg-gradient-to-br from-orange-100 via-white to-orange-50'
+                                ? 'theme-card-dark'
+                                : 'theme-card-light'
                         }`}
                     />
 

@@ -133,11 +133,7 @@ function ContactContent() {
 
     return (
         <div
-            className={`min-h-screen transition-all duration-500 ${
-                theme === 'dark'
-                    ? 'bg-[#0F0F10] text-white'
-                    : 'bg-gradient-to-br from-[#fff7ed] via-[#fffaf5] to-[#ffe7c2] text-zinc-900'
-            } `}
+            className={`min-h-screen overflow-hidden transition-all duration-500 ${theme === 'dark' ? 'bg-theme-dark' : 'bg-theme-light'} `}
         >
             <Head title="Kontak" />
 
@@ -188,8 +184,8 @@ function ContactContent() {
                         <div
                             className={`overflow-hidden rounded-[36px] p-7 backdrop-blur-2xl ${
                                 theme === 'dark'
-                                    ? 'bg-[#111112]/80 ring-1 ring-white/10'
-                                    : 'bg-white/80 ring-1 ring-orange-100'
+                                    ? 'theme-card-dark'
+                                    : 'theme-card-light'
                             } `}
                         >
                             <div className="inline-flex items-center rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-white">
@@ -243,8 +239,8 @@ function ContactContent() {
                         <div
                             className={`overflow-hidden rounded-[36px] p-7 backdrop-blur-2xl ${
                                 theme === 'dark'
-                                    ? 'bg-[#111112]/80 ring-1 ring-white/10'
-                                    : 'bg-white/80 ring-1 ring-orange-100'
+                                    ? 'theme-card-dark'
+                                    : 'theme-card-light'
                             } `}
                         >
                             <h3 className="text-2xl font-semibold">
@@ -348,8 +344,8 @@ function ContactContent() {
                         <div
                             className={`overflow-hidden rounded-[36px] p-7 backdrop-blur-2xl ${
                                 theme === 'dark'
-                                    ? 'bg-[#111112]/80 ring-1 ring-white/10'
-                                    : 'bg-white/80 ring-1 ring-orange-100'
+                                    ? 'theme-card-dark'
+                                    : 'theme-card-light'
                             } `}
                         >
                             <div className="flex items-center justify-between">
@@ -435,8 +431,8 @@ function ContactContent() {
                     <div
                         className={`order-1 rounded-[36px] p-6 backdrop-blur-2xl md:p-8 lg:order-2 ${
                             theme === 'dark'
-                                ? 'bg-[#111112]/80 ring-1 ring-white/10'
-                                : 'bg-white/80 ring-1 ring-orange-100'
+                                ? 'theme-card-dark'
+                                : 'theme-card-light'
                         }`}
                     >
                         <div className="mb-8 flex items-center justify-between">

@@ -150,3 +150,67 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+@layer utilities {
+    /* .bg-theme-light {
+        @apply bg-gradient-to-br from-[#fff7ed] via-[#fffaf5] to-[#ffe7c2] text-zinc-900;
+    }
+
+    .bg-theme-dark {
+        background:
+            radial-gradient(
+                circle at top right,
+                rgba(255, 115, 0, 0.15),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at bottom left,
+                rgba(239, 68, 68, 0.12),
+                transparent 25%
+            ),
+            linear-gradient(to bottom right, #0b0b0c, #111827, #1c1917);
+
+        @apply text-white;
+    } */
+
+    .bg-theme-light {
+        background:
+            radial-gradient(
+                circle at top left,
+                rgba(251, 146, 60, 0.15),
+                transparent 25%
+            ),
+            linear-gradient(to bottom right, #fff7ed, #fffaf5, #ffe7c2);
+
+        @apply text-zinc-900;
+    }
+
+    .bg-theme-dark {
+        background:
+            radial-gradient(
+                circle at top right,
+                rgba(255, 115, 0, 0.18),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at bottom left,
+                rgba(239, 68, 68, 0.12),
+                transparent 25%
+            ),
+            linear-gradient(to bottom right, #0b0b0c, #111827, #1c1917);
+
+        @apply text-white;
+    }
+
+    .theme-surface-dark {
+        @apply border border-white/10 bg-zinc-900/70 backdrop-blur-xl;
+    }
+
+    .theme-card-dark {
+        @apply bg-white/[0.03] ring-1 ring-white/10;
+    }
+
+    .theme-card-light {
+        @apply bg-white/80 ring-1 ring-orange-100;
+    }
+}
