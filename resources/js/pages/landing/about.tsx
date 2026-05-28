@@ -103,7 +103,7 @@ function AboutMeContent() {
                 onToggleTheme={toggleTheme}
             />
 
-            <main className="relative mx-auto max-w-7xl px-4 pt-20 pb-24 sm:px-6 md:px-8 md:pt-28 lg:px-6 lg:pt-32">
+            <main className="relative mx-auto max-w-7xl px-4 pt-20 sm:px-6 md:px-8 md:pt-28 lg:px-6 lg:pt-32">
                 {/* HERO */}
 
                 <section className="relative overflow-hidden rounded-[32px] md:rounded-[48px]">
@@ -305,100 +305,157 @@ function AboutMeContent() {
                     {/* BBQ EXPERIENCE */}
 
                     <div
-                        className={`mt-8 overflow-hidden rounded-[30px] md:mt-10 md:rounded-[40px] ${
+                        className={`mt-8 overflow-hidden rounded-[32px] md:mt-10 md:rounded-[42px] ${
                             theme === 'dark'
                                 ? 'bg-gradient-to-br from-orange-500/10 via-white/[0.03] to-red-500/10 ring-1 ring-white/10'
                                 : 'bg-gradient-to-br from-orange-50 via-white to-orange-100 ring-1 ring-orange-100'
                         }`}
                     >
-                        <div className="grid grid-cols-[1fr_140px] lg:grid-cols-[1fr_420px]">
-                            {/* LEFT */}
+                        <div className="relative">
+                            {/* SOFT GLOW */}
 
-                            <div className="p-5 md:p-10">
-                                <div
-                                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs md:text-sm ${
-                                        theme === 'dark'
-                                            ? 'bg-orange-500/10 text-orange-200'
-                                            : 'bg-orange-200/70 text-orange-700'
-                                    }`}
-                                >
-                                    <Flame size={14} />
-                                    BBQ Experience
-                                </div>
+                            <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-orange-500/10 blur-3xl" />
 
-                                <h3 className="mt-5 text-2xl leading-tight font-bold md:text-4xl">
-                                    BBQ lebih santai tanpa ribet
-                                </h3>
+                            {/* TOP CONTENT */}
 
-                                <p
-                                    className={`mt-4 text-xs leading-6 md:max-w-2xl md:text-base md:leading-8 ${
-                                        theme === 'dark'
-                                            ? 'text-zinc-400'
-                                            : 'text-zinc-600'
-                                    }`}
-                                >
-                                    Kelana Grill fokus menyediakan alat grill
-                                    premium berkualitas untuk kebutuhan BBQ
-                                    pribadi dan gathering santai.
-                                </p>
+                            <div className="relative z-10 overflow-hidden rounded-[36px]">
+                                <div className="grid min-h-[520px] lg:grid-cols-[1.05fr_1fr]">
+                                    {/* LEFT */}
 
-                                <div className="mt-6 flex flex-col gap-3 md:flex-row">
-                                    <div
-                                        className={`rounded-2xl px-4 py-3 backdrop-blur-xl ${
-                                            theme === 'dark'
-                                                ? 'bg-white/[0.05] ring-1 ring-white/10'
-                                                : 'bg-white/80 ring-1 ring-orange-100'
-                                        }`}
-                                    >
-                                        <p
-                                            className={`text-[10px] tracking-[0.2em] uppercase ${
+                                    <div className="flex flex-col justify-center p-5 md:p-8 lg:p-14">
+                                        <div
+                                            className={`inline-flex w-fit items-center gap-2 rounded-full px-4 py-2 text-xs md:text-sm ${
                                                 theme === 'dark'
-                                                    ? 'text-zinc-500'
-                                                    : 'text-zinc-400'
+                                                    ? 'bg-orange-500/10 text-orange-200'
+                                                    : 'bg-orange-200/70 text-orange-700'
                                             }`}
                                         >
-                                            Fokus Kami
+                                            <Flame size={14} />
+                                            BBQ Experience
+                                        </div>
+
+                                        <h3 className="mt-6 max-w-xl text-3xl leading-[1.05] font-black tracking-[-0.03em] md:text-5xl">
+                                            BBQ lebih santai tanpa ribet
+                                        </h3>
+
+                                        <p
+                                            className={`mt-6 max-w-2xl text-sm leading-8 md:text-base ${
+                                                theme === 'dark'
+                                                    ? 'text-zinc-400'
+                                                    : 'text-zinc-600'
+                                            }`}
+                                        >
+                                            Kelana Grill fokus menyediakan alat
+                                            grill premium berkualitas untuk
+                                            kebutuhan BBQ pribadi, gathering
+                                            santai, camping, dan acara spesial
+                                            bersama keluarga maupun teman.
                                         </p>
 
-                                        <h4 className="mt-2 text-sm font-semibold md:text-lg">
-                                            Private BBQ
-                                        </h4>
+                                        {/* TAGS */}
+
+                                        <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
+                                            {[
+                                                'Premium Grill',
+                                                'Private BBQ',
+                                                'Easy Rental',
+                                            ].map((item) => (
+                                                <div
+                                                    key={item}
+                                                    className={`rounded-full px-4 py-2 text-xs md:text-sm ${
+                                                        theme === 'dark'
+                                                            ? 'bg-white/[0.05] text-zinc-200 ring-1 ring-white/10'
+                                                            : 'bg-white/80 text-zinc-700 ring-1 ring-orange-100'
+                                                    }`}
+                                                >
+                                                    {item}
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
 
-                                    <div
-                                        className={`rounded-2xl px-4 py-3 backdrop-blur-xl ${
-                                            theme === 'dark'
-                                                ? 'bg-white/[0.05] ring-1 ring-white/10'
-                                                : 'bg-white/80 ring-1 ring-orange-100'
-                                        }`}
-                                    >
-                                        <p
-                                            className={`text-[10px] tracking-[0.2em] uppercase ${
-                                                theme === 'dark'
-                                                    ? 'text-zinc-500'
-                                                    : 'text-zinc-400'
-                                            }`}
-                                        >
-                                            Sistem Rental
-                                        </p>
+                                    {/* IMAGE */}
 
-                                        <h4 className="mt-2 text-sm font-semibold md:text-lg">
-                                            Self Pickup
-                                        </h4>
+                                    <div className="relative h-full min-h-[320px]">
+                                        <img
+                                            src="https://res.cloudinary.com/dikjbuftt/image/upload/v1779892028/ChatGPT_Image_May_27_2026_10_26_57_PM_emlmki.png"
+                                            alt="BBQ"
+                                            className="absolute inset-0 h-full w-full object-cover object-[center_30%] transition-transform duration-700 hover:scale-[1.03] md:object-[center_34%] lg:object-[center_30%]"
+                                        />
+
+                                        {/* OVERLAY */}
+
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent lg:bg-gradient-to-l lg:from-transparent lg:via-black/10 lg:to-black/40" />
+
+                                        {/* FLOATING LABEL */}
+
+                                        <div className="absolute right-5 bottom-5">
+                                            <div className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 backdrop-blur-xl">
+                                                <p className="text-[10px] tracking-[0.18em] text-orange-200 uppercase">
+                                                    Kelana Grill
+                                                </p>
+
+                                                <h4 className="mt-1 text-sm font-semibold text-white md:text-base">
+                                                    Premium BBQ Setup
+                                                </h4>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* RIGHT */}
+                            {/* BOTTOM INFO */}
 
-                            <div className="relative overflow-hidden">
-                                <img
-                                    src="https://res.cloudinary.com/dikjbuftt/image/upload/v1779892028/ChatGPT_Image_May_27_2026_10_26_57_PM_emlmki.png"
-                                    alt="BBQ"
-                                    className="h-full w-full object-cover"
-                                />
+                            <div
+                                className={`grid grid-cols-2 gap-3 border-t p-5 md:p-8 lg:grid-cols-2 lg:px-10 ${
+                                    theme === 'dark'
+                                        ? 'border-white/10'
+                                        : 'border-orange-100'
+                                }`}
+                            >
+                                {[
+                                    {
+                                        label: 'Fokus Kami',
+                                        value: 'Private BBQ',
+                                    },
+                                    {
+                                        label: 'Sistem Rental',
+                                        value: 'Self Pickup',
+                                    },
+                                ].map((item) => (
+                                    <div
+                                        key={item.label}
+                                        className={`rounded-[24px] p-4 transition-all duration-300 ${
+                                            theme === 'dark'
+                                                ? 'bg-white/[0.04] ring-1 ring-white/10 hover:bg-white/[0.06]'
+                                                : 'bg-white/70 ring-1 ring-orange-100 hover:bg-white'
+                                        }`}
+                                    >
+                                        <p
+                                            className={`text-[10px] tracking-[0.2em] uppercase ${
+                                                theme === 'dark'
+                                                    ? 'text-zinc-500'
+                                                    : 'text-zinc-400'
+                                            }`}
+                                        >
+                                            {item.label}
+                                        </p>
 
-                                <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/20" />
+                                        <div className="mt-3 flex items-center justify-between">
+                                            <h4 className="text-sm font-semibold md:text-lg">
+                                                {item.value}
+                                            </h4>
+
+                                            <div
+                                                className={`h-2 w-2 rounded-full ${
+                                                    theme === 'dark'
+                                                        ? 'bg-orange-400'
+                                                        : 'bg-orange-500'
+                                                }`}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -424,11 +481,11 @@ function AboutMeContent() {
                         </p>
                     </div>
 
-                    <div className="mt-10 flex snap-x gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-4 md:overflow-visible">
+                    <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4">
                         {steps.map((step, index) => (
                             <div
                                 key={step}
-                                className={`min-w-[220px] snap-start rounded-[28px] p-6 text-center transition-all duration-500 hover:-translate-y-1 md:min-w-0 ${
+                                className={`rounded-[28px] p-6 text-center transition-all duration-500 hover:-translate-y-1 ${
                                     theme === 'dark'
                                         ? 'bg-white/[0.03] ring-1 ring-white/10'
                                         : 'bg-white/80 ring-1 ring-orange-100'
@@ -450,96 +507,102 @@ function AboutMeContent() {
 
                 <section className="mt-24 md:mt-32">
                     <div
-                        className={`grid gap-6 overflow-hidden rounded-[32px] p-5 sm:grid-cols-[1fr_320px] md:p-10 ${
+                        className={`overflow-hidden rounded-[32px] ${
                             theme === 'dark'
                                 ? 'bg-white/[0.03] ring-1 ring-white/10'
                                 : 'bg-white/80 ring-1 ring-orange-100'
                         }`}
                     >
-                        <div>
-                            <div
-                                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm ${
-                                    theme === 'dark'
-                                        ? 'bg-orange-500/10 text-orange-200'
-                                        : 'bg-orange-100 text-orange-700'
-                                }`}
-                            >
-                                <Sparkles size={14} />
-                                Contact
+                        <div className="grid gap-8 p-5 sm:p-7 md:gap-10 md:p-10 lg:grid-cols-[1.05fr_380px]">
+                            {/* LEFT */}
+
+                            <div className="flex flex-col justify-center text-center lg:text-left">
+                                <div
+                                    className={`inline-flex w-fit items-center gap-2 self-center rounded-full px-4 py-2 text-xs md:text-sm lg:self-start ${
+                                        theme === 'dark'
+                                            ? 'bg-orange-500/10 text-orange-200'
+                                            : 'bg-orange-100 text-orange-700'
+                                    }`}
+                                >
+                                    <Sparkles size={14} />
+                                    Contact
+                                </div>
+
+                                <h2 className="mt-5 text-3xl leading-[1.05] font-black tracking-[-0.03em] md:text-5xl">
+                                    Siap bikin acara BBQ lebih seru?
+                                </h2>
+
+                                <p
+                                    className={`mx-auto mt-5 max-w-xl text-sm leading-7 md:text-base md:leading-8 lg:mx-0 ${
+                                        theme === 'dark'
+                                            ? 'text-zinc-400'
+                                            : 'text-zinc-600'
+                                    }`}
+                                >
+                                    Booking sekarang dan nikmati pengalaman
+                                    grill tanpa ribet bersama Kelana Grill.
+                                </p>
+
+                                <button className="mt-8 inline-flex items-center justify-center gap-2 self-center rounded-2xl bg-orange-500 px-6 py-4 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 lg:self-start">
+                                    Booking Sekarang
+                                    <ArrowRight size={16} />
+                                </button>
                             </div>
 
-                            <h2 className="mt-5 text-3xl leading-tight font-bold md:text-5xl">
-                                Siap bikin acara BBQ lebih seru?
-                            </h2>
+                            {/* RIGHT */}
 
-                            <p
-                                className={`mt-5 text-sm leading-7 md:text-base md:leading-8 ${
-                                    theme === 'dark'
-                                        ? 'text-zinc-400'
-                                        : 'text-zinc-600'
-                                }`}
-                            >
-                                Booking sekarang dan nikmati pengalaman grill
-                                tanpa ribet bersama Kelana Grill.
-                            </p>
+                            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+                                {[
+                                    {
+                                        icon: Phone,
+                                        title: 'WhatsApp',
+                                        value: '+62 812-3456-7890',
+                                    },
+                                    {
+                                        icon: Instagram,
+                                        title: 'Instagram',
+                                        value: '@kelanagrill',
+                                    },
+                                    {
+                                        icon: MapPin,
+                                        title: 'Location',
+                                        value: 'Denpasar, Bali',
+                                    },
+                                ].map((item, index) => {
+                                    const Icon = item.icon;
 
-                            <button className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-orange-500 px-6 py-4 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600">
-                                Booking Sekarang
-                                <ArrowRight size={16} />
-                            </button>
-                        </div>
+                                    return (
+                                        <div
+                                            key={index}
+                                            className={`flex items-center gap-4 rounded-[24px] p-4 transition-all duration-500 hover:-translate-y-1 md:p-5 ${
+                                                theme === 'dark'
+                                                    ? 'bg-white/[0.03] ring-1 ring-white/10'
+                                                    : 'bg-orange-50/70 ring-1 ring-orange-100'
+                                            }`}
+                                        >
+                                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-500 text-white md:h-14 md:w-14">
+                                                <Icon size={20} />
+                                            </div>
 
-                        <div className="space-y-4">
-                            {[
-                                {
-                                    icon: Phone,
-                                    title: 'WhatsApp',
-                                    value: '+62 812-3456-7890',
-                                },
-                                {
-                                    icon: Instagram,
-                                    title: 'Instagram',
-                                    value: '@kelanagrill',
-                                },
-                                {
-                                    icon: MapPin,
-                                    title: 'Location',
-                                    value: 'Denpasar, Bali',
-                                },
-                            ].map((item, index) => {
-                                const Icon = item.icon;
+                                            <div className="min-w-0">
+                                                <p
+                                                    className={`text-xs md:text-sm ${
+                                                        theme === 'dark'
+                                                            ? 'text-zinc-400'
+                                                            : 'text-zinc-500'
+                                                    }`}
+                                                >
+                                                    {item.title}
+                                                </p>
 
-                                return (
-                                    <div
-                                        key={index}
-                                        className={`flex items-center gap-4 rounded-[24px] p-5 transition-all duration-500 hover:-translate-y-1 ${
-                                            theme === 'dark'
-                                                ? 'bg-white/[0.03] ring-1 ring-white/10'
-                                                : 'bg-orange-50/70 ring-1 ring-orange-100'
-                                        }`}
-                                    >
-                                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500 text-white">
-                                            <Icon size={22} />
+                                                <h3 className="mt-1 truncate text-sm font-semibold md:text-lg">
+                                                    {item.value}
+                                                </h3>
+                                            </div>
                                         </div>
-
-                                        <div>
-                                            <p
-                                                className={`text-sm ${
-                                                    theme === 'dark'
-                                                        ? 'text-zinc-400'
-                                                        : 'text-zinc-500'
-                                                }`}
-                                            >
-                                                {item.title}
-                                            </p>
-
-                                            <h3 className="mt-1 text-lg font-semibold">
-                                                {item.value}
-                                            </h3>
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
                 </section>
