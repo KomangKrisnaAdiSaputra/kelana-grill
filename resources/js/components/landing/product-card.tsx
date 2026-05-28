@@ -51,28 +51,24 @@ export default function ProductCard({
 
     return (
         <article
-            className={`group overflow-hidden rounded-[30px] border transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-orange-500/10 ${
+            className={`group overflow-hidden rounded-[26px] border transition-all duration-300 hover:-translate-y-1 ${
                 theme === 'dark' ? 'theme-card-dark' : 'theme-card-light'
-            } `}
+            }`}
         >
             {/* IMAGE */}
 
-            <div className="relative h-56 overflow-hidden">
+            <div className="relative h-48 overflow-hidden sm:h-56">
                 <img
                     src={product.image}
                     alt={product.name ?? 'Product Image'}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
 
-                {/* OVERLAY */}
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
-
-                {/* CATEGORY */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent" />
 
                 {category && (
-                    <div className="absolute top-4 left-4">
-                        <span className="rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-white">
+                    <div className="absolute top-3 left-3">
+                        <span className="rounded-full bg-orange-500 px-3 py-1 text-[11px] font-semibold text-white shadow-lg">
                             {category.name}
                         </span>
                     </div>
@@ -81,31 +77,51 @@ export default function ProductCard({
 
             {/* CONTENT */}
 
-            <div className="p-5">
+            <div className="flex h-full flex-col p-4 sm:p-5">
                 {/* TITLE */}
 
                 <div>
                     <h3
-                        className={`text-xl font-semibold tracking-tight ${
+                        className={`line-clamp-1 text-lg font-bold tracking-tight ${
                             theme === 'dark' ? 'text-white' : 'text-zinc-900'
-                        } `}
+                        }`}
                     >
                         {product.name}
                     </h3>
 
-                    <p
-                        className={`mt-2 line-clamp-2 text-sm leading-6 ${
-                            theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'
-                        } `}
-                    >
-                        {product.description}
-                    </p>
+                    {/* DESCRIPTION */}
+
+                    <div className="group/tooltip relative">
+                        <div className="min-h-[40px]">
+                            <p
+                                className={`line-clamp-2 text-[13px] leading-5 ${
+                                    theme === 'dark'
+                                        ? 'text-zinc-400'
+                                        : 'text-zinc-600'
+                                }`}
+                            >
+                                {product.description}
+                            </p>
+                        </div>
+
+                        {/* TOOLTIP */}
+
+                        <div
+                            className={`pointer-events-none absolute bottom-full left-0 z-50 mb-2 hidden w-64 rounded-2xl px-3 py-2 text-xs leading-5 shadow-2xl group-hover/tooltip:block ${
+                                theme === 'dark'
+                                    ? 'border border-white/10 bg-zinc-900 text-zinc-200'
+                                    : 'border border-zinc-200 bg-white text-zinc-700'
+                            }`}
+                        >
+                            {product.description}
+                        </div>
+                    </div>
                 </div>
 
                 {/* VARIANTS */}
 
                 {product.variants.length > 1 && (
-                    <div className="mt-5 flex flex-wrap gap-2">
+                    <div className="mt-4 flex flex-wrap gap-2">
                         {product.variants.map((variant) => {
                             const isActive = selectedVariant?.id === variant.id;
 
@@ -113,13 +129,13 @@ export default function ProductCard({
                                 <button
                                     key={variant.id}
                                     onClick={() => onSelectVariant?.(variant)}
-                                    className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
+                                    className={`rounded-full px-3 py-1.5 text-[11px] font-medium transition-all duration-200 sm:text-xs ${
                                         isActive
-                                            ? 'bg-orange-500 text-white'
+                                            ? 'bg-orange-500 text-white shadow-md'
                                             : theme === 'dark'
-                                              ? `border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
-                                              : `border border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100`
-                                    } `}
+                                              ? 'border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]'
+                                              : 'border border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100'
+                                    }`}
                                 >
                                     {variant.name}
                                 </button>
@@ -128,18 +144,18 @@ export default function ProductCard({
                     </div>
                 )}
 
-                {/* PRICE + ACTIONS */}
+                {/* FOOTER */}
 
-                <div className="mt-6 flex items-end justify-between gap-3">
+                <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                     {/* PRICE */}
 
                     <div className="min-w-0">
                         <p
-                            className={`text-2xl font-bold tracking-tight ${
+                            className={`text-2xl font-black tracking-tight ${
                                 theme === 'dark'
                                     ? 'text-white'
                                     : 'text-zinc-900'
-                            } `}
+                            }`}
                         >
                             {formatPrice(selectedVariant?.rate ?? 0)}
                         </p>
@@ -149,7 +165,7 @@ export default function ProductCard({
                                 theme === 'dark'
                                     ? 'text-zinc-500'
                                     : 'text-zinc-500'
-                            } `}
+                            }`}
                         >
                             {__('per paket')}
                         </p>
@@ -157,7 +173,7 @@ export default function ProductCard({
 
                     {/* ACTIONS */}
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex w-full gap-2 sm:w-auto">
                         {/* DETAIL */}
 
                         <button
@@ -173,15 +189,11 @@ export default function ProductCard({
                                     detailButtonRef.current,
                                 );
                             }}
-                            style={{
-                                position: 'relative',
-                                zIndex: 20,
-                            }}
-                            className={`relative z-20 h-11 rounded-2xl px-4 text-sm font-medium transition-colors duration-200 ${
+                            className={`h-11 flex-1 rounded-2xl px-4 text-sm font-medium transition-all duration-200 sm:flex-none ${
                                 theme === 'dark'
-                                    ? `border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
-                                    : `border border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100`
-                            } `}
+                                    ? 'border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]'
+                                    : 'border border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100'
+                            }`}
                         >
                             Detail
                         </button>
@@ -192,13 +204,11 @@ export default function ProductCard({
                             onClick={() =>
                                 onAddToCart?.(product, selectedVariant)
                             }
-                            className="relative flex h-11 items-center justify-center gap-2 rounded-2xl bg-orange-500 px-4 text-sm font-medium text-white transition-all duration-300 hover:bg-orange-600 active:scale-[0.98]"
+                            className="relative flex h-11 flex-1 items-center justify-center gap-2 rounded-2xl bg-orange-500 px-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-orange-600 active:scale-[0.98] sm:flex-none"
                         >
                             <ShoppingBag size={16} />
 
-                            <span className="hidden sm:block">
-                                {__('Tambah')}
-                            </span>
+                            <span>{__('Tambah')}</span>
 
                             {cartQty > 0 && (
                                 <div className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-orange-500 shadow-md">
