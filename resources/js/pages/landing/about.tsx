@@ -119,7 +119,7 @@ function AboutMeContent() {
 
                     <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-red-500/10 blur-3xl" />
 
-                    <div className="relative grid items-center gap-6 px-4 py-6 sm:px-6 md:grid-cols-[1fr_420px] md:px-8 md:py-10 lg:grid-cols-[1.1fr_0.9fr] lg:px-10 lg:py-16">
+                    <div className="relative grid items-center gap-6 px-4 py-6 sm:px-6 md:px-8 md:py-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:px-10 lg:py-16">
                         {/* LEFT */}
 
                         <div className="relative z-10">
@@ -141,6 +141,11 @@ function AboutMeContent() {
                                 </span>
                             </h1>
 
+                            {/* MOBILE & TABLET */}
+                            <div className="mt-6 block lg:hidden">
+                                <HeroImage theme={theme} />
+                            </div>
+
                             <p
                                 className={`mt-5 max-w-2xl text-sm leading-7 md:text-base md:leading-8 ${
                                     theme === 'dark'
@@ -155,7 +160,8 @@ function AboutMeContent() {
                             </p>
 
                             <div className="mt-7 flex flex-wrap items-center gap-3">
-                                <button className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-orange-500 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600">
+                                <button className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 sm:px-6 sm:py-4">
+                                    {' '}
                                     Booking Sekarang
                                     <ArrowRight
                                         size={16}
@@ -164,7 +170,7 @@ function AboutMeContent() {
                                 </button>
 
                                 <button
-                                    className={`inline-flex items-center justify-center rounded-2xl px-6 py-4 text-sm font-semibold transition-all duration-300 hover:-translate-y-1 ${
+                                    className={`inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold transition-all duration-300 hover:-translate-y-1 sm:px-6 sm:py-4 ${
                                         theme === 'dark'
                                             ? 'border border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.07]'
                                             : 'border border-orange-100 bg-white/80 text-zinc-800 hover:bg-orange-50'
@@ -176,7 +182,7 @@ function AboutMeContent() {
 
                             {/* STATS */}
 
-                            <div className="mt-8 grid grid-cols-3 gap-3">
+                            <div className="mt-8 grid grid-cols-3 gap-3 md:gap-4">
                                 {[
                                     {
                                         value: '50+',
@@ -193,13 +199,13 @@ function AboutMeContent() {
                                 ].map((item) => (
                                     <div
                                         key={item.label}
-                                        className={`rounded-2xl p-4 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 ${
+                                        className={`rounded-2xl p-4 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 md:p-6 ${
                                             theme === 'dark'
                                                 ? 'bg-white/[0.04] ring-1 ring-white/10'
                                                 : 'bg-white/80 ring-1 ring-orange-100'
                                         }`}
                                     >
-                                        <h3 className="text-xl font-bold sm:text-2xl md:text-3xl">
+                                        <h3 className="text-2xl font-bold md:text-4xl">
                                             {item.value}
                                         </h3>
 
@@ -217,52 +223,17 @@ function AboutMeContent() {
                             </div>
                         </div>
 
-                        {/* RIGHT */}
+                        {/* RIGHT - DESKTOP */}
 
-                        <div className="relative">
-                            <div
-                                className={`relative overflow-hidden rounded-[28px] p-3 backdrop-blur-2xl ${
-                                    theme === 'dark'
-                                        ? 'bg-white/[0.04] ring-1 ring-white/10'
-                                        : 'bg-white/80 ring-1 ring-orange-100'
-                                }`}
-                            >
-                                <div className="relative overflow-hidden rounded-[24px]">
-                                    <img
-                                        src="https://res.cloudinary.com/dikjbuftt/image/upload/v1779890851/ChatGPT_Image_May_27_2026_10_07_12_PM_egnna8.png"
-                                        alt="Kelana Grill"
-                                        className="h-[260px] w-full object-cover sm:h-[320px] md:h-[520px] lg:h-[620px]"
-                                    />
-
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-
-                                    <div className="absolute right-4 bottom-4 left-4 rounded-[22px] bg-black/40 p-4 ring-1 ring-white/10 backdrop-blur-2xl">
-                                        <div className="flex items-center justify-between gap-4">
-                                            <div>
-                                                <h3 className="text-lg font-semibold text-white">
-                                                    Grill & Gather
-                                                </h3>
-
-                                                <p className="mt-1 text-xs text-zinc-300">
-                                                    Experience Premium BBQ
-                                                    Moments
-                                                </p>
-                                            </div>
-
-                                            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-500 text-white">
-                                                <Flame size={22} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="relative hidden lg:block">
+                            <HeroImage theme={theme} />
                         </div>
                     </div>
                 </section>
 
                 {/* FEATURES */}
 
-                <section className="mt-24 md:mt-32">
+                <section className="mt-24 md:mt-20">
                     <div className="mx-auto max-w-3xl text-center">
                         <div
                             className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm ${
@@ -292,7 +263,7 @@ function AboutMeContent() {
                         </p>
                     </div>
 
-                    <div className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
+                    <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                         {features.map((item, index) => {
                             const Icon = item.icon;
 
@@ -579,6 +550,68 @@ function AboutMeContent() {
             <div className="h-24 xl:hidden" />
 
             <Footer theme={theme} />
+        </div>
+    );
+}
+
+function HeroImage({ theme }: { theme: string }) {
+    return (
+        <div className="relative mx-auto w-full max-w-[760px]">
+            {/* SOFT GLOW */}
+
+            <div className="absolute top-14 left-1/2 h-32 w-32 -translate-x-1/2 rounded-full bg-orange-500/10 blur-3xl md:h-56 md:w-56" />
+
+            {/* CONTAINER */}
+
+            <div
+                className={`group relative overflow-hidden rounded-[32px] p-[6px] transition-all duration-500 md:rounded-[40px] ${
+                    theme === 'dark'
+                        ? 'bg-white/[0.03] ring-1 ring-white/8'
+                        : 'bg-gradient-to-br from-white via-orange-50 to-white ring-1 ring-orange-100/80'
+                }`}
+            >
+                <div className="relative overflow-hidden rounded-[28px] md:rounded-[34px]">
+                    {/* IMAGE */}
+
+                    <img
+                        src="https://res.cloudinary.com/dikjbuftt/image/upload/v1779890851/ChatGPT_Image_May_27_2026_10_07_12_PM_egnna8.png"
+                        alt="Kelana Grill"
+                        className="h-[340px] w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.02] sm:h-[460px] md:h-[560px] lg:h-[620px]"
+                    />
+
+                    {/* OVERLAY */}
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+                    {/* TOP FADE */}
+
+                    <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/25 to-transparent sm:h-40" />
+
+                    {/* FLOATING CARD */}
+
+                    <div className="absolute inset-x-0 bottom-0">
+                        <div className="flex items-center justify-between bg-gradient-to-t from-black/80 to-black/20 px-5 py-4">
+                            <div>
+                                <h3 className="text-lg font-semibold text-white">
+                                    Grill & Gather
+                                </h3>
+
+                                <p className="text-xs text-zinc-300">
+                                    Premium BBQ Experience
+                                </p>
+                            </div>
+
+                            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-500 text-white">
+                                <Flame size={18} />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* SUBTLE BORDER */}
+
+                    <div className="pointer-events-none absolute inset-0 rounded-[24px] ring-1 ring-white/10 ring-inset" />
+                </div>
+            </div>
         </div>
     );
 }
