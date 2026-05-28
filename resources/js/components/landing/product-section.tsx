@@ -67,20 +67,20 @@ export default function ProductSection({ theme, products = [] }: Props) {
     }, [totalSlides]);
 
     const goToSlide = (index: number) => {
-        const slider = sliderRef.current;
-
-        if (!slider) {
+        if (!sliderRef.current) {
             return;
         }
 
-        const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
+        const slides = sliderRef.current.querySelectorAll(
+            '[data-product-slide]',
+        );
 
-        const targetLeft =
-            totalSlides <= 1 ? 0 : (maxScrollLeft / (totalSlides - 1)) * index;
+        const targetSlide = slides[index] as HTMLElement;
 
-        slider.scrollTo({
-            left: targetLeft,
+        targetSlide?.scrollIntoView({
             behavior: 'smooth',
+            inline: 'center',
+            block: 'nearest',
         });
 
         setActiveSlide(index);
@@ -160,7 +160,7 @@ export default function ProductSection({ theme, products = [] }: Props) {
                 <div
                     ref={sliderRef}
                     onScroll={handleScroll}
-                    className="-mx-4 mt-12 flex snap-x snap-proximity [scrollbar-width:none] gap-0 overflow-x-auto scroll-smooth px-4 pb-5 [-ms-overflow-style:none] md:-mx-6 md:px-6 xl:mx-0 xl:grid xl:grid-cols-3 xl:gap-5 xl:overflow-visible xl:px-0 xl:pb-0 [&::-webkit-scrollbar]:hidden"
+                    className="-mx-4 mt-12 flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [-ms-overflow-style:none] md:-mx-6 md:gap-5 md:px-6 xl:mx-0 xl:grid xl:grid-cols-3 xl:gap-6 xl:overflow-visible xl:px-0 xl:pb-0 [&::-webkit-scrollbar]:hidden"
                 >
                     {products.map((product) => {
                         const selectedVariantId = selectedVariants[product.id];
@@ -175,7 +175,7 @@ export default function ProductSection({ theme, products = [] }: Props) {
                             <div
                                 key={product.id}
                                 data-product-slide
-                                className="w-full shrink-0 snap-start md:w-1/2 md:pr-5 xl:w-auto xl:shrink xl:pr-0"
+                                className="w-[88%] shrink-0 snap-center sm:w-[70%] md:w-[48%] xl:w-auto xl:shrink"
                             >
                                 <ProductCard
                                     theme={theme}
@@ -214,7 +214,7 @@ export default function ProductSection({ theme, products = [] }: Props) {
                 </div>
 
                 {totalSlides > 1 && (
-                    <div className="mt-2 flex items-center justify-center gap-2 xl:hidden">
+                    <div className="mt-3 flex items-center justify-center gap-2 xl:hidden">
                         {Array.from({
                             length: totalSlides,
                         }).map((_, index) => (
@@ -223,13 +223,13 @@ export default function ProductSection({ theme, products = [] }: Props) {
                                 type="button"
                                 onClick={() => goToSlide(index)}
                                 aria-label={`Go to product page ${index + 1}`}
-                                className={`h-2 rounded-full transition-all duration-300 ${
+                                className={`rounded-full transition-all duration-300 ${
                                     activeSlide === index
-                                        ? 'w-8 bg-orange-500'
+                                        ? 'h-2 w-8 bg-orange-500'
                                         : theme === 'dark'
-                                          ? 'w-2 bg-white/20 hover:bg-white/40'
-                                          : 'w-2 bg-zinc-300 hover:bg-zinc-400'
-                                } `}
+                                          ? 'h-2 w-2 bg-white/20 hover:bg-white/40'
+                                          : 'h-2 w-2 bg-zinc-300 hover:bg-zinc-400'
+                                }`}
                             />
                         ))}
                     </div>
