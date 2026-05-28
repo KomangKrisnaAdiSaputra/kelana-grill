@@ -39,6 +39,10 @@ export default function AboutMePage() {
 function AboutMeContent() {
     const { theme, toggleTheme } = useTheme();
 
+    const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+    const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '-';
+    const viteInstagram = import.meta.env.VITE_INSTAGRAM || '-';
+
     const { __ } = useTranslation();
 
     const [scrolled, setScrolled] = useState(false);
@@ -131,13 +135,13 @@ function AboutMeContent() {
                                 }`}
                             >
                                 <Sparkles size={16} />
-                                Premium BBQ Experience
+                                {__('Premium BBQ Experience')}
                             </div>
 
                             <h1 className="mt-5 text-[42px] leading-[0.95] font-black tracking-[-0.04em] sm:text-5xl md:text-6xl lg:text-7xl">
                                 Kelana Grill
                                 <span className="mt-2 block bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
-                                    Bukan Sekadar Sewa Grill
+                                    {__('Bukan Sekadar Sewa Grill')}
                                 </span>
                             </h1>
 
@@ -153,16 +157,15 @@ function AboutMeContent() {
                                         : 'text-zinc-600'
                                 }`}
                             >
-                                Kelana Grill hadir untuk menghadirkan pengalaman
-                                BBQ yang lebih modern, praktis, dan berkesan
-                                untuk gathering santai, camping, private party,
-                                hingga acara spesial bersama keluarga dan teman.
+                                {__(
+                                    'Kelana Grill hadir untuk menghadirkan pengalaman BBQ yang lebih modern, praktis, dan berkesan untuk gathering santai, camping, private party, hingga acara spesial bersama keluarga dan teman.',
+                                )}
                             </p>
 
                             <div className="mt-7 flex flex-wrap items-center gap-3">
                                 <button className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 sm:px-6 sm:py-4">
                                     {' '}
-                                    Booking Sekarang
+                                    {__('Booking Sekarang')}
                                     <ArrowRight
                                         size={16}
                                         className="transition-transform duration-300 group-hover:translate-x-1"
@@ -176,7 +179,7 @@ function AboutMeContent() {
                                             : 'border border-orange-100 bg-white/80 text-zinc-800 hover:bg-orange-50'
                                     }`}
                                 >
-                                    Lihat Paket
+                                    {__('Lihat Paket')}
                                 </button>
                             </div>
 
@@ -216,7 +219,7 @@ function AboutMeContent() {
                                                     : 'text-zinc-500'
                                             }`}
                                         >
-                                            {item.label}
+                                            {__(item.label)}
                                         </p>
                                     </div>
                                 ))}
@@ -243,11 +246,11 @@ function AboutMeContent() {
                             }`}
                         >
                             <Sparkles size={14} />
-                            Kenapa Kelana Grill?
+                            {__('Kenapa Kelana Grill?')}
                         </div>
 
                         <h2 className="mt-5 text-3xl leading-tight font-bold md:text-5xl">
-                            Pengalaman BBQ lebih praktis & nyaman
+                            {__('Pengalaman BBQ lebih praktis & nyaman')}
                         </h2>
 
                         <p
@@ -257,9 +260,9 @@ function AboutMeContent() {
                                     : 'text-zinc-600'
                             }`}
                         >
-                            Kami menghadirkan alat grill premium untuk membuat
-                            momen BBQ bersama keluarga dan teman jadi lebih seru
-                            tanpa repot.
+                            {__(
+                                'Kami menghadirkan alat grill premium untuk membuat momen BBQ bersama keluarga dan teman jadi lebih seru tanpa repot.',
+                            )}
                         </p>
                     </div>
 
@@ -284,7 +287,7 @@ function AboutMeContent() {
                                         </div>
 
                                         <h3 className="mt-5 text-base font-semibold md:text-xl">
-                                            {item.title}
+                                            {__(item.title)}
                                         </h3>
 
                                         <p
@@ -294,7 +297,7 @@ function AboutMeContent() {
                                                     : 'text-zinc-600'
                                             }`}
                                         >
-                                            {item.desc}
+                                            {__(item.desc)}
                                         </p>
                                     </div>
                                 </div>
@@ -331,11 +334,11 @@ function AboutMeContent() {
                                             }`}
                                         >
                                             <Flame size={14} />
-                                            BBQ Experience
+                                            {__('BBQ Experience')}
                                         </div>
 
                                         <h3 className="mt-6 max-w-xl text-3xl leading-[1.05] font-black tracking-[-0.03em] md:text-5xl">
-                                            BBQ lebih santai tanpa ribet
+                                            {__('BBQ lebih santai tanpa ribet')}
                                         </h3>
 
                                         <p
@@ -345,11 +348,9 @@ function AboutMeContent() {
                                                     : 'text-zinc-600'
                                             }`}
                                         >
-                                            Kelana Grill fokus menyediakan alat
-                                            grill premium berkualitas untuk
-                                            kebutuhan BBQ pribadi, gathering
-                                            santai, camping, dan acara spesial
-                                            bersama keluarga maupun teman.
+                                            {__(
+                                                'Kelana Grill fokus menyediakan alat grill premium berkualitas untuk kebutuhan BBQ pribadi, gathering santai, camping, dan acara spesial bersama keluarga maupun teman.',
+                                            )}
                                         </p>
 
                                         {/* TAGS */}
@@ -368,7 +369,7 @@ function AboutMeContent() {
                                                             : 'bg-white/80 text-zinc-700 ring-1 ring-orange-100'
                                                     }`}
                                                 >
-                                                    {item}
+                                                    {__(item)}
                                                 </div>
                                             ))}
                                         </div>
@@ -392,11 +393,11 @@ function AboutMeContent() {
                                         <div className="absolute right-5 bottom-5">
                                             <div className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 backdrop-blur-xl">
                                                 <p className="text-[10px] tracking-[0.18em] text-orange-200 uppercase">
-                                                    Kelana Grill
+                                                    {appName}
                                                 </p>
 
                                                 <h4 className="mt-1 text-sm font-semibold text-white md:text-base">
-                                                    Premium BBQ Setup
+                                                    {__('Premium BBQ Setup')}
                                                 </h4>
                                             </div>
                                         </div>
@@ -420,7 +421,7 @@ function AboutMeContent() {
                                     },
                                     {
                                         label: 'Sistem Rental',
-                                        value: 'Self Pickup',
+                                        value: 'Penjemputan Mandiri',
                                     },
                                 ].map((item) => (
                                     <div
@@ -438,12 +439,12 @@ function AboutMeContent() {
                                                     : 'text-zinc-400'
                                             }`}
                                         >
-                                            {item.label}
+                                            {__(item.label)}
                                         </p>
 
                                         <div className="mt-3 flex items-center justify-between">
                                             <h4 className="text-sm font-semibold md:text-lg">
-                                                {item.value}
+                                                {__(item.value)}
                                             </h4>
 
                                             <div
@@ -466,7 +467,7 @@ function AboutMeContent() {
                 <section className="mt-24 md:mt-32">
                     <div className="text-center">
                         <h2 className="text-3xl font-bold md:text-5xl">
-                            Cara Rental di Kelana Grill
+                            {__('Cara Rental di')} {appName}
                         </h2>
 
                         <p
@@ -476,8 +477,9 @@ function AboutMeContent() {
                                     : 'text-zinc-600'
                             }`}
                         >
-                            Proses rental dibuat mudah dan cepat agar kamu bisa
-                            fokus menikmati acara BBQ.
+                            {__(
+                                'Proses rental dibuat mudah dan cepat agar kamu bisa fokus menikmati acara BBQ.',
+                            )}
                         </p>
                     </div>
 
@@ -496,7 +498,7 @@ function AboutMeContent() {
                                 </div>
 
                                 <h3 className="mt-5 text-lg font-semibold">
-                                    {step}
+                                    {__(step)}
                                 </h3>
                             </div>
                         ))}
@@ -525,11 +527,11 @@ function AboutMeContent() {
                                     }`}
                                 >
                                     <Sparkles size={14} />
-                                    Contact
+                                    {__('Kontak')}
                                 </div>
 
                                 <h2 className="mt-5 text-3xl leading-[1.05] font-black tracking-[-0.03em] md:text-5xl">
-                                    Siap bikin acara BBQ lebih seru?
+                                    {__('Siap bikin acara BBQ lebih seru?')}
                                 </h2>
 
                                 <p
@@ -539,12 +541,14 @@ function AboutMeContent() {
                                             : 'text-zinc-600'
                                     }`}
                                 >
-                                    Booking sekarang dan nikmati pengalaman
-                                    grill tanpa ribet bersama Kelana Grill.
+                                    {__(
+                                        'Booking sekarang dan nikmati pengalaman grill tanpa ribet bersama',
+                                    )}{' '}
+                                    {appName}.
                                 </p>
 
                                 <button className="mt-8 inline-flex items-center justify-center gap-2 self-center rounded-2xl bg-orange-500 px-6 py-4 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 lg:self-start">
-                                    Booking Sekarang
+                                    {__('Booking Sekarang')}
                                     <ArrowRight size={16} />
                                 </button>
                             </div>
@@ -556,17 +560,17 @@ function AboutMeContent() {
                                     {
                                         icon: Phone,
                                         title: 'WhatsApp',
-                                        value: '+62 812-3456-7890',
+                                        value: whatsappNumber,
                                     },
                                     {
                                         icon: Instagram,
                                         title: 'Instagram',
-                                        value: '@kelanagrill',
+                                        value: viteInstagram,
                                     },
                                     {
                                         icon: MapPin,
                                         title: 'Location',
-                                        value: 'Denpasar, Bali',
+                                        value: 'Batubulan, Bali & Denpasar, Bali',
                                     },
                                 ].map((item, index) => {
                                     const Icon = item.icon;
@@ -618,6 +622,8 @@ function AboutMeContent() {
 }
 
 function HeroImage({ theme }: { theme: string }) {
+    const { __ } = useTranslation();
+
     return (
         <div className="relative mx-auto w-full max-w-[760px]">
             {/* SOFT GLOW */}
@@ -656,11 +662,11 @@ function HeroImage({ theme }: { theme: string }) {
                         <div className="flex items-center justify-between bg-gradient-to-t from-black/80 to-black/20 px-5 py-4">
                             <div>
                                 <h3 className="text-lg font-semibold text-white">
-                                    Grill & Gather
+                                    {__('Grill & Gather')}
                                 </h3>
 
                                 <p className="text-xs text-zinc-300">
-                                    Premium BBQ Experience
+                                    {__('Premium BBQ Experience')}
                                 </p>
                             </div>
 
