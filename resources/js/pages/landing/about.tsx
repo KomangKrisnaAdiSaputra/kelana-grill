@@ -546,7 +546,7 @@ function AboutMeContent() {
 
                 {/* CONTACT */}
 
-                <section className="relative -mx-5 mt-24 mb-20 overflow-hidden rounded-none md:-mx-10 md:mt-32 lg:mx-0 lg:rounded-[48px]">
+                <section className="relative -mx-5 mt-24 overflow-hidden rounded-none md:-mx-10 md:mt-32 lg:mx-0 lg:rounded-[48px]">
                     <div
                         className={`overflow-hidden rounded-none lg:rounded-[32px] ${
                             theme === 'dark'
@@ -594,7 +594,7 @@ function AboutMeContent() {
 
                             {/* RIGHT */}
 
-                            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-1">
                                 {[
                                     {
                                         icon: Phone,
@@ -617,28 +617,37 @@ function AboutMeContent() {
                                     return (
                                         <div
                                             key={index}
-                                            className={`flex items-center gap-4 rounded-[24px] p-4 transition-all duration-500 hover:-translate-y-1 md:p-5 ${
+                                            className={`group flex items-center gap-4 rounded-[28px] p-4 transition-all duration-500 hover:-translate-y-1 md:p-5 ${
                                                 theme === 'dark'
-                                                    ? 'bg-white/[0.03] ring-1 ring-white/10'
-                                                    : 'bg-orange-50/70 ring-1 ring-orange-100'
+                                                    ? 'bg-white/[0.03] ring-1 ring-white/10 hover:bg-white/[0.05] hover:ring-orange-500/20'
+                                                    : 'bg-orange-50/70 ring-1 ring-orange-100 hover:bg-orange-50 hover:ring-orange-200'
                                             }`}
                                         >
-                                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-500 text-white md:h-14 md:w-14">
+                                            {/* Icon */}
+                                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white transition-all duration-500 group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-orange-500/20 md:h-14 md:w-14">
                                                 <Icon size={20} />
                                             </div>
 
-                                            <div className="min-w-0">
+                                            {/* Content */}
+                                            <div className="min-w-0 flex-1">
                                                 <p
-                                                    className={`text-xs md:text-sm ${
+                                                    className={`text-[11px] tracking-[0.18em] uppercase ${
                                                         theme === 'dark'
-                                                            ? 'text-zinc-400'
-                                                            : 'text-zinc-500'
-                                                    }`}
+                                                            ? 'text-orange-400'
+                                                            : 'text-orange-600'
+                                                    } `}
                                                 >
                                                     {item.title}
                                                 </p>
 
-                                                <h3 className="mt-1 truncate text-sm font-semibold md:text-lg">
+                                                <h3
+                                                    className={`mt-1 leading-snug font-semibold ${
+                                                        item.title ===
+                                                        'Location'
+                                                            ? 'text-sm md:text-[15px]'
+                                                            : 'text-sm md:text-base'
+                                                    } `}
+                                                >
                                                     {item.value}
                                                 </h3>
                                             </div>
