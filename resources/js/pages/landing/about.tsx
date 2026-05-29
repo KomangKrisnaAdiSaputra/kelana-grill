@@ -109,7 +109,7 @@ function AboutMeContent() {
             <main className="relative mx-auto max-w-7xl px-4 pt-20 sm:px-6 md:px-8 md:pt-28 lg:px-6 lg:pt-32">
                 {/* HERO */}
 
-                <section className="relative overflow-hidden rounded-[32px] md:rounded-[48px]">
+                <section className="relative -mx-5 overflow-hidden rounded-none md:-mx-10 lg:mx-0 lg:rounded-[48px]">
                     <div
                         className={`absolute inset-0 ${
                             theme === 'dark'
@@ -273,7 +273,7 @@ function AboutMeContent() {
                         </p>
                     </div>
 
-                    <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    <div className="mt-10 mb-20 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                         {features.map((item, index) => {
                             const Icon = item.icon;
 
@@ -311,11 +311,12 @@ function AboutMeContent() {
                             );
                         })}
                     </div>
+                </section>
 
-                    {/* BBQ EXPERIENCE */}
-
+                {/* BBQ EXPERIENCE */}
+                <section className="relative -mx-5 overflow-hidden rounded-none md:-mx-10 lg:mx-0 lg:rounded-[48px]">
                     <div
-                        className={`mt-8 overflow-hidden rounded-[32px] md:mt-10 md:rounded-[42px] ${
+                        className={`mt-8 overflow-hidden rounded-none md:mt-10 lg:rounded-[42px] ${
                             theme === 'dark'
                                 ? 'bg-gradient-to-br from-orange-500/10 via-white/[0.03] to-red-500/10 ring-1 ring-white/10'
                                 : 'bg-gradient-to-br from-orange-50 via-white to-orange-100 ring-1 ring-orange-100'
@@ -388,7 +389,7 @@ function AboutMeContent() {
                                         <img
                                             src="https://res.cloudinary.com/dikjbuftt/image/upload/v1779892028/ChatGPT_Image_May_27_2026_10_26_57_PM_emlmki.png"
                                             alt="BBQ"
-                                            className="absolute inset-0 h-full w-full object-cover object-[center_30%] transition-transform duration-700 hover:scale-[1.03] md:object-[center_34%] lg:object-[center_30%]"
+                                            className="absolute inset-0 h-full w-full scale-100 object-cover object-[50%_28%] transition-transform duration-700 hover:scale-[1.15] sm:scale-105 sm:object-[50%_30%] md:scale-99 md:object-[50%_18%] lg:scale-110 lg:object-[50%_30%]"
                                         />
 
                                         {/* OVERLAY */}
@@ -514,9 +515,9 @@ function AboutMeContent() {
 
                 {/* CONTACT */}
 
-                <section className="mt-24 md:mt-32">
+                <section className="relative -mx-5 mt-24 mb-20 overflow-hidden rounded-none md:-mx-10 md:mt-32 lg:mx-0 lg:rounded-[48px]">
                     <div
-                        className={`overflow-hidden rounded-[32px] ${
+                        className={`overflow-hidden rounded-none lg:rounded-[32px] ${
                             theme === 'dark'
                                 ? 'bg-white/[0.03] ring-1 ring-white/10'
                                 : 'bg-white/80 ring-1 ring-orange-100'
@@ -652,7 +653,7 @@ function HeroImage({ theme }: { theme: string }) {
                     <img
                         src="https://res.cloudinary.com/dikjbuftt/image/upload/v1779890851/ChatGPT_Image_May_27_2026_10_07_12_PM_egnna8.png"
                         alt="Kelana Grill"
-                        className="h-[340px] w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.02] sm:h-[460px] md:h-[560px] lg:h-[620px]"
+                        className="h-[340px] w-full object-cover object-[50%_15%] transition-transform duration-700 group-hover:scale-[1.02] sm:h-[460px] sm:object-[50%_15%] md:h-[560px] md:object-[50%_13%] lg:h-[620px] lg:object-top"
                     />
 
                     {/* OVERLAY */}
