@@ -491,32 +491,55 @@ function AboutMeContent() {
                         </p>
                     </div>
 
-                    <div className="relative mt-20">
-                        {/* Desktop Line */}
-                        <div className="absolute top-7 left-[14%] z-0 hidden h-px w-[72%] bg-orange-500/20 lg:block" />
+                    <div className="mt-20">
+                        {/* Desktop & Tablet */}
+                        <div className="relative hidden md:block">
+                            {/* Main Line */}
+                            <div className="absolute top-7 left-[10%] h-px w-[80%] bg-gradient-to-r from-transparent via-orange-500/30 to-transparent" />
 
-                        <div className="relative z-10 grid grid-cols-1 gap-12 sm:grid-cols-4 lg:grid-cols-4">
-                            {steps.map((step, index) => (
-                                <div
-                                    key={step}
-                                    className="group relative text-center"
-                                >
-                                    {/* Mobile Connector */}
-                                    {index < steps.length - 1 && (
-                                        <div className="absolute top-14 left-1/2 z-0 h-10 w-px -translate-x-1/2 bg-orange-500/20 lg:hidden" />
-                                    )}
+                            <div className="grid grid-cols-4 gap-6 lg:gap-10">
+                                {steps.map((step, index) => (
+                                    <div
+                                        key={step}
+                                        className="group relative flex flex-col items-center text-center"
+                                    >
+                                        {/* Circle */}
+                                        <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full border border-orange-500/20 bg-background transition-all duration-500 group-hover:-translate-y-1 group-hover:border-orange-500 group-hover:shadow-[0_0_30px_rgba(249,115,22,0.15)]">
+                                            <span className="text-base font-bold text-orange-500 transition-transform duration-300 group-hover:scale-110">
+                                                {index + 1}
+                                            </span>
+                                        </div>
 
-                                    <div className="relative z-10 mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-orange-500/20 bg-white transition-all duration-300 group-hover:border-orange-500 group-hover:shadow-[0_0_25px_rgba(249,115,22,0.25)] dark:bg-zinc-950">
-                                        <span className="text-lg font-bold text-orange-500 transition-transform duration-300 group-hover:scale-110">
-                                            {index + 1}
-                                        </span>
+                                        <h3 className="mt-5 max-w-[170px] text-sm leading-relaxed font-medium transition-colors duration-300 group-hover:text-orange-500 lg:text-base">
+                                            {__(step)}
+                                        </h3>
                                     </div>
+                                ))}
+                            </div>
+                        </div>
 
-                                    <h3 className="mx-auto mt-5 max-w-[160px] text-base leading-relaxed font-medium transition-all duration-300 group-hover:-translate-y-0.5 group-hover:text-orange-500 md:text-lg">
-                                        {__(step)}
-                                    </h3>
-                                </div>
-                            ))}
+                        {/* Mobile */}
+                        <div className="relative md:hidden">
+                            <div className="absolute top-0 left-7 h-full w-px bg-orange-500/20" />
+
+                            <div className="space-y-10">
+                                {steps.map((step, index) => (
+                                    <div
+                                        key={step}
+                                        className="group relative flex items-center gap-5"
+                                    >
+                                        <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-orange-500/20 bg-background transition-all duration-300 group-hover:border-orange-500">
+                                            <span className="font-bold text-orange-500">
+                                                {index + 1}
+                                            </span>
+                                        </div>
+
+                                        <h3 className="text-base font-medium transition-colors duration-300 group-hover:text-orange-500">
+                                            {__(step)}
+                                        </h3>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </section>
