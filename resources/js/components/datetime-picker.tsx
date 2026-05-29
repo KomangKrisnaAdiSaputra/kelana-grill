@@ -238,9 +238,7 @@ export default function DateTimePicker({
             {open && (
                 <div
                     className={`absolute top-full left-0 z-[99999] mt-3 w-full rounded-[28px] border p-3 shadow-2xl backdrop-blur-2xl max-lg:max-h-[70dvh] max-lg:touch-pan-y max-lg:overflow-y-auto max-lg:overscroll-contain max-lg:[-webkit-overflow-scrolling:touch] max-md:max-h-[75dvh] sm:p-4 lg:max-h-none lg:min-w-[min(720px,calc(100vw-48px))] lg:overflow-visible lg:p-5 ${
-                        theme === 'dark'
-                            ? `border-white/10 bg-[#111112]`
-                            : `border-orange-100 bg-white`
+                        theme === 'dark' ? 'bg-theme-dark' : 'bg-theme-light'
                     } `}
                 >
                     <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[1fr_240px]">
@@ -338,7 +336,7 @@ export default function DateTimePicker({
                                                     : selected
                                                       ? `bg-orange-500 text-white shadow-lg shadow-orange-500/30`
                                                       : theme === 'dark'
-                                                        ? `bg-white/[0.04] text-white hover:bg-white/[0.08]`
+                                                        ? `bg-white/[0.08] text-white hover:bg-white/[0.15]`
                                                         : `bg-orange-50/70 text-zinc-700 hover:bg-orange-100`
                                             } `}
                                         >
@@ -564,8 +562,8 @@ export default function DateTimePicker({
                             <div
                                 className={`mt-5 rounded-2xl p-4 ${
                                     theme === 'dark'
-                                        ? 'bg-black/30'
-                                        : 'bg-white'
+                                        ? 'bg-theme-dark'
+                                        : 'bg-theme-light'
                                 } `}
                             >
                                 <p

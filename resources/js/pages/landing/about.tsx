@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 
 import {
     ArrowRight,
@@ -27,6 +27,7 @@ import AppProvider from '@/contexts/app-provider';
 import { useTheme } from '@/contexts/theme-context';
 
 import { useTranslation } from '@/helpers/global';
+import { contact, produk } from '@/routes/landing';
 
 export default function AboutMePage() {
     return (
@@ -42,6 +43,8 @@ function AboutMeContent() {
     const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
     const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '-';
     const viteInstagram = import.meta.env.VITE_INSTAGRAM || '-';
+
+    const locale = usePage<any>().props.params.locale;
 
     const { __ } = useTranslation();
 
@@ -159,7 +162,12 @@ function AboutMeContent() {
                             </p>
 
                             <div className="mt-7 flex flex-wrap items-center gap-3">
-                                <button className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 sm:px-6 sm:py-4">
+                                <button
+                                    onClick={() =>
+                                        router.visit(contact({ locale }).url)
+                                    }
+                                    className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 sm:px-6 sm:py-4"
+                                >
                                     {' '}
                                     {__('Booking Sekarang')}
                                     <ArrowRight
@@ -169,6 +177,9 @@ function AboutMeContent() {
                                 </button>
 
                                 <button
+                                    onClick={() =>
+                                        router.visit(produk({ locale }).url)
+                                    }
                                     className={`inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold transition-all duration-300 hover:-translate-y-1 sm:px-6 sm:py-4 ${
                                         theme === 'dark'
                                             ? 'border border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.07]'
