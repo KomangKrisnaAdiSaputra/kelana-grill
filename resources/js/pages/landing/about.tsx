@@ -491,25 +491,33 @@ function AboutMeContent() {
                         </p>
                     </div>
 
-                    <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4">
-                        {steps.map((step, index) => (
-                            <div
-                                key={step}
-                                className={`rounded-[28px] p-6 text-center transition-all duration-500 hover:-translate-y-1 ${
-                                    theme === 'dark'
-                                        ? 'bg-white/[0.03] ring-1 ring-white/10'
-                                        : 'bg-white/80 ring-1 ring-orange-100'
-                                }`}
-                            >
-                                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500 text-xl font-bold text-white">
-                                    {index + 1}
-                                </div>
+                    <div className="relative mt-20">
+                        {/* Desktop Line */}
+                        <div className="absolute top-7 left-[14%] z-0 hidden h-px w-[72%] bg-orange-500/20 lg:block" />
 
-                                <h3 className="mt-5 text-lg font-semibold">
-                                    {__(step)}
-                                </h3>
-                            </div>
-                        ))}
+                        <div className="relative z-10 grid grid-cols-1 gap-12 sm:grid-cols-4 lg:grid-cols-4">
+                            {steps.map((step, index) => (
+                                <div
+                                    key={step}
+                                    className="group relative text-center"
+                                >
+                                    {/* Mobile Connector */}
+                                    {index < steps.length - 1 && (
+                                        <div className="absolute top-14 left-1/2 z-0 h-10 w-px -translate-x-1/2 bg-orange-500/20 lg:hidden" />
+                                    )}
+
+                                    <div className="relative z-10 mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-orange-500/20 bg-white transition-all duration-300 group-hover:border-orange-500 group-hover:shadow-[0_0_25px_rgba(249,115,22,0.25)] dark:bg-zinc-950">
+                                        <span className="text-lg font-bold text-orange-500 transition-transform duration-300 group-hover:scale-110">
+                                            {index + 1}
+                                        </span>
+                                    </div>
+
+                                    <h3 className="mx-auto mt-5 max-w-[160px] text-base leading-relaxed font-medium transition-all duration-300 group-hover:-translate-y-0.5 group-hover:text-orange-500 md:text-lg">
+                                        {__(step)}
+                                    </h3>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </section>
 
