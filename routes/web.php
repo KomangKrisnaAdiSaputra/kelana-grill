@@ -26,6 +26,10 @@ Route::prefix('{locale?}')->middleware(Locale::class)->where(['locale' => 'id|en
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
+
+    Route::prefix('master')->name('master')->group(function () {
+        require __DIR__ . '/master/type.php';
+    });
 });
 
 require __DIR__ . '/settings.php';
