@@ -55,12 +55,12 @@ class TypeController extends Controller
             $type = Type::find($request->id);
             if ($type) {
                 $type->update([
-                    'name' => $validated['name'],
+                    'name' => Str::upper($validated['name']),
                     'active' => $validated['active']
                 ]);
             } else {
                 Type::Create([
-                    'name' => $validated['name'],
+                    'name' => Str::upper($validated['name']),
                     'slug' => Str::slug($validated['name']),
                     'active' => $validated['active'],
                 ],);

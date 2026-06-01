@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { type, warehouse } from '@/routes/master';
+import { manageProduct } from '@/routes/product';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -22,6 +23,22 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Products',
+        icon: Folder,
+        group: [
+            {
+                title: 'Manage Product',
+                href: manageProduct(),
+                icon: Tag,
+            },
+            {
+                title: 'Inventory',
+                href: warehouse(),
+                icon: Warehouse,
+            },
+        ],
     },
     {
         title: 'Master',

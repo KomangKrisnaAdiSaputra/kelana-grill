@@ -484,7 +484,10 @@ export default function Index({ types, filters, stats }: Props) {
                                 id="name"
                                 value={data.name}
                                 onChange={(e) =>
-                                    setData('name', e.target.value)
+                                    setData(
+                                        'name',
+                                        e.target.value.toUpperCase(),
+                                    )
                                 }
                                 placeholder="Enter product type name"
                             />

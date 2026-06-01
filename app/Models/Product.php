@@ -13,9 +13,9 @@ class Product extends Model
 
     protected $casts = [
         'rate' => 'decimal:2',
-        'is_featured' => 'boolean',
-        'is_new' => 'boolean',
-        'is_active' => 'boolean',
+        'featured' => 'boolean',
+        'new' => 'boolean',
+        'active' => 'boolean',
         'sort_order' => 'integer',
     ];
 
