@@ -29,6 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('master')->name('master')->group(function () {
         require __DIR__ . '/master/type.php';
+        require __DIR__ . '/master/warehouse.php';
     });
 });
 
