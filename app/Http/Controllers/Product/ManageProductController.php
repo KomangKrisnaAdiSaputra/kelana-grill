@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductTranslation;
 use App\Models\Type;
@@ -58,43 +59,54 @@ class ManageProductController extends Controller
 
                     'active' => $product->active,
 
-                    'translations' => [
-                        'id' => [
-                            'name' => optional(
-                                $product->translations->firstWhere('language', 'id')
-                            )->name ?? '',
+                    'translations' => $product->translations->mapWithKeys(function ($translation) {
+                        return [
+                            $translation->language => [
+                                'name' => $translation->name,
+                                'slug' => $translation->slug,
+                                'description' => $translation->description,
+                                'featuredLabel' => $translation->featured_label,
+                            ],
+                        ];
+                    }),
 
-                            'slug' => optional(
-                                $product->translations->firstWhere('language', 'id')
-                            )->slug ?? '',
+                    // 'translations' => [
+                    //     'id' => [
+                    //         'name' => optional(
+                    //             $product->translations->firstWhere('language', 'id')
+                    //         )->name ?? '',
 
-                            'description' => optional(
-                                $product->translations->firstWhere('language', 'id')
-                            )->description ?? '',
+                    //         'slug' => optional(
+                    //             $product->translations->firstWhere('language', 'id')
+                    //         )->slug ?? '',
 
-                            'featuredLabel' => optional(
-                                $product->translations->firstWhere('language', 'id')
-                            )->featured_label ?? '',
-                        ],
+                    //         'description' => optional(
+                    //             $product->translations->firstWhere('language', 'id')
+                    //         )->description ?? '',
 
-                        'en' => [
-                            'name' => optional(
-                                $product->translations->firstWhere('language', 'en')
-                            )->name ?? '',
+                    //         'featuredLabel' => optional(
+                    //             $product->translations->firstWhere('language', 'id')
+                    //         )->featured_label ?? '',
+                    //     ],
 
-                            'slug' => optional(
-                                $product->translations->firstWhere('language', 'en')
-                            )->slug ?? '',
+                    //     'en' => [
+                    //         'name' => optional(
+                    //             $product->translations->firstWhere('language', 'en')
+                    //         )->name ?? '',
 
-                            'description' => optional(
-                                $product->translations->firstWhere('language', 'en')
-                            )->description ?? '',
+                    //         'slug' => optional(
+                    //             $product->translations->firstWhere('language', 'en')
+                    //         )->slug ?? '',
 
-                            'featuredLabel' => optional(
-                                $product->translations->firstWhere('language', 'en')
-                            )->featured_label ?? '',
-                        ],
-                    ],
+                    //         'description' => optional(
+                    //             $product->translations->firstWhere('language', 'en')
+                    //         )->description ?? '',
+
+                    //         'featuredLabel' => optional(
+                    //             $product->translations->firstWhere('language', 'en')
+                    //         )->featured_label ?? '',
+                    //     ],
+                    // ],
                 ];
             });
 
@@ -104,6 +116,13 @@ class ManageProductController extends Controller
             ->get([
                 'id',
                 'name',
+            ]);
+
+        $categories = Category::query()
+            ->where('active', true)
+            ->get()->map(fn($category) => [
+                'label' => $category->translations->firstWhere('language', 'id')->name ?? $category->translations->firstWhere('language', 'en')->name ?? 'Unnamed Category',
+                'value' => $category->id,
             ]);
 
         return Inertia::render('product/manage-product/index', [
@@ -126,6 +145,8 @@ class ManageProductController extends Controller
 
                 'newest' => Product::where('new', true)->count(),
             ],
+
+            'categories' => $categories,
         ]);
     }
 

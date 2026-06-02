@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Folder, LayoutGrid, Tag, Warehouse } from 'lucide-react';
+import { Folder, FolderTree, LayoutGrid, Tag, Warehouse } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -14,7 +14,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { type, warehouse } from '@/routes/master';
+import { category, type, warehouse } from '@/routes/master';
 import { manageProduct } from '@/routes/product';
 import type { NavItem } from '@/types';
 
@@ -48,6 +48,11 @@ const mainNavItems: NavItem[] = [
                 title: 'Type',
                 href: type(),
                 icon: Tag,
+            },
+            {
+                title: 'Category',
+                href: category(),
+                icon: FolderTree,
             },
             {
                 title: 'Warehouse',

@@ -6,14 +6,13 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-#[Fillable(['is_active', 'sort_order'])]
+#[Fillable(['active'])]
 class Category extends Model
 {
     use HasUuids;
 
     protected $casts = [
-        'is_active' => 'boolean',
-        'sort_order' => 'integer',
+        'active' => 'boolean',
     ];
 
     public function translations()
