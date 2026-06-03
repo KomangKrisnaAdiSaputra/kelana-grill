@@ -112,4 +112,26 @@ class CategoryController extends Controller
             ]);
         }
     }
+
+    public function delete(Request $request)
+    {
+        $id = $request->id;
+
+        DB::beginTransaction();
+        try {
+            $category = Category::findOrFail($id);
+            $category->delete();
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->withErrors([
+                'error' => $th->getMessage()
+            ]);
+        }
+
+        return back()->with(
+            'success',
+            'Category deleted successfully.'
+        );
+    }
 }

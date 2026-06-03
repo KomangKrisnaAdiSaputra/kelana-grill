@@ -14,7 +14,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { category, type, warehouse } from '@/routes/master';
+import { badge, category, type, warehouse } from '@/routes/master';
 import { manageProduct } from '@/routes/product';
 import type { NavItem } from '@/types';
 
@@ -52,6 +52,11 @@ const mainNavItems: NavItem[] = [
             {
                 title: 'Category',
                 href: category(),
+                icon: FolderTree,
+            },
+            {
+                title: 'Badge',
+                href: badge(),
                 icon: FolderTree,
             },
             {

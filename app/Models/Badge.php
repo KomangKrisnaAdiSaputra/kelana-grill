@@ -6,14 +6,13 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-#[Fillable(['is_active', 'sort_order'])]
+#[Fillable(['is_active'])]
 class Badge extends Model
 {
     use HasUuids;
 
     protected $casts = [
-        'is_active' => 'boolean',
-        'sort_order' => 'integer',
+        'active' => 'boolean',
     ];
 
     public function translations()
@@ -35,6 +34,6 @@ class Badge extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('is_active', true);
+        return $query->where('active', true);
     }
 }

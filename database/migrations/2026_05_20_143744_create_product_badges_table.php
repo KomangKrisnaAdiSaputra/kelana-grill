@@ -9,7 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_badges', function (Blueprint $table) {
-            $table->uuid('id')->primary();
 
             $table->foreignUuid('product_id')
                 ->constrained('products')
@@ -23,10 +22,10 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->unique(['product_id', 'badge_id']);
-
-            $table->index('product_id');
-            $table->index('badge_id');
+            $table->primary([
+                'product_id',
+                'badge_id',
+            ]);
         });
     }
 
