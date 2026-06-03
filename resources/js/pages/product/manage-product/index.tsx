@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+import DynamicSelect from '@/components/dynamic-select';
 import { InputNumber } from '@/components/input-number';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -39,13 +40,6 @@ import {
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 
 import {
@@ -95,11 +89,18 @@ interface Product {
     };
 
     error?: string | null;
+
+    categories: string[];
 }
 
 interface ProductType {
     id: string;
     name: string;
+}
+
+interface ProductCategory {
+    label: string;
+    value: string;
 }
 
 interface PaginatedProducts {
@@ -116,6 +117,8 @@ interface Props {
 
     types: ProductType[];
 
+    categories: ProductCategory[];
+
     filters: {
         search?: string;
         status?: string;
@@ -130,7 +133,13 @@ interface Props {
     };
 }
 
-export default function Index({ products, types, filters, stats }: Props) {
+export default function Index({
+    products,
+    types,
+    filters,
+    stats,
+    categories,
+}: Props) {
     const [search, setSearch] = useState(filters?.search ?? '');
 
     const [status, setStatus] = useState(filters?.status ?? '');
@@ -178,6 +187,8 @@ export default function Index({ products, types, filters, stats }: Props) {
                     featuredLabel: '',
                 },
             },
+
+            categories: [],
         });
 
     useEffect(() => {
@@ -702,33 +713,17 @@ export default function Index({ products, types, filters, stats }: Props) {
                         <div className="space-y-2">
                             <Label>Type</Label>
 
-                            <Select
+                            <DynamicSelect
+                                options={types}
                                 value={data.type_id}
-                                onValueChange={(value) =>
-                                    setData('type_id', value)
+                                onChange={(value) =>
+                                    setData('type_id', value as string)
                                 }
-                            >
-                                <SelectTrigger className="h-10 w-full rounded-xl">
-                                    <SelectValue placeholder="Select Type" />
-                                </SelectTrigger>
-
-                                <SelectContent className="bg-background text-foreground">
-                                    {types.map((type) => (
-                                        <SelectItem
-                                            key={type.id}
-                                            value={type.id}
-                                        >
-                                            {type.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-
-                            {errors.type_id && (
-                                <p className="text-sm text-destructive">
-                                    {errors.type_id}
-                                </p>
-                            )}
+                                getValue={(item) => item.id}
+                                getLabel={(item) => item.name}
+                                placeholder="Select Type"
+                                error={errors.type_id}
+                            />
                         </div>
 
                         <div className="space-y-2">
@@ -743,6 +738,27 @@ export default function Index({ products, types, filters, stats }: Props) {
                                 placeholder="50.000"
                             />
                         </div>
+                    </div>
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-2">
+                            <Label>Category</Label>
+
+                            <DynamicSelect
+                                multiple
+                                options={categories}
+                                value={data.categories}
+                                onChange={(value) =>
+                                    setData('categories', value as string[])
+                                }
+                                getValue={(item) => item.value}
+                                getLabel={(item) => item.label}
+                                placeholder="Select Categories"
+                                error={errors.categories}
+                            />
+                        </div>
+
+                        <div className="space-y-2"></div>
                     </div>
 
                     {/* IMAGE */}
