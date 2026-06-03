@@ -9,24 +9,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_categories', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-
             $table->foreignUuid('product_id')
-                ->constrained('products')
-                ->cascadeOnUpdate()
+                ->constrained()
                 ->cascadeOnDelete();
 
             $table->foreignUuid('category_id')
-                ->constrained('categories')
-                ->cascadeOnUpdate()
+                ->constrained()
                 ->cascadeOnDelete();
 
             $table->timestamps();
 
-            $table->unique(['product_id', 'category_id']);
-
-            $table->index('product_id');
-            $table->index('category_id');
+            $table->primary([
+                'product_id',
+                'category_id',
+            ]);
         });
     }
 

@@ -481,6 +481,7 @@ export default function Index({ types, filters, stats }: Props) {
                             <Label htmlFor="name">Type Name</Label>
 
                             <Input
+                                autoFocus={openForm}
                                 id="name"
                                 value={data.name}
                                 onChange={(e) =>

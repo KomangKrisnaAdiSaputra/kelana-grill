@@ -70,6 +70,8 @@ class ManageProductController extends Controller
                         ];
                     }),
 
+                    'categories' => $product->categories->pluck('id')->values(),
+
                     // 'translations' => [
                     //     'id' => [
                     //         'name' => optional(
@@ -164,6 +166,8 @@ class ManageProductController extends Controller
             'active' => ['required', 'boolean'],
 
             'image' => ['nullable'],
+            'categories' => ['required', 'array'],
+            'categories.*' => ['required', 'exists:categories,id'],
 
             'translations.id.name' => ['required', 'string', 'max:255'],
             'translations.id.featuredLabel' => [
@@ -198,6 +202,9 @@ class ManageProductController extends Controller
 
             'translations.en.featuredLabel.required_if' =>
             'Featured label (English) is required when featured is enabled.',
+
+            'categories.required' => 'Please select at least one category.',
+            'categories.*.required' => 'Selected category is invalid.',
         ]);
 
         DB::beginTransaction();
@@ -258,6 +265,8 @@ class ManageProductController extends Controller
 
                 $translation->save();
             }
+
+            $product->categories()->sync($validated['categories']);
 
             DB::commit();
 

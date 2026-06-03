@@ -301,6 +301,8 @@ export default function Index({
                                     featuredLabel: '',
                                 },
                             },
+
+                            categories: [],
                         });
 
                         setLanguage('id');

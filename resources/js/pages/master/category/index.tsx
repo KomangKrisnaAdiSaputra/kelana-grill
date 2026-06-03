@@ -9,7 +9,7 @@ import {
     CheckCircle2,
     XCircle,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -103,6 +103,8 @@ interface Props {
 }
 
 export default function Index({ categories, filters, stats }: Props) {
+    const inputRef = useRef<HTMLInputElement>(null);
+
     const [search, setSearch] = useState(filters?.search ?? '');
 
     const [status, setStatus] = useState(filters?.status ?? '');
@@ -154,6 +156,14 @@ export default function Index({ categories, filters, stats }: Props) {
 
         return () => clearTimeout(timeout);
     }, [search, status]);
+
+    useEffect(() => {
+        if (openForm || language) {
+            requestAnimationFrame(() => {
+                inputRef.current?.focus();
+            });
+        }
+    }, [openForm, language]);
 
     const handleSubmit = () => {
         post(save().url, {
@@ -571,6 +581,7 @@ export default function Index({ categories, filters, stats }: Props) {
                             <Label>Name</Label>
 
                             <Input
+                                ref={inputRef}
                                 value={data.translations[language].name}
                                 onChange={(e) =>
                                     setData('translations', {
