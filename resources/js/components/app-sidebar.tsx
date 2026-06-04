@@ -1,5 +1,12 @@
 import { Link } from '@inertiajs/react';
-import { Folder, FolderTree, LayoutGrid, Tag, Warehouse } from 'lucide-react';
+import {
+    BadgeCheck,
+    Folder,
+    FolderTree,
+    LayoutGrid,
+    Tag,
+    Warehouse,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -57,7 +64,7 @@ const mainNavItems: NavItem[] = [
             {
                 title: 'Badge',
                 href: badge(),
-                icon: FolderTree,
+                icon: BadgeCheck,
             },
             {
                 title: 'Warehouse',

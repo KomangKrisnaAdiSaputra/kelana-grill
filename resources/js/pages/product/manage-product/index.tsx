@@ -91,6 +91,7 @@ interface Product {
     error?: string | null;
 
     categories: string[];
+    badges: string[];
 }
 
 interface ProductType {
@@ -99,6 +100,11 @@ interface ProductType {
 }
 
 interface ProductCategory {
+    label: string;
+    value: string;
+}
+
+interface ProductBadge {
     label: string;
     value: string;
 }
@@ -118,6 +124,8 @@ interface Props {
     types: ProductType[];
 
     categories: ProductCategory[];
+
+    badges: ProductBadge[];
 
     filters: {
         search?: string;
@@ -139,6 +147,7 @@ export default function Index({
     filters,
     stats,
     categories,
+    badges,
 }: Props) {
     const [search, setSearch] = useState(filters?.search ?? '');
 
@@ -189,6 +198,7 @@ export default function Index({
             },
 
             categories: [],
+            badges: [],
         });
 
     useEffect(() => {
@@ -303,6 +313,7 @@ export default function Index({
                             },
 
                             categories: [],
+                            badges: [],
                         });
 
                         setLanguage('id');
@@ -760,7 +771,22 @@ export default function Index({
                             />
                         </div>
 
-                        <div className="space-y-2"></div>
+                        <div className="space-y-2">
+                            <Label>Badge</Label>
+
+                            <DynamicSelect
+                                multiple
+                                options={badges}
+                                value={data.badges}
+                                onChange={(value) =>
+                                    setData('badges', value as string[])
+                                }
+                                getValue={(item) => item.value}
+                                getLabel={(item) => item.label}
+                                placeholder="Select Badges"
+                                error={errors.badges}
+                            />
+                        </div>
                     </div>
 
                     {/* IMAGE */}

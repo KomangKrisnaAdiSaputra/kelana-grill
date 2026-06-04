@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
+use App\Models\Badge;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductTranslation;
@@ -127,6 +128,13 @@ class ManageProductController extends Controller
                 'value' => $category->id,
             ]);
 
+        $badges = Badge::query()
+            ->where('active', true)
+            ->get()->map(fn($badge) => [
+                'label' => $badge->translations->firstWhere('language', 'id')->name ?? $badge->translations->firstWhere('language', 'en')->name ?? 'Unnamed Badge',
+                'value' => $badge->id,
+            ]);
+
         return Inertia::render('product/manage-product/index', [
             'products' => $products,
 
@@ -149,6 +157,7 @@ class ManageProductController extends Controller
             ],
 
             'categories' => $categories,
+            'badges' => $badges,
         ]);
     }
 
@@ -205,6 +214,9 @@ class ManageProductController extends Controller
 
             'categories.required' => 'Please select at least one category.',
             'categories.*.required' => 'Selected category is invalid.',
+
+            'badges.required' => 'Please select at least one badge.',
+            'badges.*.required' => 'Selected badge is invalid.',
         ]);
 
         DB::beginTransaction();
@@ -267,6 +279,7 @@ class ManageProductController extends Controller
             }
 
             $product->categories()->sync($validated['categories']);
+            $product->badges()->sync($validated['badges']);
 
             DB::commit();
 
