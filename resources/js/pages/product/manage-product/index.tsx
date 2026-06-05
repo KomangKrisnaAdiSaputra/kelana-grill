@@ -68,7 +68,7 @@ interface ProductTranslation {
 interface Product {
     id: string | null;
 
-    type_id: string;
+    typeId: string;
 
     type?: {
         id: string;
@@ -92,6 +92,8 @@ interface Product {
 
     categories: string[];
     badges: string[];
+
+    variants: ProductVariant[];
 }
 
 interface ProductType {
@@ -107,6 +109,27 @@ interface ProductCategory {
 interface ProductBadge {
     label: string;
     value: string;
+}
+
+interface ProductVariantTranslation {
+    name: string;
+    description: string;
+}
+
+interface ProductVariant {
+    id: string | null;
+
+    rate: number | null;
+
+    minPerson: number | null;
+    maxPerson: number | null;
+
+    active: boolean;
+
+    translations: {
+        id: ProductVariantTranslation;
+        en: ProductVariantTranslation;
+    };
 }
 
 interface PaginatedProducts {
@@ -130,7 +153,7 @@ interface Props {
     filters: {
         search?: string;
         status?: string;
-        type_id?: string;
+        typeId?: string;
     };
 
     stats: {
@@ -150,19 +173,11 @@ export default function Index({
     badges,
 }: Props) {
     const [search, setSearch] = useState(filters?.search ?? '');
-
     const [status, setStatus] = useState(filters?.status ?? '');
-
-    const [typeId, setTypeId] = useState(filters?.type_id ?? '');
-
+    const [typeId, setTypeId] = useState(filters?.typeId ?? '');
     const [openForm, setOpenForm] = useState(false);
-
     const [openDelete, setOpenDelete] = useState(false);
-
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>(
-        null,
-    );
-
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [language, setLanguage] = useState<'id' | 'en'>('id');
 
     const isEdit = selectedProduct !== null;
@@ -170,35 +185,27 @@ export default function Index({
     const { data, setData, post, processing, reset, errors, clearErrors } =
         useForm<Product>({
             id: null,
-
-            type_id: '',
-
+            typeId: '',
             rate: null,
-
             image: null,
-
             featured: false,
-
             new: true,
-
             active: true,
-
             translations: {
                 id: {
                     name: '',
                     description: '',
                     featuredLabel: '',
                 },
-
                 en: {
                     name: '',
                     description: '',
                     featuredLabel: '',
                 },
             },
-
             categories: [],
             badges: [],
+            variants: [],
         });
 
     useEffect(() => {
@@ -208,7 +215,7 @@ export default function Index({
                 {
                     search,
                     status,
-                    type_id: typeId,
+                    typeId: typeId,
                 },
                 {
                     preserveState: true,
@@ -224,16 +231,11 @@ export default function Index({
     const handleSubmit = () => {
         post(save().url, {
             forceFormData: true,
-
             preserveScroll: true,
-
             onSuccess: () => {
                 setOpenForm(false);
-
                 setSelectedProduct(null);
-
                 reset();
-
                 setLanguage('id');
             },
         });
@@ -246,10 +248,8 @@ export default function Index({
 
         router.delete(`/master/product/${selectedProduct.id}`, {
             preserveScroll: true,
-
             onSuccess: () => {
                 setOpenDelete(false);
-
                 setSelectedProduct(null);
             },
         });
@@ -285,42 +285,33 @@ export default function Index({
                         clearErrors();
                         setData({
                             id: null,
-
-                            type_id: '',
-
+                            typeId: '',
                             rate: null,
-
                             image: null,
-
                             featured: false,
-
                             new: true,
-
                             active: true,
-
                             translations: {
                                 id: {
                                     name: '',
                                     description: '',
                                     featuredLabel: '',
                                 },
-
                                 en: {
                                     name: '',
                                     description: '',
                                     featuredLabel: '',
                                 },
                             },
-
                             categories: [],
                             badges: [],
+                            variants: [],
                         });
 
                         setLanguage('id');
 
                         setOpenForm(true);
-                    }}
-                >
+                    }}>
                     <Plus className="mr-2 h-4 w-4" />
                     Add Product
                 </Button>
@@ -431,7 +422,6 @@ export default function Index({
                                 className="h-10 rounded-xl border bg-background px-3 text-sm"
                             >
                                 <option value="">All Types</option>
-
                                 {types.map((type) => (
                                     <option key={type.id} value={type.id}>
                                         {type.name}
@@ -495,12 +485,7 @@ export default function Index({
                                             <div className="flex items-center gap-3">
                                                 <div className="h-12 w-12 overflow-hidden rounded-lg border">
                                                     {product.image ? (
-                                                        <img
-                                                            src={
-                                                                product.image as string
-                                                            }
-                                                            className="h-full w-full object-cover"
-                                                        />
+                                                        <img src={product.image as string} className="h-full w-full object-cover" />
                                                     ) : (
                                                         <div className="flex h-full items-center justify-center bg-muted">
                                                             <Package className="h-4 w-4" />
@@ -510,10 +495,7 @@ export default function Index({
 
                                                 <div>
                                                     <div className="font-medium">
-                                                        {
-                                                            product.translations
-                                                                .id.name
-                                                        }
+                                                        {product.translations.id.name}
                                                     </div>
                                                 </div>
                                             </div>
@@ -524,11 +506,9 @@ export default function Index({
                                         </TableCell>
 
                                         <TableCell>
-                                            {product.rate !== null
-                                                ? formatPrice(
-                                                      product.rate,
-                                                  ).toLocaleString()
-                                                : '-'}
+                                            {product.rate !== null && product.rate > 0 ? formatPrice(product.rate).toLocaleString() : (
+                                                product.variants.length > 1 ? formatPrice(product.variants[0]?.rate ?? 0) + " - " + formatPrice(product.variants.at(-1)?.rate ?? 0) : formatPrice(product.variants[0]?.rate ?? 0)
+                                            )}
                                         </TableCell>
 
                                         <TableCell>
@@ -554,10 +534,7 @@ export default function Index({
                                         <TableCell className="text-right">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                    >
+                                                    <Button variant="ghost" size="icon" >
                                                         <MoreHorizontal className="h-4 w-4" />
                                                     </Button>
                                                 </DropdownMenuTrigger>
@@ -565,16 +542,11 @@ export default function Index({
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuItem
                                                         onClick={() => {
-                                                            setSelectedProduct(
-                                                                product,
-                                                            );
+                                                            setSelectedProduct(product);
                                                             clearErrors();
-
                                                             setData(product);
-
                                                             setOpenForm(true);
-                                                        }}
-                                                    >
+                                                        }}>
                                                         <Pencil className="mr-2 h-4 w-4" />
                                                         Edit
                                                     </DropdownMenuItem>
@@ -582,13 +554,9 @@ export default function Index({
                                                     <DropdownMenuItem
                                                         className="text-red-600"
                                                         onClick={() => {
-                                                            setSelectedProduct(
-                                                                product,
-                                                            );
-
+                                                            setSelectedProduct(product);
                                                             setOpenDelete(true);
-                                                        }}
-                                                    >
+                                                        }}>
                                                         <Trash2 className="mr-2 h-4 w-4" />
                                                         Delete
                                                     </DropdownMenuItem>
@@ -728,29 +696,32 @@ export default function Index({
 
                             <DynamicSelect
                                 options={types}
-                                value={data.type_id}
-                                onChange={(value) =>
-                                    setData('type_id', value as string)
-                                }
+                                value={data.typeId}
+                                onChange={(value) => {
+                                    setData('variants', []);
+                                    setData('typeId', value as string);
+                                }}
                                 getValue={(item) => item.id}
                                 getLabel={(item) => item.name}
                                 placeholder="Select Type"
-                                error={errors.type_id}
+                                error={errors.typeId}
                             />
                         </div>
 
-                        <div className="space-y-2">
-                            <Label>Rate</Label>
+                        {(data.variants ?? []).length <= 0 && (
+                            <div className="space-y-2">
+                                <Label>Rate</Label>
 
-                            <InputNumber
-                                currency
-                                prefix="IDR"
-                                value={data.rate}
-                                onChange={(value) => setData('rate', value)}
-                                error={errors.rate}
-                                placeholder="50.000"
-                            />
-                        </div>
+                                <InputNumber
+                                    currency
+                                    prefix="IDR"
+                                    value={data.rate}
+                                    onChange={(value) => setData('rate', value)}
+                                    error={errors.rate}
+                                    placeholder="50.000"
+                                />
+                            </div>
+                        )}
                     </div>
 
                     <div className="grid gap-4 md:grid-cols-2">
@@ -893,14 +864,14 @@ export default function Index({
                                 {errors[
                                     `translations.${language}.featuredLabel`
                                 ] && (
-                                    <p className="text-sm text-destructive">
-                                        {
-                                            errors[
+                                        <p className="text-sm text-destructive">
+                                            {
+                                                errors[
                                                 `translations.${language}.featuredLabel`
-                                            ]
-                                        }
-                                    </p>
-                                )}
+                                                ]
+                                            }
+                                        </p>
+                                    )}
                             </div>
                         )}
 
@@ -924,6 +895,311 @@ export default function Index({
                         </div>
                     </div>
 
+                    {/* PRODUCT VARIANTS */}
+                    {types.filter((t) => t.id === data.typeId && t.name === 'PACKAGE').length > 0 && (
+                        <div className="space-y-4 rounded-xl border p-4">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h3 className="font-semibold">
+                                        Product Variants
+                                    </h3>
+
+                                    <p className="text-sm text-muted-foreground">
+                                        Create pricing variants for this package.
+                                    </p>
+                                </div>
+
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => {
+                                        setData('rate', 0);
+                                        setData('variants', [
+                                            ...(data.variants ?? []),
+                                            {
+                                                id: null,
+                                                rate: null,
+                                                minPerson: null,
+                                                maxPerson: null,
+                                                active: true,
+                                                translations: {
+                                                    id: {
+                                                        name: '',
+                                                        description: '',
+                                                    },
+                                                    en: {
+                                                        name: '',
+                                                        description: '',
+                                                    },
+                                                },
+                                            },
+                                        ]);
+                                    }}
+                                >
+                                    <Plus className="mr-2 h-4 w-4" />
+                                    Add Variant
+                                </Button>
+                            </div>
+
+                            {(data.variants ?? []).length === 0 && (
+                                <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
+                                    No variants added yet.
+                                </div>
+                            )}
+
+                            {(data.variants ?? []).map((variant, index) => (
+                                <Card key={index}>
+                                    <CardContent className="space-y-4 p-4">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h4 className="font-medium">
+                                                    Variant #{index + 1}
+                                                </h4>
+
+                                                <p className="text-xs text-muted-foreground">
+                                                    Package pricing option
+                                                </p>
+                                            </div>
+
+                                            <Button
+                                                type="button"
+                                                size="sm"
+                                                variant="destructive"
+                                                onClick={() => {
+                                                    setData(
+                                                        'variants',
+                                                        data.variants.filter(
+                                                            (_, i) =>
+                                                                i !== index,
+                                                        ),
+                                                    );
+                                                }}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+
+                                        <div className="flex items-center justify-between rounded-lg border p-3">
+                                            <div>
+                                                <p className="font-medium">
+                                                    Active
+                                                </p>
+
+                                                <p className="text-xs text-muted-foreground">
+                                                    Variant available
+                                                </p>
+                                            </div>
+
+                                            <Switch
+                                                checked={variant.active}
+                                                onCheckedChange={(value) => {
+                                                    const variants = [
+                                                        ...data.variants,
+                                                    ];
+
+                                                    variants[index].active =
+                                                        value;
+
+                                                    setData(
+                                                        'variants',
+                                                        variants,
+                                                    );
+                                                }}
+                                            />
+                                        </div>
+
+                                        <div className="grid gap-4 md:grid-cols-3">
+                                            <div>
+                                                <Label>Rate</Label>
+
+                                                <InputNumber
+                                                    currency
+                                                    prefix="IDR"
+                                                    value={variant.rate}
+                                                    onChange={(value) => {
+                                                        const variants = [
+                                                            ...data.variants,
+                                                        ];
+
+                                                        variants[index].rate =
+                                                            value;
+
+                                                        setData(
+                                                            'variants',
+                                                            variants,
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <Label>Min Person</Label>
+
+                                                <InputNumber
+                                                    value={variant.minPerson}
+                                                    onChange={(value) => {
+                                                        const variants = [
+                                                            ...data.variants,
+                                                        ];
+
+                                                        variants[
+                                                            index
+                                                        ].minPerson =
+                                                            value as number;
+
+                                                        setData(
+                                                            'variants',
+                                                            variants,
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <Label>Max Person</Label>
+
+                                                <InputNumber
+                                                    value={variant.maxPerson}
+                                                    onChange={(value) => {
+                                                        const variants = [
+                                                            ...data.variants,
+                                                        ];
+
+                                                        variants[
+                                                            index
+                                                        ].maxPerson =
+                                                            value as number;
+
+                                                        setData(
+                                                            'variants',
+                                                            variants,
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid gap-4 md:grid-cols-2">
+                                            <div className="space-y-2">
+                                                <Label>Name (Indonesia)</Label>
+
+                                                <Input
+                                                    value={
+                                                        variant.translations.id
+                                                            .name
+                                                    }
+                                                    onChange={(e) => {
+                                                        const variants = [
+                                                            ...data.variants,
+                                                        ];
+
+                                                        variants[
+                                                            index
+                                                        ].translations.id.name =
+                                                            e.target.value;
+
+                                                        setData(
+                                                            'variants',
+                                                            variants,
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label>Name (English)</Label>
+
+                                                <Input
+                                                    value={
+                                                        variant.translations.en
+                                                            .name
+                                                    }
+                                                    onChange={(e) => {
+                                                        const variants = [
+                                                            ...data.variants,
+                                                        ];
+
+                                                        variants[
+                                                            index
+                                                        ].translations.en.name =
+                                                            e.target.value;
+
+                                                        setData(
+                                                            'variants',
+                                                            variants,
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid gap-4 md:grid-cols-2">
+                                            <div>
+                                                <Label>
+                                                    Description (Indonesia)
+                                                </Label>
+
+                                                <textarea
+                                                    rows={3}
+                                                    value={
+                                                        variant.translations.id
+                                                            .description
+                                                    }
+                                                    onChange={(e) => {
+                                                        const variants = [
+                                                            ...data.variants,
+                                                        ];
+
+                                                        variants[
+                                                            index
+                                                        ].translations.id.description =
+                                                            e.target.value;
+
+                                                        setData(
+                                                            'variants',
+                                                            variants,
+                                                        );
+                                                    }}
+                                                    className="w-full rounded-xl border px-3 py-2"
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <Label>
+                                                    Description (English)
+                                                </Label>
+
+                                                <textarea
+                                                    rows={3}
+                                                    value={
+                                                        variant.translations.en
+                                                            .description
+                                                    }
+                                                    onChange={(e) => {
+                                                        const variants = [
+                                                            ...data.variants,
+                                                        ];
+
+                                                        variants[
+                                                            index
+                                                        ].translations.en.description =
+                                                            e.target.value;
+
+                                                        setData(
+                                                            'variants',
+                                                            variants,
+                                                        );
+                                                    }}
+                                                    className="w-full rounded-xl border px-3 py-2"
+                                                />
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+                    )}
+
                     <DialogFooter>
                         <Button
                             variant="outline"
@@ -936,8 +1212,8 @@ export default function Index({
                             {processing
                                 ? 'Saving...'
                                 : isEdit
-                                  ? 'Update Product'
-                                  : 'Create Product'}
+                                    ? 'Update Product'
+                                    : 'Create Product'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

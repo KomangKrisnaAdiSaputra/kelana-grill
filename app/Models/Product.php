@@ -31,44 +31,17 @@ class Product extends Model
 
     public function translation()
     {
-        return $this->hasOne(ProductTranslation::class)
-            ->where('language', app()->getLocale());
+        return $this->hasOne(ProductTranslation::class)->where('language', app()->getLocale());
     }
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'product_categories')
-            ->withTimestamps();
+        return $this->belongsToMany(Category::class, 'product_categories')->withTimestamps();
     }
 
     public function badges()
     {
-        return $this->belongsToMany(Badge::class, 'product_badges')
-            ->withTimestamps();
-    }
-
-    public function packageItems()
-    {
-        return $this->belongsToMany(
-            Product::class,
-            'package_items',
-            'package_id',
-            'product_id'
-        )
-            ->withPivot(['qty', 'sort_order'])
-            ->withTimestamps();
-    }
-
-    public function includedInPackages()
-    {
-        return $this->belongsToMany(
-            Product::class,
-            'package_items',
-            'product_id',
-            'package_id'
-        )
-            ->withPivot(['qty', 'sort_order'])
-            ->withTimestamps();
+        return $this->belongsToMany(Badge::class, 'product_badges')->withTimestamps();
     }
 
     public function variants()
@@ -78,9 +51,7 @@ class Product extends Model
 
     public function activeVariants()
     {
-        return $this->hasMany(ProductVariant::class)
-            ->where('is_active', true)
-            ->orderBy('sort_order');
+        return $this->hasMany(ProductVariant::class)->where('is_active', true)->orderBy('sort_order');
     }
 
     public function scopeActive($query)

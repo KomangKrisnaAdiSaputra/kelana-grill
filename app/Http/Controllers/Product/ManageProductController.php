@@ -7,10 +7,13 @@ use App\Models\Badge;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductTranslation;
+use App\Models\ProductVariant;
+use App\Models\ProductVariantTranslation;
 use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class ManageProductController extends Controller
@@ -43,7 +46,7 @@ class ManageProductController extends Controller
                 return [
                     'id' => $product->id,
 
-                    'type_id' => $product->type_id,
+                    'typeId' => $product->type_id,
 
                     'type' => [
                         'id' => $product->type?->id,
@@ -72,6 +75,22 @@ class ManageProductController extends Controller
                     }),
 
                     'categories' => $product->categories->pluck('id')->values(),
+
+                    'variants' => $product->variants->map(fn($variant) => [
+                        'id' => $variant->id,
+                        'rate' => $variant->rate,
+                        'minPerson' => $variant->min_person,
+                        'maxPerson' => $variant->max_person,
+                        'active' => $variant->active,
+                        'translations' => $variant->translations->mapWithKeys(fn($translation) => [
+                            $translation->language => [
+                                'name' => $translation->name,
+                                'slug' => $translation->slug,
+                                'description' => $translation->description,
+                                'featuredLabel' => $translation->featured_label,
+                            ]
+                        ])
+                    ])
 
                     // 'translations' => [
                     //     'id' => [
@@ -166,19 +185,25 @@ class ManageProductController extends Controller
         $validated = $request->validate([
             'id' => ['nullable', 'uuid'],
 
-            'type_id' => ['required', 'exists:types,id'],
+            'typeId' => ['required', 'exists:types,id'],
 
-            'rate' => ['required', 'numeric', 'min:0'],
+            'rate' => [Rule::requiredIf(fn() => count($request->input('variants', [])) <= 0), 'numeric', 'min:0'],
 
             'featured' => ['required', 'boolean'],
             'new' => ['required', 'boolean'],
             'active' => ['required', 'boolean'],
 
             'image' => ['nullable'],
+
             'categories' => ['required', 'array'],
             'categories.*' => ['required', 'exists:categories,id'],
 
+            'badges' => ['nullable', 'array'],
+            'badges.*' => ['exists:badges,id'],
+
             'translations.id.name' => ['required', 'string', 'max:255'],
+            'translations.en.name' => ['required', 'string', 'max:255'],
+
             'translations.id.featuredLabel' => [
                 'nullable',
                 'required_if:featured,true',
@@ -186,15 +211,59 @@ class ManageProductController extends Controller
                 'max:255',
             ],
 
-            'translations.en.name' => ['required', 'string', 'max:255'],
             'translations.en.featuredLabel' => [
                 'nullable',
                 'required_if:featured,true',
                 'string',
                 'max:255',
             ],
+
+            /*
+        |--------------------------------------------------------------------------
+        | Variants
+        |--------------------------------------------------------------------------
+        */
+
+            'variants' => ['nullable', 'array'],
+
+            'variants.*.id' => ['nullable', 'uuid'],
+
+            'variants.*.rate' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
+
+            'variants.*.min_person' => [
+                'nullable',
+                'integer',
+                'min:1',
+            ],
+
+            'variants.*.max_person' => [
+                'nullable',
+                'integer',
+                'min:1',
+            ],
+
+            'variants.*.active' => [
+                'required',
+                'boolean',
+            ],
+
+            'variants.*.translations.id.name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'variants.*.translations.en.name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
         ], [
-            'type_id.required' => 'Please select a product type.',
+            'typeId.required' => 'Please select a product type.',
 
             'rate.required' => 'Rate is required.',
             'rate.numeric' => 'Rate must be a valid number.',
@@ -212,15 +281,28 @@ class ManageProductController extends Controller
             'translations.en.featuredLabel.required_if' =>
             'Featured label (English) is required when featured is enabled.',
 
-            'categories.required' => 'Please select at least one category.',
-            'categories.*.required' => 'Selected category is invalid.',
+            'categories.required' =>
+            'Please select at least one category.',
 
-            'badges.required' => 'Please select at least one badge.',
-            'badges.*.required' => 'Selected badge is invalid.',
+            'variants.*.rate.required' =>
+            'Variant rate is required.',
+
+            'variants.*.translations.id.name.required' =>
+            'Variant name (Indonesia) is required.',
+
+            'variants.*.translations.en.name.required' =>
+            'Variant name (English) is required.',
         ]);
 
         DB::beginTransaction();
+
         try {
+
+            /*
+        |--------------------------------------------------------------------------
+        | Product
+        |--------------------------------------------------------------------------
+        */
 
             $product = Product::find($request->id);
 
@@ -228,7 +310,7 @@ class ManageProductController extends Controller
                 $product = new Product();
             }
 
-            $product->type_id = $validated['type_id'];
+            $product->type_id = $validated['typeId'];
             $product->rate = $validated['rate'];
 
             $product->featured = $validated['featured'];
@@ -256,7 +338,7 @@ class ManageProductController extends Controller
 
             /*
         |--------------------------------------------------------------------------
-        | Translations
+        | Product Translations
         |--------------------------------------------------------------------------
         */
 
@@ -267,20 +349,91 @@ class ManageProductController extends Controller
                     'language' => $language,
                 ]);
 
-                $translation->name = $validated['translations'][$language]['name'];
+                $translation->name =
+                    $validated['translations'][$language]['name'];
 
-                $translation->slug = Str::slug($validated['translations'][$language]['name']);
+                $translation->slug = Str::slug(
+                    $validated['translations'][$language]['name']
+                );
 
-                $translation->description = $validated['translations'][$language]['description'] ?? null;
+                $translation->description =
+                    $validated['translations'][$language]['description']
+                    ?? null;
 
-                $translation->featured_label = $validated['translations'][$language]['featuredLabel'] ?? null;
+                $translation->featured_label =
+                    $validated['translations'][$language]['featuredLabel']
+                    ?? null;
 
                 $translation->save();
             }
 
-            $product->categories()->sync($validated['categories']);
-            $product->badges()->sync($validated['badges']);
+            /*
+        |--------------------------------------------------------------------------
+        | Categories & Badges
+        |--------------------------------------------------------------------------
+        */
 
+            $product->categories()->sync(
+                $validated['categories']
+            );
+
+            $product->badges()->sync(
+                $validated['badges'] ?? []
+            );
+
+            /*
+        |--------------------------------------------------------------------------
+        | Variants
+        |--------------------------------------------------------------------------
+        */
+
+            $submittedVariantIds = [];
+
+            foreach ($validated['variants'] ?? [] as $variantData) {
+
+                $variant = null;
+
+                if (!empty($variantData['id'])) {
+
+                    $variant = ProductVariant::where(
+                        'product_id',
+                        $product->id
+                    )->find($variantData['id']);
+                }
+
+                if (!$variant) {
+                    $variant = new ProductVariant();
+                    $variant->product_id = $product->id;
+                }
+
+                $variant->rate = $variantData['rate'];
+                $variant->min_person = $variantData['min_person']  ?? null;
+                $variant->max_person = $variantData['max_person'] ?? null;
+                $variant->active = $variantData['active'];
+                $variant->save();
+
+                $submittedVariantIds[] = $variant->id;
+
+                foreach (['id', 'en'] as $language) {
+
+                    $translation = ProductVariantTranslation::firstOrNew([
+                        'product_variant_id' => $variant->id,
+                        'language' => $language,
+                    ]);
+
+                    $translation->name = $variantData['translations'][$language]['name'];
+                    $translation->slug = Str::slug($variantData['translations'][$language]['name']);
+                    $translation->description = $variantData['translations'][$language]['description'] ?? null;
+                    $translation->save();
+                }
+            }
+
+            /*
+        |--------------------------------------------------------------------------
+        | Delete Removed Variants
+        |--------------------------------------------------------------------------
+        */
+            $product->variants()->whereNotIn('id', $submittedVariantIds)->delete();
             DB::commit();
 
             return back()->with([

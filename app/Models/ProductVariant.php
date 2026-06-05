@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-#[Fillable(['product_id', 'rate', 'min_person', 'max_person', 'is_active', 'sort_order'])]
+#[Fillable(['product_id', 'rate', 'min_person', 'max_person', 'active'])]
 class ProductVariant extends Model
 {
     use HasUuids;
@@ -15,13 +15,17 @@ class ProductVariant extends Model
         'rate' => 'decimal:2',
         'min_person' => 'integer',
         'max_person' => 'integer',
-        'is_active' => 'boolean',
-        'sort_order' => 'integer',
+        'active' => 'boolean',
     ];
 
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function translations()
+    {
+        return $this->hasMany(ProductVariantTranslation::class);
     }
 
     public function scopeActive($query)
