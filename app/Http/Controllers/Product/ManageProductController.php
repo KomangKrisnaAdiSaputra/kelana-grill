@@ -22,144 +22,47 @@ class ManageProductController extends Controller
     {
         $search = $request->search;
         $status = $request->status;
-        $typeId = $request->type_id;
+        $typeId = $request->typeId;
 
-        $products = Product::query()
-            ->with([
-                'type',
-                'translations',
-            ])
-            ->when($search, function ($query) use ($search) {
-                $query->whereHas('translations', function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
-                });
-            })
-            ->when($status !== null && $status !== '', function ($query) use ($status) {
-                $query->where('active', $status);
-            })
-            ->when($typeId, function ($query) use ($typeId) {
-                $query->where('type_id', $typeId);
-            })
+        $products = Product::query()->with(['type', 'translations',])
+            ->when($search, fn($query) => $query->whereHas('translations', fn($q) => $q->where('name', 'like', "%{$search}%")))
+            ->when($status !== null && $status !== '', fn($query) => $query->where('active', $status))
+            ->when($typeId, fn($query) => $query->where('type_id', $typeId))
             ->latest()
             ->paginate(10)
-            ->through(function ($product) {
-                return [
-                    'id' => $product->id,
+            ->through(fn($product) => $this->generateData($product));
 
-                    'typeId' => $product->type_id,
+        $types = Type::query()->where('active', true)->orderBy('name')->get(['id', 'name']);
 
-                    'type' => [
-                        'id' => $product->type?->id,
-                        'name' => $product->type?->name,
-                    ],
+        $categories = Category::query()->where('active', true)->get()->map(fn($category) => [
+            'label' => $category->translations->firstWhere('language', 'id')->name ?? $category->translations->firstWhere('language', 'en')->name ?? 'Unnamed Category',
+            'value' => $category->id,
+        ]);
 
-                    'rate' => $product->rate,
+        $badges = Badge::query()->where('active', true)->get()->map(fn($badge) => [
+            'label' => $badge->translations->firstWhere('language', 'id')->name ?? $badge->translations->firstWhere('language', 'en')->name ?? 'Unnamed Badge',
+            'value' => $badge->id,
+        ]);
 
-                    'image' => $product->image,
-
-                    'featured' => $product->featured,
-
-                    'new' => $product->new,
-
-                    'active' => $product->active,
-
-                    'translations' => $product->translations->mapWithKeys(function ($translation) {
-                        return [
-                            $translation->language => [
-                                'name' => $translation->name,
-                                'slug' => $translation->slug,
-                                'description' => $translation->description,
-                                'featuredLabel' => $translation->featured_label,
-                            ],
-                        ];
-                    }),
-
-                    'categories' => $product->categories->pluck('id')->values(),
-
-                    'variants' => $product->variants->map(fn($variant) => [
-                        'id' => $variant->id,
-                        'rate' => $variant->rate,
-                        'minPerson' => $variant->min_person,
-                        'maxPerson' => $variant->max_person,
-                        'active' => $variant->active,
-                        'translations' => $variant->translations->mapWithKeys(fn($translation) => [
-                            $translation->language => [
-                                'name' => $translation->name,
-                                'slug' => $translation->slug,
-                                'description' => $translation->description,
-                                'featuredLabel' => $translation->featured_label,
-                            ]
-                        ])
-                    ]),
-
-                    'items' => $product->items->map(fn($item) => [
-                        'itemProductId' => $item->pivot->item_product_id,
-                        'qty' => $item->pivot->qty,
-                        'unit' => $item->pivot->unit
-                    ])
-                ];
-            });
-
-        $types = Type::query()
-            ->where('active', true)
-            ->orderBy('name')
-            ->get([
-                'id',
-                'name',
-            ]);
-
-        $categories = Category::query()
-            ->where('active', true)
-            ->get()->map(fn($category) => [
-                'label' => $category->translations->firstWhere('language', 'id')->name ?? $category->translations->firstWhere('language', 'en')->name ?? 'Unnamed Category',
-                'value' => $category->id,
-            ]);
-
-        $badges = Badge::query()
-            ->where('active', true)
-            ->get()->map(fn($badge) => [
-                'label' => $badge->translations->firstWhere('language', 'id')->name ?? $badge->translations->firstWhere('language', 'en')->name ?? 'Unnamed Badge',
-                'value' => $badge->id,
-            ]);
-
-        $alaCarteProducts = Product::query()
-            ->with([
-                'type',
-                'translations',
-            ])
-            ->whereHas('type', function ($query) {
-                $query->where('name', 'ALA CARTE');
-            })
-            ->where('active', true)
-            ->orderBy('id')
-            ->get()
-            ->map(fn($product) => [
+        $alaCarteProducts = Product::query()->with(['type', 'translations'])
+            ->whereHas('type', fn($query) => $query->where('name', 'ALA CARTE'))
+            ->where('active', true)->orderBy('id')->get()->map(fn($product) => [
                 'id' => $product->id,
-                'name' =>
-                $product->translations->firstWhere('language', 'id')?->name
-                    ?? $product->translations->firstWhere('language', 'en')?->name
-                    ?? 'Unnamed Product',
-            ])
-            ->values();
+                'name' => $product->translations->firstWhere('language', 'id')?->name  ?? $product->translations->firstWhere('language', 'en')?->name ?? 'Unnamed Product'
+            ])->values();
 
         return Inertia::render('product/manage-product/index', [
             'products' => $products,
-
             'types' => $types,
-
             'filters' => [
                 'search' => $search,
                 'status' => $status,
-                'type_id' => $typeId,
+                'typeId' => $typeId,
             ],
-
             'stats' => [
                 'total' => Product::count(),
-
                 'active' => Product::where('active', true)->count(),
-
                 'featured' => Product::where('featured', true)->count(),
-
                 'newest' => Product::where('new', true)->count(),
             ],
 
@@ -278,53 +181,26 @@ class ManageProductController extends Controller
             'rate.numeric' => 'Rate must be a valid number.',
             'rate.min' => 'Rate must be greater than or equal to 0.',
 
-            'translations.id.name.required' =>
-            'Product name (Indonesia) is required.',
+            'translations.id.name.required' => 'Product name (Indonesia) is required.',
+            'translations.en.name.required' => 'Product name (English) is required.',
+            'translations.id.featuredLabel.required_if' => 'Featured label (Indonesia) is required when featured is enabled.',
+            'translations.en.featuredLabel.required_if' => 'Featured label (English) is required when featured is enabled.',
 
-            'translations.en.name.required' =>
-            'Product name (English) is required.',
+            'categories.required' => 'Please select at least one category.',
 
-            'translations.id.featuredLabel.required_if' =>
-            'Featured label (Indonesia) is required when featured is enabled.',
+            'variants.*.rate.required' => 'Variant rate is required.',
+            'variants.*.translations.id.name.required' => 'Variant name (Indonesia) is required.',
+            'variants.*.translations.en.name.required' => 'Variant name (English) is required.',
 
-            'translations.en.featuredLabel.required_if' =>
-            'Featured label (English) is required when featured is enabled.',
-
-            'categories.required' =>
-            'Please select at least one category.',
-
-            'variants.*.rate.required' =>
-            'Variant rate is required.',
-
-            'variants.*.translations.id.name.required' =>
-            'Variant name (Indonesia) is required.',
-
-            'variants.*.translations.en.name.required' =>
-            'Variant name (English) is required.',
-
-            'items.required' =>
-            'Please select at least one items.',
-
-            'items.*.itemProductId.required' =>
-            'Please select a product.',
-
-            'items.*.qty.required' =>
-            'Quantity is required.',
-
-            'items.*.qty.min' =>
-            'Quantity must be greater than 0.',
+            'items.required' => 'Please select at least one items.',
+            'items.*.itemProductId.required' => 'Please select a product.',
+            'items.*.qty.required' => 'Quantity is required.',
+            'items.*.qty.min' => 'Quantity must be greater than 0.',
         ]);
 
         DB::beginTransaction();
 
         try {
-
-            /*
-        |--------------------------------------------------------------------------
-        | Product
-        |--------------------------------------------------------------------------
-        */
-
             $product = Product::find($request->id);
 
             if (!$product) {
@@ -333,16 +209,9 @@ class ManageProductController extends Controller
 
             $product->type_id = $validated['typeId'];
             $product->rate = $validated['rate'];
-
             $product->featured = $validated['featured'];
             $product->new = $validated['new'];
             $product->active = $validated['active'];
-
-            /*
-        |--------------------------------------------------------------------------
-        | Upload Image
-        |--------------------------------------------------------------------------
-        */
 
             if ($request->hasFile('image')) {
 
@@ -357,12 +226,6 @@ class ManageProductController extends Controller
 
             $product->save();
 
-            /*
-        |--------------------------------------------------------------------------
-        | Product Translations
-        |--------------------------------------------------------------------------
-        */
-
             foreach (['id', 'en'] as $language) {
 
                 $translation = ProductTranslation::firstOrNew([
@@ -370,56 +233,24 @@ class ManageProductController extends Controller
                     'language' => $language,
                 ]);
 
-                $translation->name =
-                    $validated['translations'][$language]['name'];
-
-                $translation->slug = Str::slug(
-                    $validated['translations'][$language]['name']
-                );
-
-                $translation->description =
-                    $validated['translations'][$language]['description']
-                    ?? null;
-
-                $translation->featured_label =
-                    $validated['translations'][$language]['featuredLabel']
-                    ?? null;
-
+                $translation->name = $validated['translations'][$language]['name'];
+                $translation->slug = Str::slug($validated['translations'][$language]['name']);
+                $translation->description = $validated['translations'][$language]['description'] ?? null;
+                $translation->featured_label = $validated['translations'][$language]['featuredLabel'] ?? null;
                 $translation->save();
             }
 
-            /*
-        |--------------------------------------------------------------------------
-        | Categories & Badges
-        |--------------------------------------------------------------------------
-        */
+            $product->categories()->sync($validated['categories']);
 
-            $product->categories()->sync(
-                $validated['categories']
-            );
-
-            $product->badges()->sync(
-                $validated['badges'] ?? []
-            );
-
-            /*
-        |--------------------------------------------------------------------------
-        | Variants
-        |--------------------------------------------------------------------------
-        */
+            $product->badges()->sync($validated['badges'] ?? []);
 
             $submittedVariantIds = [];
-
             foreach ($validated['variants'] ?? [] as $variantData) {
 
                 $variant = null;
-
                 if (!empty($variantData['id'])) {
 
-                    $variant = ProductVariant::where(
-                        'product_id',
-                        $product->id
-                    )->find($variantData['id']);
+                    $variant = ProductVariant::where('product_id', $product->id)->find($variantData['id']);
                 }
 
                 if (!$variant) {
@@ -434,7 +265,6 @@ class ManageProductController extends Controller
                 $variant->save();
 
                 $submittedVariantIds[] = $variant->id;
-
                 foreach (['id', 'en'] as $language) {
 
                     $translation = ProductVariantTranslation::firstOrNew([
@@ -449,43 +279,25 @@ class ManageProductController extends Controller
                 }
             }
 
-            /*
-        |--------------------------------------------------------------------------
-        | Delete Removed Variants
-        |--------------------------------------------------------------------------
-        */
             $product->variants()->whereNotIn('id', $submittedVariantIds)->delete();
 
-            /*
-            |--------------------------------------------------------------------------
-            | Package Items
-            |--------------------------------------------------------------------------
-            */
-
-            $syncItems = collect(
-                $validated['items'] ?? []
-            )
+            $syncItems = collect($validated['items'] ?? [])
                 ->mapWithKeys(fn($item) => [
                     $item['itemProductId'] => [
                         'qty' => $item['qty'],
                         'unit' => $item['unit'] ?? null,
                     ],
-                ])
-                ->toArray();
+                ])->toArray();
 
             $product->items()->sync($syncItems);
 
             DB::commit();
-
             return back()->with([
-                'success' => $request->id
-                    ? 'Product updated successfully.'
-                    : 'Product created successfully.',
+                'success' => $request->id ? 'Product updated successfully.' : 'Product created successfully.',
             ]);
         } catch (\Throwable $e) {
 
             DB::rollBack();
-
             return back()->withErrors([
                 'error' => $e->getMessage(),
             ]);
@@ -514,8 +326,8 @@ class ManageProductController extends Controller
             $product->delete();
             DB::commit();
         } catch (\Throwable $th) {
+
             DB::rollBack();
-            dd($th->getMessage());
             return back()->withErrors([
                 'error' => $th->getMessage()
             ]);
@@ -524,5 +336,51 @@ class ManageProductController extends Controller
         return back()->with([
             'success' => 'Product deleted successfully.',
         ]);
+    }
+
+    function generateData(Product $product)
+    {
+        return [
+            'id' => $product->id,
+            'typeId' => $product->type_id,
+            'type' => [
+                'id' => $product->type?->id,
+                'name' => $product->type?->name,
+            ],
+            'rate' => $product->rate,
+            'image' => $product->image,
+            'featured' => $product->featured,
+            'new' => $product->new,
+            'active' => $product->active,
+            'translations' => $product->translations->mapWithKeys(fn($translation) => [
+                $translation->language => [
+                    'name' => $translation->name,
+                    'slug' => $translation->slug,
+                    'description' => $translation->description,
+                    'featuredLabel' => $translation->featured_label,
+                ]
+            ]),
+            'categories' => $product->categories->pluck('id')->values(),
+            'variants' => $product->variants->map(fn($variant) => [
+                'id' => $variant->id,
+                'rate' => $variant->rate,
+                'minPerson' => $variant->min_person,
+                'maxPerson' => $variant->max_person,
+                'active' => $variant->active,
+                'translations' => $variant->translations->mapWithKeys(fn($translation) => [
+                    $translation->language => [
+                        'name' => $translation->name,
+                        'slug' => $translation->slug,
+                        'description' => $translation->description,
+                        'featuredLabel' => $translation->featured_label,
+                    ]
+                ])
+            ]),
+            'items' => $product->items->map(fn($item) => [
+                'itemProductId' => $item->pivot->item_product_id,
+                'qty' => $item->pivot->qty,
+                'unit' => $item->pivot->unit
+            ])
+        ];
     }
 }
