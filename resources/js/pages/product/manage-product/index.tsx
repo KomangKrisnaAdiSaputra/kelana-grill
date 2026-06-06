@@ -51,7 +51,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { formatPrice } from '@/helpers/global';
-import { save } from '@/routes/product/manage-product';
+import { deleteMethod, save } from '@/routes/product/manage-product';
 
 interface PaginationLink {
     url: string | null;
@@ -94,6 +94,7 @@ interface Product {
     badges: string[];
 
     variants: ProductVariant[];
+    items: ProductItem[];
 }
 
 interface ProductType {
@@ -132,6 +133,17 @@ interface ProductVariant {
     };
 }
 
+interface ProductItem {
+    itemProductId: string;
+    qty: number;
+    unit: string | null;
+}
+
+interface AlaCarteProduct {
+    id: string;
+    name: string;
+}
+
 interface PaginatedProducts {
     data: Product[];
     current_page: number;
@@ -149,6 +161,7 @@ interface Props {
     categories: ProductCategory[];
 
     badges: ProductBadge[];
+    alaCarteProducts: AlaCarteProduct[];
 
     filters: {
         search?: string;
@@ -171,6 +184,7 @@ export default function Index({
     stats,
     categories,
     badges,
+    alaCarteProducts
 }: Props) {
     const [search, setSearch] = useState(filters?.search ?? '');
     const [status, setStatus] = useState(filters?.status ?? '');
@@ -181,6 +195,7 @@ export default function Index({
     const [language, setLanguage] = useState<'id' | 'en'>('id');
 
     const isEdit = selectedProduct !== null;
+    console.log(selectedProduct);
 
     const { data, setData, post, processing, reset, errors, clearErrors } =
         useForm<Product>({
@@ -206,6 +221,7 @@ export default function Index({
             categories: [],
             badges: [],
             variants: [],
+            items: [],
         });
 
     useEffect(() => {
@@ -246,7 +262,7 @@ export default function Index({
             return;
         }
 
-        router.delete(`/master/product/${selectedProduct.id}`, {
+        router.delete(deleteMethod(selectedProduct.id), {
             preserveScroll: true,
             onSuccess: () => {
                 setOpenDelete(false);
@@ -306,6 +322,7 @@ export default function Index({
                             categories: [],
                             badges: [],
                             variants: [],
+                            items: []
                         });
 
                         setLanguage('id');
@@ -1199,6 +1216,142 @@ export default function Index({
                             ))}
                         </div>
                     )}
+
+                    {/* PACKAGE ITEMS */}
+                    {types.some(
+                        (t) => t.id === data.typeId && t.name === 'PACKAGE',
+                    ) && (
+                            <div className="space-y-4 rounded-xl border p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h3 className="font-semibold">
+                                            Package Items
+                                        </h3>
+
+                                        <p className="text-sm text-muted-foreground">
+                                            Products included in this package.
+                                        </p>
+                                    </div>
+
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => {
+                                            setData('items', [
+                                                ...(data.items ?? []),
+                                                {
+                                                    itemProductId: '',
+                                                    qty: 1,
+                                                    unit: null,
+                                                },
+                                            ]);
+                                        }}
+                                    >
+                                        <Plus className="mr-2 h-4 w-4" />
+                                        Add Item
+                                    </Button>
+                                </div>
+                                {errors.items && (
+                                    <div className="rounded-md border border-red-200 bg-red-50 p-3">
+                                        <p className="text-sm text-red-600">
+                                            {errors.items}
+                                        </p>
+                                    </div>
+                                )}
+                                {(data.items ?? []).length === 0 && (
+                                    <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
+                                        No items added yet.
+                                    </div>
+                                )}
+
+                                {(data.items ?? []).map((item, index) => (
+                                    <Card key={index}>
+                                        <CardContent className="space-y-4 p-4">
+                                            <div className="flex justify-end">
+                                                <Button
+                                                    type="button"
+                                                    size="sm"
+                                                    variant="destructive"
+                                                    onClick={() => {
+                                                        setData(
+                                                            'items',
+                                                            data.items.filter(
+                                                                (_, i) => i !== index,
+                                                            ),
+                                                        );
+                                                    }}
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+
+                                            <div className="grid gap-4 md:grid-cols-3">
+                                                <div>
+                                                    <Label>Product</Label>
+
+                                                    <DynamicSelect
+                                                        options={alaCarteProducts}
+                                                        value={item.itemProductId}
+                                                        onChange={(value) => {
+                                                            const items = [...data.items];
+
+                                                            items[index].itemProductId =
+                                                                value as string;
+
+                                                            setData('items', items);
+                                                        }}
+                                                        getValue={(item) => item.id}
+                                                        getLabel={(item) => item.name}
+                                                        placeholder="Select Product"
+                                                        error={errors[`items.${index}.itemProductId`]}
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <Label>Qty</Label>
+
+                                                    <InputNumber
+                                                        value={item.qty}
+                                                        onChange={(value) => {
+                                                            const items = [...data.items];
+
+                                                            items[index].qty =
+                                                                Number(value ?? 0);
+
+                                                            setData('items', items);
+                                                        }}
+                                                        error={errors[`items.${index}.qty`]}
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <Label>Unit</Label>
+
+                                                    <Input
+                                                        value={item.unit ?? ''}
+                                                        onChange={(e) => {
+                                                            const items = [...data.items];
+
+                                                            items[index].unit =
+                                                                e.target.value;
+
+                                                            setData('items', items);
+                                                        }}
+                                                        placeholder="pcs"
+                                                    />
+
+                                                    {errors[`items.${index}.unit`] && (
+                                                        <p className="text-sm text-destructive">
+                                                            {errors[`items.${index}.unit`]}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        )}
 
                     <DialogFooter>
                         <Button

@@ -49,6 +49,16 @@ class Product extends Model
         return $this->hasMany(ProductVariant::class);
     }
 
+    public function items()
+    {
+        return $this->belongsToMany(
+            Product::class,
+            'product_items',
+            'product_id',
+            'item_product_id'
+        )->withPivot('qty', 'unit')->withTimestamps();
+    }
+
     public function activeVariants()
     {
         return $this->hasMany(ProductVariant::class)->where('is_active', true)->orderBy('sort_order');

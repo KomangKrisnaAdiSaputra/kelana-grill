@@ -90,45 +90,13 @@ class ManageProductController extends Controller
                                 'featuredLabel' => $translation->featured_label,
                             ]
                         ])
+                    ]),
+
+                    'items' => $product->items->map(fn($item) => [
+                        'itemProductId' => $item->pivot->item_product_id,
+                        'qty' => $item->pivot->qty,
+                        'unit' => $item->pivot->unit
                     ])
-
-                    // 'translations' => [
-                    //     'id' => [
-                    //         'name' => optional(
-                    //             $product->translations->firstWhere('language', 'id')
-                    //         )->name ?? '',
-
-                    //         'slug' => optional(
-                    //             $product->translations->firstWhere('language', 'id')
-                    //         )->slug ?? '',
-
-                    //         'description' => optional(
-                    //             $product->translations->firstWhere('language', 'id')
-                    //         )->description ?? '',
-
-                    //         'featuredLabel' => optional(
-                    //             $product->translations->firstWhere('language', 'id')
-                    //         )->featured_label ?? '',
-                    //     ],
-
-                    //     'en' => [
-                    //         'name' => optional(
-                    //             $product->translations->firstWhere('language', 'en')
-                    //         )->name ?? '',
-
-                    //         'slug' => optional(
-                    //             $product->translations->firstWhere('language', 'en')
-                    //         )->slug ?? '',
-
-                    //         'description' => optional(
-                    //             $product->translations->firstWhere('language', 'en')
-                    //         )->description ?? '',
-
-                    //         'featuredLabel' => optional(
-                    //             $product->translations->firstWhere('language', 'en')
-                    //         )->featured_label ?? '',
-                    //     ],
-                    // ],
                 ];
             });
 
@@ -154,6 +122,26 @@ class ManageProductController extends Controller
                 'value' => $badge->id,
             ]);
 
+        $alaCarteProducts = Product::query()
+            ->with([
+                'type',
+                'translations',
+            ])
+            ->whereHas('type', function ($query) {
+                $query->where('name', 'ALA CARTE');
+            })
+            ->where('active', true)
+            ->orderBy('id')
+            ->get()
+            ->map(fn($product) => [
+                'id' => $product->id,
+                'name' =>
+                $product->translations->firstWhere('language', 'id')?->name
+                    ?? $product->translations->firstWhere('language', 'en')?->name
+                    ?? 'Unnamed Product',
+            ])
+            ->values();
+
         return Inertia::render('product/manage-product/index', [
             'products' => $products,
 
@@ -177,11 +165,15 @@ class ManageProductController extends Controller
 
             'categories' => $categories,
             'badges' => $badges,
+            'alaCarteProducts' => $alaCarteProducts,
         ]);
     }
 
     public function save(Request $request)
     {
+        $type = Type::find($request->typeId);
+        $isPackage = $type?->name === 'PACKAGE';
+
         $validated = $request->validate([
             'id' => ['nullable', 'uuid'],
 
@@ -217,13 +209,6 @@ class ManageProductController extends Controller
                 'string',
                 'max:255',
             ],
-
-            /*
-        |--------------------------------------------------------------------------
-        | Variants
-        |--------------------------------------------------------------------------
-        */
-
             'variants' => ['nullable', 'array'],
 
             'variants.*.id' => ['nullable', 'uuid'],
@@ -262,6 +247,30 @@ class ManageProductController extends Controller
                 'string',
                 'max:255',
             ],
+
+            'items' => [
+                Rule::requiredIf($isPackage),
+                'array',
+                'min:1',
+            ],
+
+            'items.*.itemProductId' => [
+                'required',
+                'exists:products,id',
+                'different:id',
+            ],
+
+            'items.*.qty' => [
+                'required',
+                'numeric',
+                'min:0.01',
+            ],
+
+            'items.*.unit' => [
+                'required',
+                'string',
+                'max:50',
+            ],
         ], [
             'typeId.required' => 'Please select a product type.',
 
@@ -292,6 +301,18 @@ class ManageProductController extends Controller
 
             'variants.*.translations.en.name.required' =>
             'Variant name (English) is required.',
+
+            'items.required' =>
+            'Please select at least one items.',
+
+            'items.*.itemProductId.required' =>
+            'Please select a product.',
+
+            'items.*.qty.required' =>
+            'Quantity is required.',
+
+            'items.*.qty.min' =>
+            'Quantity must be greater than 0.',
         ]);
 
         DB::beginTransaction();
@@ -434,6 +455,26 @@ class ManageProductController extends Controller
         |--------------------------------------------------------------------------
         */
             $product->variants()->whereNotIn('id', $submittedVariantIds)->delete();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Package Items
+            |--------------------------------------------------------------------------
+            */
+
+            $syncItems = collect(
+                $validated['items'] ?? []
+            )
+                ->mapWithKeys(fn($item) => [
+                    $item['itemProductId'] => [
+                        'qty' => $item['qty'],
+                        'unit' => $item['unit'] ?? null,
+                    ],
+                ])
+                ->toArray();
+
+            $product->items()->sync($syncItems);
+
             DB::commit();
 
             return back()->with([
@@ -449,5 +490,39 @@ class ManageProductController extends Controller
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+
+    public function delete(Request $request)
+    {
+        $id = $request->id;
+
+        DB::beginTransaction();
+        try {
+            $product = Product::findOrFail($id);
+            $product->categories()->detach();
+            $product->badges()->detach();
+
+            $product->items()->detach();
+
+            foreach ($product->variants as $variant) {
+                $variant->translations()->delete();
+            }
+
+            $product->variants()->delete();
+            $product->translations()->delete();
+
+            $product->delete();
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            dd($th->getMessage());
+            return back()->withErrors([
+                'error' => $th->getMessage()
+            ]);
+        }
+
+        return back()->with([
+            'success' => 'Product deleted successfully.',
+        ]);
     }
 }

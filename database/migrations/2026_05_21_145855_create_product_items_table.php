@@ -9,12 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_items', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-
-            /*
-             * product_id = parent product/package
-             * item_product_id = product item yang masuk ke dalam package
-             */
             $table->foreignUuid('product_id')
                 ->constrained('products')
                 ->cascadeOnUpdate()
@@ -28,10 +22,12 @@ return new class extends Migration
             $table->decimal('qty', 10, 2)->default(1);
             $table->string('unit')->nullable();
 
-
             $table->timestamps();
 
-            $table->unique(['product_id', 'item_product_id']);
+            $table->primary([
+                'product_id',
+                'item_product_id',
+            ]);
 
             $table->index('item_product_id');
         });
