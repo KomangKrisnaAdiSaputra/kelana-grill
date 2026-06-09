@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import {
     Command,
     CommandEmpty,
@@ -17,6 +16,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 interface DynamicSelectProps<T> {
     options: T[];
@@ -170,12 +170,13 @@ export default function DynamicSelect<T>({
 
                 <PopoverContent
                     align="start"
-                    className="w-[var(--radix-popover-trigger-width)] p-0"
+                    className="w-[var(--radix-popover-trigger-width)] p-0 overflow-hidden"
+                    onWheel={(e) => e.stopPropagation()}
                 >
                     <Command>
                         <CommandInput placeholder={searchPlaceholder} />
 
-                        <CommandList>
+                        <CommandList className="max-h-64 overflow-y-auto" onWheel={(e) => e.stopPropagation()}>
                             <CommandEmpty>No data found.</CommandEmpty>
 
                             {multiple && selectedItems.length > 0 && (

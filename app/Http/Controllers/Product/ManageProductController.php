@@ -77,7 +77,7 @@ class ManageProductController extends Controller
         $type = Type::find($request->typeId);
         $isPackage = $type?->name === 'PACKAGE';
 
-        $validated = $request->validate([
+        $request->validate([
             'id' => ['nullable', 'uuid'],
 
             'typeId' => ['required', 'exists:types,id'],
@@ -122,13 +122,13 @@ class ManageProductController extends Controller
                 'min:0',
             ],
 
-            'variants.*.min_person' => [
+            'variants.*.minPerson' => [
                 'nullable',
                 'integer',
                 'min:1',
             ],
 
-            'variants.*.max_person' => [
+            'variants.*.maxPerson' => [
                 'nullable',
                 'integer',
                 'min:1',
@@ -169,11 +169,11 @@ class ManageProductController extends Controller
                 'min:0.01',
             ],
 
-            'items.*.unit' => [
-                'required',
-                'string',
-                'max:50',
-            ],
+            // 'items.*.unit' => [
+            //     'required',
+            //     'string',
+            //     'max:50',
+            // ],
         ], [
             'typeId.required' => 'Please select a product type.',
 
@@ -207,11 +207,11 @@ class ManageProductController extends Controller
                 $product = new Product();
             }
 
-            $product->type_id = $validated['typeId'];
-            $product->rate = $validated['rate'];
-            $product->featured = $validated['featured'];
-            $product->new = $validated['new'];
-            $product->active = $validated['active'];
+            $product->type_id = $request->typeId;
+            $product->rate = $request->rate;
+            $product->featured = $request->featured;
+            $product->new = $request->new;
+            $product->active = $request->active;
 
             if ($request->hasFile('image')) {
 
@@ -233,19 +233,19 @@ class ManageProductController extends Controller
                     'language' => $language,
                 ]);
 
-                $translation->name = $validated['translations'][$language]['name'];
-                $translation->slug = Str::slug($validated['translations'][$language]['name']);
-                $translation->description = $validated['translations'][$language]['description'] ?? null;
-                $translation->featured_label = $validated['translations'][$language]['featuredLabel'] ?? null;
+                $translation->name = $request->translations[$language]['name'];
+                $translation->slug = Str::slug($request->translations[$language]['name']);
+                $translation->description = $request->translations[$language]['description'] ?? null;
+                $translation->featured_label = $request->translations[$language]['featuredLabel'] ?? null;
                 $translation->save();
             }
 
-            $product->categories()->sync($validated['categories']);
+            $product->categories()->sync($request->categories);
 
-            $product->badges()->sync($validated['badges'] ?? []);
+            $product->badges()->sync($request->badges ?? []);
 
             $submittedVariantIds = [];
-            foreach ($validated['variants'] ?? [] as $variantData) {
+            foreach ($request->variants ?? [] as $variantData) {
 
                 $variant = null;
                 if (!empty($variantData['id'])) {
@@ -259,8 +259,8 @@ class ManageProductController extends Controller
                 }
 
                 $variant->rate = $variantData['rate'];
-                $variant->min_person = $variantData['min_person']  ?? null;
-                $variant->max_person = $variantData['max_person'] ?? null;
+                $variant->min_person = $variantData['minPerson']  ?? null;
+                $variant->max_person = $variantData['maxPerson'] ?? null;
                 $variant->active = $variantData['active'];
                 $variant->save();
 
@@ -281,7 +281,7 @@ class ManageProductController extends Controller
 
             $product->variants()->whereNotIn('id', $submittedVariantIds)->delete();
 
-            $syncItems = collect($validated['items'] ?? [])
+            $syncItems = collect($request->items ?? [])
                 ->mapWithKeys(fn($item) => [
                     $item['itemProductId'] => [
                         'qty' => $item['qty'],
@@ -361,6 +361,7 @@ class ManageProductController extends Controller
                 ]
             ]),
             'categories' => $product->categories->pluck('id')->values(),
+            'badges' => $product->badges->pluck('id')->values(),
             'variants' => $product->variants->map(fn($variant) => [
                 'id' => $variant->id,
                 'rate' => $variant->rate,

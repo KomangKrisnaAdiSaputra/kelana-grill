@@ -3,16 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Support\Collection;
 
-#[Fillable(['active'])]
+#[Fillable(["active"])]
 class Category extends Model
 {
     use HasUuids;
 
     protected $casts = [
-        'active' => 'boolean',
+        "active" => "boolean",
     ];
 
     public function translations()
@@ -22,18 +24,26 @@ class Category extends Model
 
     public function translation()
     {
-        return $this->hasOne(CategoryTranslation::class)
-            ->where('language', app()->getLocale());
+        return $this->hasOne(CategoryTranslation::class)->where("language", app()->getLocale());
     }
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'product_categories')
-            ->withTimestamps();
+        return $this->belongsToMany(Product::class, "product_categories")->withTimestamps();
     }
 
-    public function scopeActive($query)
+    public function scopeActive(Builder $query): Builder
     {
-        return $query->where('is_active', true);
+        return $query->where("active", true);
+    }
+
+    function generateData(): Collection
+    {
+        $translation = $this->translation;
+
+        return collect([
+            "id" => $this->id,
+            "name" => $translation->name
+        ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Data\KelanaGrillData;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
@@ -13,20 +14,12 @@ class LandingPageController extends Controller
 {
     public function index(Request $request)
     {
-        $data = KelanaGrillData::get();
-
-        $products = $data['products'];
+        $featuredProduct = Product::active()->featured()->inRandomOrder()->first()->generateDataLanding();
+        $products = Product::active()->whereHas("type", fn($q) => $q->where("name", Product::TYPE_PACKAGE))->whereNot("id", $featuredProduct["id"])->inRandomOrder()->limit(3)->get()->map->generateDataLanding();
 
         return Inertia::render('landing/index', [
-            'locale' => $data['locale'],
-
-            'types' => $data['types']->map(fn($item) => $this->generateDataType($item)),
-
-            'featuredProduct' => $this->generateDataProduct($products->firstWhere('featured', true)),
-            'products' => $products->where('featured', false)->where('type_id', 'type-package')->take(3)->values()->map(fn($item) => $this->generateDataProduct($item)),
-
-            'categories' => $data['categories']->map(fn($item) => $this->generateDataCategory($item)),
-            'badges' => $data['badges']->map(fn($item) => $this->generateDataBadge($item)),
+            'featuredProduct' => $featuredProduct,
+            'products' => $products,
         ]);
     }
 

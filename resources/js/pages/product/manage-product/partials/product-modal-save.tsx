@@ -343,7 +343,8 @@ export default function ProductModalSave({
           (t) => t.id === data.typeId && t.name === 'PACKAGE',
         ).length > 0 && (
             <div className="space-y-4 rounded-xl border p-4">
-              <div className="flex items-center justify-between">
+              <div className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b flex items-center justify-between pb-3">
+
                 <div>
                   <h3 className="font-semibold">
                     Product Variants
@@ -394,7 +395,7 @@ export default function ProductModalSave({
               )}
 
               {(data.variants ?? []).map((variant, index) => (
-                <Card key={index}>
+                <Card key={index} className='py-1'>
                   <CardContent className="space-y-4 p-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -651,7 +652,7 @@ export default function ProductModalSave({
           (t) => t.id === data.typeId && t.name === 'PACKAGE',
         ) && (
             <div className="space-y-4 rounded-xl border p-4">
-              <div className="flex items-center justify-between">
+              <div className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b flex items-center justify-between pb-3">
                 <div>
                   <h3 className="font-semibold">
                     Package Items
@@ -680,6 +681,7 @@ export default function ProductModalSave({
                   Add Item
                 </Button>
               </div>
+
               {errors.items && (
                 <div className="rounded-md border border-red-200 bg-red-50 p-3">
                   <p className="text-sm text-red-600">
@@ -694,9 +696,23 @@ export default function ProductModalSave({
               )}
 
               {(data.items ?? []).map((item, index) => (
-                <Card key={index}>
-                  <CardContent className="space-y-4 p-4">
-                    <div className="flex justify-end">
+                <Card key={index} className="relative overflow-visible">
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="destructive"
+                    className="absolute top-3 right-3 z-10"
+                    onClick={() => {
+                      setData(
+                        'items',
+                        data.items.filter((_, i) => i !== index),
+                      );
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                  <CardContent className="p-4">
+                    {/* <div className="flex justify-end">
                       <Button
                         type="button"
                         size="sm"
@@ -713,7 +729,7 @@ export default function ProductModalSave({
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
-                    </div>
+                    </div> */}
 
                     <div className="grid gap-4 md:grid-cols-3">
                       <div>

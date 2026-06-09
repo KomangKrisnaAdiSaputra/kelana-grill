@@ -49,17 +49,24 @@ export default function ProductCard({
     const { __ } = useTranslation();
     const detailButtonRef = useRef<HTMLButtonElement>(null);
 
+    const productImage = product?.image ?? 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop';
+    const productPriceValue = selectedVariant?.rate ?? product?.rate ?? 0;
+    const productOriginalPriceValue = product?.originalPrice ?? 0;
+    const hasPromoPrice = product?.hasPromo ?? (typeof productOriginalPriceValue === 'number' && productOriginalPriceValue > productPriceValue);
+    const productPrice = formatPrice(productPriceValue);
+    const productOriginalPrice = typeof productOriginalPriceValue === 'number' ? formatPrice(productOriginalPriceValue) : null;
+    console.log(product);
+
     return (
         <article
-            className={`group overflow-hidden rounded-[26px] border transition-all duration-300 hover:-translate-y-1 ${
-                theme === 'dark' ? 'theme-card-dark' : 'theme-card-light'
-            }`}
+            className={`group overflow-hidden rounded-[26px] border transition-all duration-300 hover:-translate-y-1 ${theme === 'dark' ? 'theme-card-dark' : 'theme-card-light'
+                }`}
         >
             {/* IMAGE */}
 
             <div className="relative h-48 overflow-hidden sm:h-56">
                 <img
-                    src={product.image}
+                    src={productImage}
                     alt={product.name ?? 'Product Image'}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
@@ -69,7 +76,7 @@ export default function ProductCard({
                 {category && (
                     <div className="absolute top-3 left-3">
                         <span className="rounded-full bg-orange-500 px-3 py-1 text-[11px] font-semibold text-white shadow-lg">
-                            {category.name}
+                            {category}
                         </span>
                     </div>
                 )}
@@ -82,10 +89,7 @@ export default function ProductCard({
 
                 <div>
                     <h3
-                        className={`line-clamp-1 text-lg font-bold tracking-tight ${
-                            theme === 'dark' ? 'text-white' : 'text-zinc-900'
-                        }`}
-                    >
+                        className={`line-clamp-1 text-lg font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-zinc-900'}`}>
                         {product.name}
                     </h3>
 
@@ -94,11 +98,10 @@ export default function ProductCard({
                     <div className="group/tooltip relative">
                         <div className="min-h-[40px]">
                             <p
-                                className={`line-clamp-2 text-[13px] leading-5 ${
-                                    theme === 'dark'
-                                        ? 'text-zinc-400'
-                                        : 'text-zinc-600'
-                                }`}
+                                className={`line-clamp-2 text-[13px] leading-5 ${theme === 'dark'
+                                    ? 'text-zinc-400'
+                                    : 'text-zinc-600'
+                                    }`}
                             >
                                 {product.description}
                             </p>
@@ -107,11 +110,10 @@ export default function ProductCard({
                         {/* TOOLTIP */}
 
                         <div
-                            className={`pointer-events-none absolute bottom-full left-0 z-50 mb-2 hidden w-64 rounded-2xl px-3 py-2 text-xs leading-5 shadow-2xl group-hover/tooltip:block ${
-                                theme === 'dark'
-                                    ? 'border border-white/10 bg-zinc-900 text-zinc-200'
-                                    : 'border border-zinc-200 bg-white text-zinc-700'
-                            }`}
+                            className={`pointer-events-none absolute bottom-full left-0 z-50 mb-2 hidden w-64 rounded-2xl px-3 py-2 text-xs leading-5 shadow-2xl group-hover/tooltip:block ${theme === 'dark'
+                                ? 'border border-white/10 bg-zinc-900 text-zinc-200'
+                                : 'border border-zinc-200 bg-white text-zinc-700'
+                                }`}
                         >
                             {product.description}
                         </div>
@@ -129,13 +131,12 @@ export default function ProductCard({
                                 <button
                                     key={variant.id}
                                     onClick={() => onSelectVariant?.(variant)}
-                                    className={`rounded-full px-3 py-1.5 text-[11px] font-medium transition-all duration-200 sm:text-xs ${
-                                        isActive
-                                            ? 'bg-orange-500 text-white shadow-md'
-                                            : theme === 'dark'
-                                              ? 'border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]'
-                                              : 'border border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100'
-                                    }`}
+                                    className={`rounded-full px-3 py-1.5 text-[11px] font-medium transition-all duration-200 sm:text-xs ${isActive
+                                        ? 'bg-orange-500 text-white shadow-md'
+                                        : theme === 'dark'
+                                            ? 'border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]'
+                                            : 'border border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100'
+                                        }`}
                                 >
                                     {variant.name}
                                 </button>
@@ -150,22 +151,28 @@ export default function ProductCard({
                     {/* PRICE */}
 
                     <div className="min-w-0">
+                        {hasPromoPrice && productOriginalPrice && (
+                            <p className={`mb-1 text-xl font-medium ${theme === 'dark'
+                                ? 'text-white'
+                                : 'text-zinc-900'
+                                } line-through md:text-xs`}>
+                                {productOriginalPrice}
+                            </p>
+                        )}
                         <p
-                            className={`text-2xl font-black tracking-tight ${
-                                theme === 'dark'
-                                    ? 'text-white'
-                                    : 'text-zinc-900'
-                            }`}
+                            className={`text-2xl font-black tracking-tight ${theme === 'dark'
+                                ? 'text-white'
+                                : 'text-zinc-900'
+                                }`}
                         >
-                            {formatPrice(selectedVariant?.rate ?? 0)}
+                            {productPrice}
                         </p>
 
                         <p
-                            className={`mt-1 text-xs ${
-                                theme === 'dark'
-                                    ? 'text-zinc-500'
-                                    : 'text-zinc-500'
-                            }`}
+                            className={`mt-1 text-xs ${theme === 'dark'
+                                ? 'text-zinc-500'
+                                : 'text-zinc-500'
+                                }`}
                         >
                             {__('per paket')}
                         </p>
@@ -189,11 +196,10 @@ export default function ProductCard({
                                     detailButtonRef.current,
                                 );
                             }}
-                            className={`h-11 flex-1 rounded-2xl px-4 text-sm font-medium transition-all duration-200 sm:flex-none ${
-                                theme === 'dark'
-                                    ? 'border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]'
-                                    : 'border border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100'
-                            }`}
+                            className={`h-11 flex-1 rounded-2xl px-4 text-sm font-medium transition-all duration-200 sm:flex-none ${theme === 'dark'
+                                ? 'border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]'
+                                : 'border border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100'
+                                }`}
                         >
                             Detail
                         </button>

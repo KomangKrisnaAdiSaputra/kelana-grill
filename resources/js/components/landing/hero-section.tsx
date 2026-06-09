@@ -15,11 +15,10 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
             <div className="mx-auto grid max-w-7xl gap-10 px-4 py-10 md:grid-cols-1 md:px-6 md:py-24 lg:gap-16 xl:grid-cols-2 xl:items-center">
                 <div>
                     <div
-                        className={`mb-6 inline-flex items-center rounded-full border px-4 py-2 text-xs backdrop-blur-xl md:text-sm ${
-                            theme === 'dark'
-                                ? 'border-orange-400/20 bg-orange-500/10 text-orange-200'
-                                : 'border-orange-200 bg-white/70 text-orange-600'
-                        } `}
+                        className={`mb-6 inline-flex items-center rounded-full border px-4 py-2 text-xs backdrop-blur-xl md:text-sm ${theme === 'dark'
+                            ? 'border-orange-400/20 bg-orange-500/10 text-orange-200'
+                            : 'border-orange-200 bg-white/70 text-orange-600'
+                            } `}
                     >
                         {__('Pengalaman BBQ Premium')}
                     </div>
@@ -59,11 +58,10 @@ export default function HeroSection({ theme, featuredProduct }: Props) {
 
                         <a
                             href="#products"
-                            className={`rounded-full border px-7 py-4 text-center font-medium backdrop-blur-xl transition ${
-                                theme === 'dark'
-                                    ? 'border-white/10 bg-white/5 hover:bg-white/10'
-                                    : 'border-orange-200 bg-white/70 hover:bg-orange-50'
-                            } `}
+                            className={`rounded-full border px-7 py-4 text-center font-medium backdrop-blur-xl transition ${theme === 'dark'
+                                ? 'border-white/10 bg-white/5 hover:bg-white/10'
+                                : 'border-orange-200 bg-white/70 hover:bg-orange-50'
+                                } `}
                         >
                             {__('Lihat Paket')}
                         </a>
@@ -86,62 +84,28 @@ function HeroImage({ theme, featuredProduct }: Props) {
 
     const product = featuredProduct ?? null;
 
-    const defaultVariant =
-        product?.variants?.find((variant) => variant.isDefault) ??
-        product?.variants?.[0] ??
-        null;
-
+    const defaultVariant = product?.variants?.[0];
     const productBadges = product?.badges ?? [];
-
-    const productImage =
-        product?.image ??
-        'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop';
-
-    const productLabel =
-        product?.featuredLabel ??
-        product?.promo?.label ??
-        product?.badges?.[0]?.label ??
-        product?.badges?.[0]?.name ??
-        __('Paket Paling Populer');
-
+    const productImage = product?.image ?? 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop';
+    const productLabel = product?.featuredLabel ?? product?.promo?.label ?? __('Paket Paling Populer');
     const productName = product?.name ?? __('Family BBQ Set');
-
-    const productDescription = product?.description ?? product?.desc ?? null;
-
-    const productPriceValue =
-        defaultVariant?.rate ??
-        defaultVariant?.price ??
-        product?.rate ??
-        product?.price ??
-        0;
-
-    const productOriginalPriceValue = product?.originalPrice ?? null;
-
-    const hasPromoPrice =
-        product?.hasPromo ??
-        (typeof productOriginalPriceValue === 'number' &&
-            productOriginalPriceValue > productPriceValue);
-
+    const productDescription = product?.description ?? null;
+    const productPriceValue = defaultVariant?.rate ?? product?.rate ?? 0;
+    const productOriginalPriceValue = product?.originalPrice ?? 0;
+    const hasPromoPrice = product?.hasPromo ?? (typeof productOriginalPriceValue === 'number' && productOriginalPriceValue > productPriceValue);
     const productPrice = formatPrice(productPriceValue);
-
-    const productOriginalPrice =
-        typeof productOriginalPriceValue === 'number'
-            ? formatPrice(productOriginalPriceValue)
-            : null;
-
-    const defaultVariantLabel =
-        defaultVariant?.label ?? defaultVariant?.name ?? null;
+    const productOriginalPrice = typeof productOriginalPriceValue === 'number' ? formatPrice(productOriginalPriceValue) : null;
+    const defaultVariantLabel = defaultVariant?.name ?? null;
 
     return (
         <div className="relative">
             <div className="absolute top-10 -left-10 h-40 w-40 rounded-full bg-orange-500/20 blur-3xl" />
 
             <div
-                className={`relative overflow-hidden rounded-[32px] border shadow-2xl backdrop-blur-2xl md:rounded-[40px] ${
-                    theme === 'dark'
-                        ? 'border-white/10 bg-white/5'
-                        : 'border-orange-100 bg-white/60 shadow-orange-200/40'
-                } `}
+                className={`relative overflow-hidden rounded-[32px] border shadow-2xl backdrop-blur-2xl md:rounded-[40px] ${theme === 'dark'
+                    ? 'border-white/10 bg-white/5'
+                    : 'border-orange-100 bg-white/60 shadow-orange-200/40'
+                    } `}
             >
                 <img
                     src={productImage}
@@ -162,27 +126,11 @@ function HeroImage({ theme, featuredProduct }: Props) {
                 {productBadges.length > 0 && (
                     <div className="absolute top-4 right-4 flex flex-wrap justify-end gap-2 md:top-6 md:right-6">
                         {productBadges.map((badge) => {
-                            const badgeText =
-                                badge.label ??
-                                badge.name ??
-                                badge.key ??
-                                badge.slug;
-
-                            if (!badgeText) {
-                                return null;
-                            }
-
                             return (
                                 <span
-                                    key={
-                                        badge.id ??
-                                        badge.key ??
-                                        badge.slug ??
-                                        badgeText
-                                    }
-                                    className="rounded-full bg-gradient-to-r from-red-500 to-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-orange-500/30 md:text-sm"
+                                    key={badge} className="rounded-full bg-gradient-to-r from-red-500 to-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-orange-500/30 md:text-sm"
                                 >
-                                    {badgeText}
+                                    {badge}
                                 </span>
                             );
                         })}

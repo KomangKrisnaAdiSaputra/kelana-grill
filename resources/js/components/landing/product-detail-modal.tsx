@@ -35,8 +35,11 @@ export default function ProductDetailModal({
 }: ProductDetailModalProps) {
     const isDark = theme === 'dark';
     const modalRef = useRef<HTMLDivElement>(null);
+    const productImage = product?.image ?? 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop';
+
 
     const [showContent, setShowContent] = useState(false);
+    console.log(product);
 
     const getButtonRect = useCallback(() => {
         if (!buttonEl) {
@@ -140,24 +143,22 @@ export default function ProductDetailModal({
             <div
                 ref={modalRef}
                 onClick={(event) => event.stopPropagation()}
-                className={`fixed z-[60] flex flex-col overflow-hidden border shadow-2xl will-change-[top,left,width,height] ${
-                    isDark
-                        ? 'border-white/10 bg-zinc-950 text-white'
-                        : 'border-orange-100 bg-white text-zinc-950'
-                } `}
+                className={`fixed z-[60] flex flex-col overflow-hidden border shadow-2xl will-change-[top,left,width,height] ${isDark
+                    ? 'border-white/10 bg-zinc-950 text-white'
+                    : 'border-orange-100 bg-white text-zinc-950'
+                    } `}
             >
                 <div
-                    className={`flex h-full flex-col transition-all duration-300 ${
-                        showContent
-                            ? 'translate-y-0 opacity-100'
-                            : 'translate-y-4 opacity-0'
-                    } `}
+                    className={`flex h-full flex-col transition-all duration-300 ${showContent
+                        ? 'translate-y-0 opacity-100'
+                        : 'translate-y-4 opacity-0'
+                        } `}
                 >
                     {/* IMAGE */}
 
                     <div className="relative h-[34dvh] min-h-[260px] overflow-hidden md:h-80">
                         <img
-                            src={product.image}
+                            src={productImage}
                             alt={product.name ?? 'Product Image'}
                             className="h-full w-full object-cover"
                         />
@@ -181,10 +182,10 @@ export default function ProductDetailModal({
                             <div className="mb-3 flex flex-wrap gap-2">
                                 {product.categories?.map((category) => (
                                     <span
-                                        key={category.id}
+                                        key={category}
                                         className="rounded-full bg-orange-500 px-3 py-1.5 text-xs font-semibold text-white"
                                     >
-                                        {category.name}
+                                        {category}
                                     </span>
                                 ))}
 
@@ -202,10 +203,10 @@ export default function ProductDetailModal({
 
                                 {product.badges?.map((badge) => (
                                     <span
-                                        key={badge.id}
+                                        key={badge}
                                         className="rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-xl"
                                     >
-                                        {badge.name}
+                                        {badge}
                                     </span>
                                 ))}
                             </div>
@@ -230,121 +231,117 @@ export default function ProductDetailModal({
                         <div className="space-y-5 p-5 md:p-7">
                             {/* VARIANT */}
 
-                            <div
-                                className={`rounded-[28px] border p-5 ${
-                                    isDark
+                            {product.variants.length > 0 && (
+                                <div
+                                    className={`rounded-[28px] border p-5 ${isDark
                                         ? 'theme-card-dark'
                                         : 'theme-card-light'
-                                } `}
-                            >
-                                <div className="flex items-center justify-between gap-4">
-                                    <div>
-                                        <p
-                                            className={`text-xs font-semibold tracking-[0.2em] uppercase ${
-                                                isDark
+                                        } `}
+                                >
+                                    <div className="flex items-center justify-between gap-4">
+                                        <div>
+                                            <p
+                                                className={`text-xs font-semibold tracking-[0.2em] uppercase ${isDark
                                                     ? 'text-zinc-400'
                                                     : 'text-zinc-500'
-                                            }`}
-                                        >
-                                            {text.variantsLabel}
-                                        </p>
-
-                                        <h4 className="mt-2 text-lg font-semibold">
-                                            {selectedVariant.name}
-                                        </h4>
-                                    </div>
-
-                                    <div className="text-right">
-                                        <p className="text-2xl font-bold text-orange-400">
-                                            {formatPrice(selectedVariant.rate)}
-                                        </p>
-
-                                        {(selectedVariant.minPerson ||
-                                            selectedVariant.maxPerson) && (
-                                            <p
-                                                className={`mt-1 text-xs ${
-                                                    isDark
-                                                        ? 'text-zinc-500'
-                                                        : 'text-zinc-500'
-                                                }`}
+                                                    }`}
                                             >
-                                                {selectedVariant.minPerson}-
-                                                {selectedVariant.maxPerson}{' '}
-                                                orang
+                                                {text.variantsLabel}
                                             </p>
-                                        )}
+
+                                            <h4 className="mt-2 text-lg font-semibold">
+                                                {/* {selectedVariant.name} */}
+                                            </h4>
+                                        </div>
+
+                                        <div className="text-right">
+                                            <p className="text-2xl font-bold text-orange-400">
+                                                {formatPrice(selectedVariant.rate)}
+                                            </p>
+
+                                            {(selectedVariant.minPerson ||
+                                                selectedVariant.maxPerson) && (
+                                                    <p
+                                                        className={`mt-1 text-xs ${isDark
+                                                            ? 'text-zinc-500'
+                                                            : 'text-zinc-500'
+                                                            }`}
+                                                    >
+                                                        {selectedVariant.minPerson}-
+                                                        {selectedVariant.maxPerson}{' '}
+                                                        orang
+                                                    </p>
+                                                )}
+                                        </div>
                                     </div>
-                                </div>
 
-                                {/* OTHER VARIANTS */}
+                                    {/* OTHER VARIANTS */}
 
-                                {product.variants.length > 1 && (
-                                    <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                                        {product.variants.map((variant) => {
-                                            const isSelected =
-                                                selectedVariant.id ===
-                                                variant.id;
+                                    {product.variants.length > 1 && (
+                                        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                                            {product.variants.map((variant) => {
+                                                const isSelected =
+                                                    selectedVariant.id ===
+                                                    variant.id;
 
-                                            return (
-                                                <div
-                                                    key={variant.id}
-                                                    className={`rounded-2xl border p-4 transition ${
-                                                        isSelected
+                                                return (
+                                                    <div
+                                                        key={variant.id}
+                                                        className={`rounded-2xl border p-4 transition ${isSelected
                                                             ? 'border-orange-400 bg-orange-500/10'
                                                             : isDark
-                                                              ? 'border-white/10 bg-black/20'
-                                                              : 'border-orange-100 bg-white'
-                                                    } `}
-                                                >
-                                                    <div className="flex items-start justify-between gap-3">
-                                                        <div>
-                                                            <p className="text-sm font-semibold">
-                                                                {variant.name}
-                                                            </p>
+                                                                ? 'border-white/10 bg-black/20'
+                                                                : 'border-orange-100 bg-white'
+                                                            } `}
+                                                    >
+                                                        <div className="flex items-start justify-between gap-3">
+                                                            <div>
+                                                                <p className="text-sm font-semibold">
+                                                                    {variant.name}
+                                                                </p>
 
-                                                            {variant.description && (
-                                                                <p
-                                                                    className={`mt-1 text-xs ${
-                                                                        isDark
+                                                                {variant.description && (
+                                                                    <p
+                                                                        className={`mt-1 text-xs ${isDark
                                                                             ? 'text-zinc-400'
                                                                             : 'text-zinc-500'
-                                                                    }`}
-                                                                >
-                                                                    {
-                                                                        variant.description
-                                                                    }
-                                                                </p>
+                                                                            }`}
+                                                                    >
+                                                                        {
+                                                                            variant.description
+                                                                        }
+                                                                    </p>
+                                                                )}
+                                                            </div>
+
+                                                            {isSelected && (
+                                                                <span className="rounded-full bg-orange-500 px-2 py-1 text-[10px] font-semibold text-white">
+                                                                    Aktif
+                                                                </span>
                                                             )}
                                                         </div>
 
-                                                        {isSelected && (
-                                                            <span className="rounded-full bg-orange-500 px-2 py-1 text-[10px] font-semibold text-white">
-                                                                Aktif
-                                                            </span>
-                                                        )}
+                                                        <p className="mt-3 text-xl font-bold text-orange-400">
+                                                            {formatPrice(
+                                                                variant.rate,
+                                                            )}
+                                                        </p>
                                                     </div>
-
-                                                    <p className="mt-3 text-xl font-bold text-orange-400">
-                                                        {formatPrice(
-                                                            variant.rate,
-                                                        )}
-                                                    </p>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                )}
-                            </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
                             {/* ITEMS */}
 
-                            {product.items.length > 0 ? (
+                            {product?.items.length > 0 ? (
                                 <div
-                                    className={`rounded-[28px] border p-5 ${
-                                        isDark
-                                            ? 'border-white/10 bg-white/[0.04]'
-                                            : 'border-zinc-100 bg-white'
-                                    } `}
+                                    className={`rounded-[28px] border p-5 ${isDark
+                                        ? 'border-white/10 bg-white/[0.04]'
+                                        : 'border-zinc-100 bg-white'
+                                        } `}
                                 >
                                     <div className="flex items-center justify-between gap-4">
                                         <h4 className="text-lg font-semibold">
@@ -352,11 +349,10 @@ export default function ProductDetailModal({
                                         </h4>
 
                                         <span
-                                            className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                                                isDark
-                                                    ? 'bg-white/10 text-zinc-300'
-                                                    : 'bg-zinc-100 text-zinc-500'
-                                            } `}
+                                            className={`rounded-full px-3 py-1 text-xs font-semibold ${isDark
+                                                ? 'bg-white/10 text-zinc-300'
+                                                : 'bg-zinc-100 text-zinc-500'
+                                                } `}
                                         >
                                             {product.items.length} item
                                         </span>
@@ -365,12 +361,11 @@ export default function ProductDetailModal({
                                     <div className="mt-4 grid gap-2">
                                         {product.items.map((item) => (
                                             <div
-                                                key={item.id}
-                                                className={`flex items-start justify-between gap-4 rounded-2xl px-4 py-3 text-sm ${
-                                                    isDark
-                                                        ? 'bg-black/20 text-zinc-300'
-                                                        : 'bg-zinc-50 text-zinc-700'
-                                                } `}
+                                                key={item.name}
+                                                className={`flex items-start justify-between gap-4 rounded-2xl px-4 py-3 text-sm ${isDark
+                                                    ? 'bg-black/20 text-zinc-300'
+                                                    : 'bg-zinc-50 text-zinc-700'
+                                                    } `}
                                             >
                                                 <div className="min-w-0">
                                                     <p className="font-semibold">
@@ -379,11 +374,10 @@ export default function ProductDetailModal({
 
                                                     {item.description && (
                                                         <p
-                                                            className={`mt-1 text-xs ${
-                                                                isDark
-                                                                    ? 'text-zinc-400'
-                                                                    : 'text-zinc-500'
-                                                            }`}
+                                                            className={`mt-1 text-xs ${isDark
+                                                                ? 'text-zinc-400'
+                                                                : 'text-zinc-500'
+                                                                }`}
                                                         >
                                                             {item.description}
                                                         </p>
@@ -391,11 +385,10 @@ export default function ProductDetailModal({
                                                 </div>
 
                                                 <span
-                                                    className={`shrink-0 font-semibold ${
-                                                        isDark
-                                                            ? 'text-zinc-400'
-                                                            : 'text-zinc-500'
-                                                    }`}
+                                                    className={`shrink-0 font-semibold ${isDark
+                                                        ? 'text-zinc-400'
+                                                        : 'text-zinc-500'
+                                                        }`}
                                                 >
                                                     {item.qty} {item.unit}
                                                 </span>
@@ -405,11 +398,10 @@ export default function ProductDetailModal({
                                 </div>
                             ) : (
                                 <div
-                                    className={`rounded-[28px] border p-5 text-sm ${
-                                        isDark
-                                            ? 'border-white/10 bg-white/[0.04] text-zinc-400'
-                                            : 'border-zinc-100 bg-zinc-50 text-zinc-500'
-                                    } `}
+                                    className={`rounded-[28px] border p-5 text-sm ${isDark
+                                        ? 'border-white/10 bg-white/[0.04] text-zinc-400'
+                                        : 'border-zinc-100 bg-zinc-50 text-zinc-500'
+                                        } `}
                                 >
                                     {text.noDataLabel}
                                 </div>
@@ -420,20 +412,18 @@ export default function ProductDetailModal({
                     {/* FOOTER */}
 
                     <div
-                        className={`border-t p-4 md:p-5 ${
-                            isDark
-                                ? 'border-white/10 bg-zinc-950/95'
-                                : 'border-zinc-100 bg-white/95'
-                        } `}
+                        className={`border-t p-4 md:p-5 ${isDark
+                            ? 'border-white/10 bg-zinc-950/95'
+                            : 'border-zinc-100 bg-white/95'
+                            } `}
                     >
                         <button
                             type="button"
                             onClick={handleClose}
-                            className={`w-full rounded-2xl px-5 py-3 text-sm font-semibold transition ${
-                                isDark
-                                    ? 'bg-white text-zinc-950 hover:bg-orange-100'
-                                    : 'bg-zinc-950 text-white hover:bg-orange-500'
-                            } `}
+                            className={`w-full rounded-2xl px-5 py-3 text-sm font-semibold transition ${isDark
+                                ? 'bg-white text-zinc-950 hover:bg-orange-100'
+                                : 'bg-zinc-950 text-white hover:bg-orange-500'
+                                } `}
                         >
                             {text.closeLabel}
                         </button>
