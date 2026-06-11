@@ -39,7 +39,6 @@ export default function ProductDetailModal({
 
 
     const [showContent, setShowContent] = useState(false);
-    console.log(product);
 
     const getButtonRect = useCallback(() => {
         if (!buttonEl) {
@@ -182,10 +181,10 @@ export default function ProductDetailModal({
                             <div className="mb-3 flex flex-wrap gap-2">
                                 {product.categories?.map((category) => (
                                     <span
-                                        key={category}
+                                        key={category.id}
                                         className="rounded-full bg-orange-500 px-3 py-1.5 text-xs font-semibold text-white"
                                     >
-                                        {category}
+                                        {category.name}
                                     </span>
                                 ))}
 
@@ -203,10 +202,10 @@ export default function ProductDetailModal({
 
                                 {product.badges?.map((badge) => (
                                     <span
-                                        key={badge}
+                                        key={badge.id}
                                         className="rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-xl"
                                     >
-                                        {badge}
+                                        {badge.name}
                                     </span>
                                 ))}
                             </div>

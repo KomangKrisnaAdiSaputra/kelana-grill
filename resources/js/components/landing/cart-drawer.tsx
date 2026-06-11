@@ -1,7 +1,7 @@
 import { router, usePage } from '@inertiajs/react';
-import { Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react';
+import { Minus, Package, Plus, ShoppingBag, Trash2, X } from 'lucide-react';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useCart } from '@/contexts/cart-context';
 
@@ -18,13 +18,13 @@ export default function CartDrawer({ open, onClose }: Props) {
     const { theme } = useTheme();
     const { __ } = useTranslation();
     const locale = usePage<any>().props.params.locale;
+    const [imageError, setImageError] = useState(false);
 
-    const { cartItems, increaseQty, decreaseQty, removeItem, clearCart } =
-        useCart();
+    const { cartItems, increaseQty, decreaseQty, removeItem, clearCart } = useCart();
 
     const total = useMemo(() => {
         return cartItems.reduce(
-            (sum, item) => sum + item.qty * (item.variant.rate ?? 0),
+            (sum, item) => sum + item.qty * (item.rate ?? 0),
             0,
         );
     }, [cartItems]);
@@ -63,20 +63,18 @@ export default function CartDrawer({ open, onClose }: Props) {
 
             <div className="absolute inset-y-0 right-0 flex w-full justify-end sm:p-4">
                 <div
-                    className={`relative flex h-full w-full max-w-md flex-col overflow-hidden shadow-2xl transition-all duration-300 sm:rounded-[32px] ${
-                        theme === 'dark'
-                            ? `border border-white/10 bg-[#111111] text-white`
-                            : `border border-orange-100 bg-white text-zinc-900`
-                    } `}
+                    className={`relative flex h-full w-full max-w-md flex-col overflow-hidden shadow-2xl transition-all duration-300 sm:rounded-[32px] ${theme === 'dark'
+                        ? `border border-white/10 bg-[#111111] text-white`
+                        : `border border-orange-100 bg-white text-zinc-900`
+                        } `}
                 >
                     {/* HEADER */}
 
                     <div
-                        className={`flex items-center justify-between border-b px-5 py-5 ${
-                            theme === 'dark'
-                                ? 'border-white/10'
-                                : 'border-orange-100'
-                        } `}
+                        className={`flex items-center justify-between border-b px-5 py-5 ${theme === 'dark'
+                            ? 'border-white/10'
+                            : 'border-orange-100'
+                            } `}
                     >
                         <div>
                             <h2 className="text-lg font-semibold tracking-tight">
@@ -84,11 +82,10 @@ export default function CartDrawer({ open, onClose }: Props) {
                             </h2>
 
                             <p
-                                className={`mt-1 text-sm ${
-                                    theme === 'dark'
-                                        ? 'text-zinc-400'
-                                        : 'text-zinc-500'
-                                } `}
+                                className={`mt-1 text-sm ${theme === 'dark'
+                                    ? 'text-zinc-400'
+                                    : 'text-zinc-500'
+                                    } `}
                             >
                                 {totalQty} item
                             </p>
@@ -96,11 +93,10 @@ export default function CartDrawer({ open, onClose }: Props) {
 
                         <button
                             onClick={onClose}
-                            className={`flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 ${
-                                theme === 'dark'
-                                    ? `bg-white/[0.05] hover:bg-white/[0.08]`
-                                    : `bg-orange-50 hover:bg-orange-100`
-                            } `}
+                            className={`flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 ${theme === 'dark'
+                                ? `bg-white/[0.05] hover:bg-white/[0.08]`
+                                : `bg-orange-50 hover:bg-orange-100`
+                                } `}
                         >
                             <X size={18} />
                         </button>
@@ -112,11 +108,10 @@ export default function CartDrawer({ open, onClose }: Props) {
                         {cartItems.length === 0 ? (
                             <div className="flex h-full flex-col items-center justify-center text-center">
                                 <div
-                                    className={`flex h-20 w-20 items-center justify-center rounded-full ${
-                                        theme === 'dark'
-                                            ? 'bg-white/[0.05]'
-                                            : 'bg-orange-50'
-                                    } `}
+                                    className={`flex h-20 w-20 items-center justify-center rounded-full ${theme === 'dark'
+                                        ? 'bg-white/[0.05]'
+                                        : 'bg-orange-50'
+                                        } `}
                                 >
                                     <ShoppingBag
                                         size={32}
@@ -129,11 +124,10 @@ export default function CartDrawer({ open, onClose }: Props) {
                                 </h3>
 
                                 <p
-                                    className={`mt-2 max-w-xs text-sm leading-6 ${
-                                        theme === 'dark'
-                                            ? 'text-zinc-400'
-                                            : 'text-zinc-500'
-                                    } `}
+                                    className={`mt-2 max-w-xs text-sm leading-6 ${theme === 'dark'
+                                        ? 'text-zinc-400'
+                                        : 'text-zinc-500'
+                                        } `}
                                 >
                                     {__(
                                         'Tambahkan produk favoritmu ke dalam keranjang.',
@@ -145,24 +139,27 @@ export default function CartDrawer({ open, onClose }: Props) {
                                 {cartItems.map((item) => (
                                     <div
                                         key={item.id}
-                                        className={`overflow-hidden rounded-[28px] border p-4 transition-all duration-300 ${
-                                            theme === 'dark'
-                                                ? `border-white/10 bg-white/[0.03]`
-                                                : `border-orange-100 bg-orange-50/40`
-                                        } `}
+                                        className={`overflow-hidden rounded-[28px] border p-4 transition-all duration-300 ${theme === 'dark'
+                                            ? `border-white/10 bg-white/[0.03]`
+                                            : `border-orange-100 bg-orange-50/40`
+                                            } `}
                                     >
                                         <div className="flex gap-4">
                                             {/* IMAGE */}
 
                                             <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl">
-                                                <img
-                                                    src={item.product.image}
-                                                    alt={
-                                                        item.product.name ??
-                                                        'Product Image'
-                                                    }
-                                                    className="h-full w-full object-cover"
-                                                />
+                                                {item.image && !imageError ? (
+                                                    <img
+                                                        src={item.image}
+                                                        alt={item.name ?? 'Product Image'}
+                                                        className="h-full w-full object-cover"
+                                                        onError={() => setImageError(true)}
+                                                    />
+                                                ) : (
+                                                    <div className="flex h-full w-full items-center justify-center bg-muted">
+                                                        <Package className="h-6 w-6 text-muted-foreground" />
+                                                    </div>
+                                                )}
                                             </div>
 
                                             {/* CONTENT */}
@@ -171,17 +168,16 @@ export default function CartDrawer({ open, onClose }: Props) {
                                                 <div className="flex items-start justify-between gap-3">
                                                     <div className="min-w-0">
                                                         <h3 className="truncate font-semibold">
-                                                            {item.product.name}
+                                                            {item.name}
                                                         </h3>
 
                                                         <p
-                                                            className={`mt-1 text-sm ${
-                                                                theme === 'dark'
-                                                                    ? 'text-zinc-400'
-                                                                    : 'text-zinc-500'
-                                                            } `}
+                                                            className={`mt-1 text-sm ${theme === 'dark'
+                                                                ? 'text-zinc-400'
+                                                                : 'text-zinc-500'
+                                                                } `}
                                                         >
-                                                            {item.variant.name}
+                                                            {item?.variant?.name ?? ""}
                                                         </p>
                                                     </div>
 
@@ -189,11 +185,10 @@ export default function CartDrawer({ open, onClose }: Props) {
                                                         onClick={() =>
                                                             removeItem(item.id)
                                                         }
-                                                        className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 ${
-                                                            theme === 'dark'
-                                                                ? `bg-white/[0.05] text-zinc-400 hover:bg-red-500/20 hover:text-red-400`
-                                                                : `bg-white text-zinc-500 hover:bg-red-50 hover:text-red-500`
-                                                        } `}
+                                                        className={`flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 ${theme === 'dark'
+                                                            ? `bg-white/[0.05] text-zinc-400 hover:bg-red-500/20 hover:text-red-400`
+                                                            : `bg-white text-zinc-500 hover:bg-red-50 hover:text-red-500`
+                                                            } `}
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
@@ -205,8 +200,7 @@ export default function CartDrawer({ open, onClose }: Props) {
                                                     <div>
                                                         <p className="text-lg font-bold text-orange-500">
                                                             {formatPrice(
-                                                                item.variant
-                                                                    .rate ?? 0,
+                                                                item.rate ?? 0,
                                                             )}
                                                         </p>
                                                     </div>
@@ -214,11 +208,10 @@ export default function CartDrawer({ open, onClose }: Props) {
                                                     {/* QTY */}
 
                                                     <div
-                                                        className={`flex items-center gap-2 rounded-full p-1 ${
-                                                            theme === 'dark'
-                                                                ? 'bg-white/[0.05]'
-                                                                : 'bg-white'
-                                                        } `}
+                                                        className={`flex items-center gap-2 rounded-full p-1 ${theme === 'dark'
+                                                            ? 'bg-white/[0.05]'
+                                                            : 'bg-white'
+                                                            } `}
                                                     >
                                                         <button
                                                             onClick={() =>
@@ -226,11 +219,10 @@ export default function CartDrawer({ open, onClose }: Props) {
                                                                     item.id,
                                                                 )
                                                             }
-                                                            className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${
-                                                                theme === 'dark'
-                                                                    ? `bg-white/[0.05] hover:bg-white/[0.1]`
-                                                                    : `bg-orange-50 hover:bg-orange-100`
-                                                            } `}
+                                                            className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${theme === 'dark'
+                                                                ? `bg-white/[0.05] hover:bg-white/[0.1]`
+                                                                : `bg-orange-50 hover:bg-orange-100`
+                                                                } `}
                                                         >
                                                             <Minus size={14} />
                                                         </button>
@@ -263,22 +255,20 @@ export default function CartDrawer({ open, onClose }: Props) {
 
                     {cartItems.length > 0 && (
                         <div
-                            className={`border-t p-5 ${
-                                theme === 'dark'
-                                    ? 'border-white/10'
-                                    : 'border-orange-100'
-                            } `}
+                            className={`border-t p-5 ${theme === 'dark'
+                                ? 'border-white/10'
+                                : 'border-orange-100'
+                                } `}
                         >
                             {/* TOTAL */}
 
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p
-                                        className={`text-sm ${
-                                            theme === 'dark'
-                                                ? 'text-zinc-400'
-                                                : 'text-zinc-500'
-                                        } `}
+                                        className={`text-sm ${theme === 'dark'
+                                            ? 'text-zinc-400'
+                                            : 'text-zinc-500'
+                                            } `}
                                     >
                                         Total
                                     </p>
@@ -290,11 +280,10 @@ export default function CartDrawer({ open, onClose }: Props) {
 
                                 <button
                                     onClick={clearCart}
-                                    className={`rounded-2xl px-4 py-3 text-sm font-medium transition-all duration-300 ${
-                                        theme === 'dark'
-                                            ? `bg-red-500/10 text-red-400 hover:bg-red-500/20`
-                                            : `bg-red-50 text-red-500 hover:bg-red-100`
-                                    } `}
+                                    className={`rounded-2xl px-4 py-3 text-sm font-medium transition-all duration-300 ${theme === 'dark'
+                                        ? `bg-red-500/10 text-red-400 hover:bg-red-500/20`
+                                        : `bg-red-50 text-red-500 hover:bg-red-100`
+                                        } `}
                                 >
                                     {__('Kosongkan')}
                                 </button>

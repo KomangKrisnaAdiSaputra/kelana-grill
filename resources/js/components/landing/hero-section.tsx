@@ -128,9 +128,9 @@ function HeroImage({ theme, featuredProduct }: Props) {
                         {productBadges.map((badge) => {
                             return (
                                 <span
-                                    key={badge} className="rounded-full bg-gradient-to-r from-red-500 to-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-orange-500/30 md:text-sm"
+                                    key={badge.id} className="rounded-full bg-gradient-to-r from-red-500 to-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-orange-500/30 md:text-sm"
                                 >
-                                    {badge}
+                                    {badge.name}
                                 </span>
                             );
                         })}

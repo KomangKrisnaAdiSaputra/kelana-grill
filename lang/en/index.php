@@ -80,6 +80,7 @@ return [
   "halaman" => "page",
   "produk" => "products",
   "per paket" => "per package",
+  "Best Value" => "Best Value",
   // End Product
 
   // CTA

@@ -25,10 +25,8 @@ class LandingPageController extends Controller
 
     public function indexProduct(Request $request)
     {
-        $data = KelanaGrillData::get();
-
         return Inertia::render('landing/product', [
-            'products' => collect($data['products'] ?? [])->map(fn($item) => $this->generateDataProduct($item)),
+            'products' => Product::active()->get()->map->generateDataLanding(),
         ]);
     }
 

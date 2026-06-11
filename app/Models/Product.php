@@ -111,8 +111,8 @@ class Product extends Model
 
             "type" => $this->type->name,
 
-            "categories" => $this->categories->map->generateData()->pluck("name"),
-            "badges" => $this->badges->map->generateData()->pluck("name"),
+            "categories" => $this->categories->map->generateData(),
+            "badges" => $this->badges->map->generateData(),
             "variants" => $this->variants->map->generateData(),
 
             "items" => $this->items->map->generateDataItem()

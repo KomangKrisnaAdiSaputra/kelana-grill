@@ -10,9 +10,15 @@ export type ProductPromo = {
     description: string | null;
 };
 
-export type ProductCategory = string;
+export type ProductCategory = {
+    id: string;
+    name: string;
+};
 
-export type ProductBadge = string;
+export type ProductBadge = {
+    id: string;
+    name: string;
+};
 
 export type ProductVariant = {
     id: string | number;

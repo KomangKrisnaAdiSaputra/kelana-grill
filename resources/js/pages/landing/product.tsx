@@ -257,11 +257,10 @@ function ProductCatalogContent() {
 
                 <section>
                     <div
-                        className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm backdrop-blur-xl ${
-                            theme === 'dark'
+                        className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm backdrop-blur-xl ${theme === 'dark'
                                 ? 'border-orange-400/20 bg-orange-500/10 text-orange-200'
                                 : 'border-orange-200 bg-white/70 text-orange-700'
-                        } `}
+                            } `}
                     >
                         <SlidersHorizontal size={16} />
 
@@ -273,9 +272,8 @@ function ProductCatalogContent() {
                     </h1>
 
                     <p
-                        className={`mt-4 max-w-2xl leading-7 md:leading-8 ${
-                            theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'
-                        } `}
+                        className={`mt-4 max-w-2xl leading-7 md:leading-8 ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'
+                            } `}
                     >
                         {__(
                             'Temukan berbagai pilihan produk dan paket terbaik dalam satu halaman yang mudah dicari dan difilter.',
@@ -287,22 +285,20 @@ function ProductCatalogContent() {
 
                 <section className="sticky top-[72px] z-40 mt-6 md:top-24 md:mt-8">
                     <div
-                        className={`overflow-hidden rounded-[28px] backdrop-blur-2xl ${
-                            theme === 'dark'
+                        className={`overflow-hidden rounded-[28px] backdrop-blur-2xl ${theme === 'dark'
                                 ? 'theme-card-dark'
                                 : 'theme-card-light'
-                        } `}
+                            } `}
                     >
                         <div className="p-3">
                             <div className="flex items-center gap-3">
                                 {/* SEARCH */}
 
                                 <div
-                                    className={`flex flex-1 items-center gap-3 rounded-2xl px-4 py-3 ${
-                                        theme === 'dark'
+                                    className={`flex flex-1 items-center gap-3 rounded-2xl px-4 py-3 ${theme === 'dark'
                                             ? 'bg-white/[0.04]'
                                             : 'bg-orange-50/80'
-                                    } `}
+                                        } `}
                                 >
                                     <Search
                                         size={16}
@@ -321,11 +317,10 @@ function ProductCatalogContent() {
                                         placeholder={__(
                                             'Cari produk atau paket...',
                                         )}
-                                        className={`w-full bg-transparent text-sm outline-none ${
-                                            theme === 'dark'
+                                        className={`w-full bg-transparent text-sm outline-none ${theme === 'dark'
                                                 ? 'text-white placeholder:text-zinc-500'
                                                 : 'text-zinc-800 placeholder:text-zinc-400'
-                                        } `}
+                                            } `}
                                     />
                                 </div>
 
@@ -345,11 +340,10 @@ function ProductCatalogContent() {
 
                         {showFilters && (
                             <div
-                                className={`border-t px-3 pt-3 pb-4 ${
-                                    theme === 'dark'
+                                className={`border-t px-3 pt-3 pb-4 ${theme === 'dark'
                                         ? 'border-white/10'
                                         : 'border-orange-100'
-                                } `}
+                                    } `}
                             >
                                 {/* TYPE */}
 
@@ -362,13 +356,12 @@ function ProductCatalogContent() {
 
                                                 setPage(1);
                                             }}
-                                            className={`rounded-2xl px-4 py-2 text-sm transition-all ${
-                                                activeType === type
+                                            className={`rounded-2xl px-4 py-2 text-sm transition-all ${activeType === type
                                                     ? 'bg-orange-500 text-white'
                                                     : theme === 'dark'
-                                                      ? `bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
-                                                      : `bg-orange-50 text-zinc-700 hover:bg-orange-100`
-                                            } `}
+                                                        ? `bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
+                                                        : `bg-orange-50 text-zinc-700 hover:bg-orange-100`
+                                                } `}
                                         >
                                             {labelFromValue(type)}
                                         </button>
@@ -386,13 +379,12 @@ function ProductCatalogContent() {
 
                                                 setPage(1);
                                             }}
-                                            className={`rounded-2xl px-4 py-2 text-sm transition-all ${
-                                                activeCategory === category
+                                            className={`rounded-2xl px-4 py-2 text-sm transition-all ${activeCategory === category
                                                     ? 'bg-orange-500 text-white'
                                                     : theme === 'dark'
-                                                      ? `bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
-                                                      : `bg-white text-zinc-700 hover:bg-orange-50`
-                                            } `}
+                                                        ? `bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
+                                                        : `bg-white text-zinc-700 hover:bg-orange-50`
+                                                } `}
                                         >
                                             {getCategoryFilterLabel(
                                                 category,
@@ -410,9 +402,8 @@ function ProductCatalogContent() {
 
                 <section className="mt-8 flex items-center justify-between">
                     <p
-                        className={`text-sm ${
-                            theme === 'dark' ? 'text-zinc-400' : 'text-zinc-500'
-                        } `}
+                        className={`text-sm ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-500'
+                            } `}
                     >
                         {totalProducts} {__('produk')}
                     </p>
@@ -424,11 +415,10 @@ function ProductCatalogContent() {
 
                             setPage(1);
                         }}
-                        className={`rounded-2xl border px-4 py-3 text-sm transition-all outline-none ${
-                            theme === 'dark'
+                        className={`rounded-2xl border px-4 py-3 text-sm transition-all outline-none ${theme === 'dark'
                                 ? `border-white/10 bg-white/[0.04] text-white`
                                 : `border-orange-100 bg-white text-zinc-800`
-                        } `}
+                            } `}
                     >
                         {PER_PAGE_OPTIONS.map((option) => (
                             <option key={option} value={option}>
@@ -470,9 +460,7 @@ function ProductCatalogContent() {
                                         variant: selectedVariant,
                                     });
                                 }}
-                                cartQty={getItemQty(
-                                    `${product.id}-${selectedVariantId}`,
-                                )}
+                                cartQty={getItemQty(`${product.id}${selectedVariantId ? `-${selectedVariantId}` : ''}`)}
                                 onAddToCart={addToCart}
                             />
                         );
@@ -507,11 +495,10 @@ function ProductCatalogContent() {
                         <button
                             disabled={currentPage <= 1}
                             onClick={() => setPage(currentPage - 1)}
-                            className={`flex h-11 w-11 items-center justify-center rounded-2xl border transition-all ${
-                                theme === 'dark'
+                            className={`flex h-11 w-11 items-center justify-center rounded-2xl border transition-all ${theme === 'dark'
                                     ? `border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
                                     : `border-orange-100 bg-white text-zinc-700 hover:bg-orange-50`
-                            } `}
+                                } `}
                         >
                             <ChevronLeft size={18} />
                         </button>
@@ -520,13 +507,12 @@ function ProductCatalogContent() {
                             <button
                                 key={number}
                                 onClick={() => setPage(number)}
-                                className={`h-11 min-w-11 rounded-2xl px-4 text-sm font-semibold transition-all ${
-                                    currentPage === number
+                                className={`h-11 min-w-11 rounded-2xl px-4 text-sm font-semibold transition-all ${currentPage === number
                                         ? 'bg-orange-500 text-white'
                                         : theme === 'dark'
-                                          ? `border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
-                                          : `border border-orange-100 bg-white text-zinc-700 hover:bg-orange-50`
-                                } `}
+                                            ? `border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
+                                            : `border border-orange-100 bg-white text-zinc-700 hover:bg-orange-50`
+                                    } `}
                             >
                                 {number}
                             </button>
@@ -535,11 +521,10 @@ function ProductCatalogContent() {
                         <button
                             disabled={currentPage >= totalPages}
                             onClick={() => setPage(currentPage + 1)}
-                            className={`flex h-11 w-11 items-center justify-center rounded-2xl border transition-all ${
-                                theme === 'dark'
+                            className={`flex h-11 w-11 items-center justify-center rounded-2xl border transition-all ${theme === 'dark'
                                     ? `border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
                                     : `border-orange-100 bg-white text-zinc-700 hover:bg-orange-50`
-                            } `}
+                                } `}
                         >
                             <ChevronRight size={18} />
                         </button>

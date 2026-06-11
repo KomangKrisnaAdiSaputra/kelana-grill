@@ -13,9 +13,16 @@ import type {
 
 export type CartItem = {
   id: string;
-  product: Product;
-  variant: ProductVariant;
+  name: string;
+  descrption: string;
+  variant: {
+    name: string;
+    description: string;
+  } | null
   qty: number;
+  rate: number;
+  type: string;
+  image: string;
 };
 
 type CartContextType = {
@@ -39,16 +46,11 @@ type CartContextType = {
   getItemQty: (id: string) => number;
 };
 
-const CartContext =
-  createContext<CartContextType | null>(null);
+const CartContext = createContext<CartContextType | null>(null);
 
 const STORAGE_KEY = "kelana-grill-cart";
 
-export function CartProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function CartProvider({ children }: { children: React.ReactNode; }) {
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -77,7 +79,7 @@ export function CartProvider({
     product: Product,
     variant: ProductVariant,
   ) => {
-    const itemId = `${product.id}-${variant.id}`;
+    const itemId = (product?.variants ?? []).length <= 0 ? `${product.id}` : `${product.id}-${variant.id}`;
 
     setCartItems((current) => {
       const exists = current.find(
@@ -99,10 +101,17 @@ export function CartProvider({
         ...current,
         {
           id: itemId,
-          product,
-          variant,
+          name: product.name ?? "",
+          descrption: product.description ?? "",
+          variant: variant ? {
+            name: variant.name ?? "",
+            description: variant.description ?? ""
+          } : null,
           qty: 1,
-        },
+          rate: variant?.rate ?? product.rate ?? 0,
+          type: product.type ?? "",
+          image: product.image ?? "",
+        } as CartItem,
       ];
     });
   };
