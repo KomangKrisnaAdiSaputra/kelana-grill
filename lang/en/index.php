@@ -81,6 +81,9 @@ return [
   "produk" => "products",
   "per paket" => "per package",
   "Best Value" => "Best Value",
+  "Gambar Tidak Ditemukan" => "Image Not Found",
+  "Tidak ada produk yang ditemukan." => "No Products Found",
+  "Tidak ada produk yang tersedia." => "There are no products available.",
   // End Product
 
   // CTA

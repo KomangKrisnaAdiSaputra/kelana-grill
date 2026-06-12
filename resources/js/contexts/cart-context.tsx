@@ -43,7 +43,9 @@ type CartContextType = {
 
   clearCart: () => void;
 
-  getItemQty: (id: string) => number;
+  getItemQty: (id: string, variant?: boolean) => number;
+
+  getItemQtyVariant: (ids: string[]) => Record<string, number>;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -156,12 +158,28 @@ export function CartProvider({ children }: { children: React.ReactNode; }) {
     setCartItems([]);
   };
 
-  const getItemQty = (id: string) => {
-    return (
-      cartItems.find(
-        (item) => item.id === id,
-      )?.qty ?? 0
-    );
+  const getItemQtyVariant = (ids: string[]) => {
+    return ids.reduce((result, id) => {
+      result[id] = cartItems
+        .filter((item) => item.id.includes(id))
+        .reduce((total, item) => total + Number(item.qty || 0), 0);
+
+      return result;
+    }, {} as Record<string, number>);
+  };
+
+  const getItemQty = (id: string, variant: boolean = false) => {
+    let total = 0;
+
+    if (variant) {
+      const findId = id.split("-")[0] ?? null;
+      total += cartItems.filter((item) => item.id.includes(findId)).reduce((sum, item) => sum + Number(item.qty || 0), 0);
+
+    } else {
+      total += cartItems.find((item) => item.id === id)?.qty ?? 0;
+    }
+
+    return total;
   };
 
   const totalQty = useMemo(() => {
@@ -182,6 +200,7 @@ export function CartProvider({ children }: { children: React.ReactNode; }) {
         removeItem,
         clearCart,
         getItemQty,
+        getItemQtyVariant
       }}
     >
       {children}

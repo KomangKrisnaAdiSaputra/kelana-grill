@@ -150,11 +150,10 @@ function ContactContent() {
 
                 <section className="max-w-3xl">
                     <div
-                        className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm backdrop-blur-xl ${
-                            theme === 'dark'
-                                ? 'border-orange-400/20 bg-orange-500/10 text-orange-200'
-                                : 'border-orange-200 bg-white/70 text-orange-700'
-                        } `}
+                        className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm backdrop-blur-xl ${theme === 'dark'
+                            ? 'border-orange-400/20 bg-orange-500/10 text-orange-200'
+                            : 'border-orange-200 bg-white/70 text-orange-700'
+                            } `}
                     >
                         <SlidersHorizontal size={16} />
                         {__('Kontak Kami')}
@@ -165,9 +164,8 @@ function ContactContent() {
                     </h1>
 
                     <p
-                        className={`mt-5 max-w-2xl leading-7 md:text-lg ${
-                            theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'
-                        } `}
+                        className={`mt-5 max-w-2xl leading-7 md:text-lg ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'
+                            } `}
                     >
                         {__(
                             'Isi form booking berikut dan tim kami akan langsung menghubungi anda melalui WhatsApp untuk proses konfirmasi pesanan.',
@@ -182,11 +180,10 @@ function ContactContent() {
 
                     <div className="order-2 space-y-6 lg:order-1">
                         <div
-                            className={`overflow-hidden rounded-[36px] p-7 backdrop-blur-2xl ${
-                                theme === 'dark'
-                                    ? 'theme-card-dark'
-                                    : 'theme-card-light'
-                            } `}
+                            className={`overflow-hidden rounded-[36px] p-7 backdrop-blur-2xl ${theme === 'dark'
+                                ? 'theme-card-dark'
+                                : 'theme-card-light'
+                                } `}
                         >
                             <div className="inline-flex items-center rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-white">
                                 {__('Booking Cepat')}
@@ -197,11 +194,10 @@ function ContactContent() {
                             </h2>
 
                             <p
-                                className={`mt-4 leading-7 ${
-                                    theme === 'dark'
-                                        ? 'text-zinc-400'
-                                        : 'text-zinc-600'
-                                } `}
+                                className={`mt-4 leading-7 ${theme === 'dark'
+                                    ? 'text-zinc-400'
+                                    : 'text-zinc-600'
+                                    } `}
                             >
                                 {__(
                                     'Cocok untuk gathering, camping, barbecue, acara keluarga.',
@@ -237,11 +233,10 @@ function ContactContent() {
                         {/* CONTACT */}
 
                         <div
-                            className={`overflow-hidden rounded-[36px] p-7 backdrop-blur-2xl ${
-                                theme === 'dark'
-                                    ? 'theme-card-dark'
-                                    : 'theme-card-light'
-                            } `}
+                            className={`overflow-hidden rounded-[36px] p-7 backdrop-blur-2xl ${theme === 'dark'
+                                ? 'theme-card-dark'
+                                : 'theme-card-light'
+                                } `}
                         >
                             <h3 className="text-2xl font-semibold">
                                 {__('Informasi Kontak')}
@@ -250,11 +245,10 @@ function ContactContent() {
                             <div className="mt-7 space-y-5">
                                 <a
                                     href="tel:+628123456789"
-                                    className={`flex items-center gap-4 rounded-3xl p-4 transition-all ${
-                                        theme === 'dark'
-                                            ? 'bg-white/[0.04] hover:bg-white/[0.06]'
-                                            : 'bg-orange-50/70 hover:bg-orange-100/70'
-                                    } `}
+                                    className={`flex items-center gap-4 rounded-3xl p-4 transition-all ${theme === 'dark'
+                                        ? 'bg-white/[0.04] hover:bg-white/[0.06]'
+                                        : 'bg-orange-50/70 hover:bg-orange-100/70'
+                                        } `}
                                 >
                                     <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500 text-white">
                                         <Phone size={22} />
@@ -279,11 +273,10 @@ function ContactContent() {
 
                                 <a
                                     href="mailto:hello@kelanagrill.com"
-                                    className={`flex items-center gap-4 rounded-3xl p-4 transition-all ${
-                                        theme === 'dark'
-                                            ? 'bg-white/[0.04] hover:bg-white/[0.06]'
-                                            : 'bg-orange-50/70 hover:bg-orange-100/70'
-                                    } `}
+                                    className={`flex items-center gap-4 rounded-3xl p-4 transition-all ${theme === 'dark'
+                                        ? 'bg-white/[0.04] hover:bg-white/[0.06]'
+                                        : 'bg-orange-50/70 hover:bg-orange-100/70'
+                                        } `}
                                 >
                                     <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500 text-white">
                                         <Mail size={22} />
@@ -307,11 +300,10 @@ function ContactContent() {
                                 </a>
 
                                 <div
-                                    className={`flex items-center gap-4 rounded-3xl p-4 ${
-                                        theme === 'dark'
-                                            ? 'bg-white/[0.04] hover:bg-white/[0.06]'
-                                            : 'bg-orange-50/70 hover:bg-orange-100/70'
-                                    }`}
+                                    className={`flex items-center gap-4 rounded-3xl p-4 ${theme === 'dark'
+                                        ? 'bg-white/[0.04] hover:bg-white/[0.06]'
+                                        : 'bg-orange-50/70 hover:bg-orange-100/70'
+                                        }`}
                                 >
                                     <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500 text-white">
                                         <MapPin size={22} />
@@ -342,11 +334,10 @@ function ContactContent() {
                         {/* CART */}
 
                         <div
-                            className={`overflow-hidden rounded-[36px] p-7 backdrop-blur-2xl ${
-                                theme === 'dark'
-                                    ? 'theme-card-dark'
-                                    : 'theme-card-light'
-                            } `}
+                            className={`overflow-hidden rounded-[36px] p-7 backdrop-blur-2xl ${theme === 'dark'
+                                ? 'theme-card-dark'
+                                : 'theme-card-light'
+                                } `}
                         >
                             <div className="flex items-center justify-between">
                                 <h3 className="text-2xl font-semibold">
@@ -363,16 +354,15 @@ function ContactContent() {
                                     data.cart.map((item: any, index) => (
                                         <div
                                             key={index}
-                                            className={`rounded-3xl p-5 ${
-                                                theme === 'dark'
-                                                    ? 'bg-white/[0.04]'
-                                                    : 'bg-orange-50/70'
-                                            } `}
+                                            className={`rounded-3xl p-5 ${theme === 'dark'
+                                                ? 'bg-white/[0.04]'
+                                                : 'bg-orange-50/70'
+                                                } `}
                                         >
                                             <div className="flex items-start justify-between gap-4">
                                                 <div>
                                                     <h4 className="font-bold">
-                                                        {item.product.name}
+                                                        {item.name}
                                                     </h4>
 
                                                     <h2
@@ -382,7 +372,7 @@ function ContactContent() {
                                                                 : 'mt-1 text-sm text-zinc-500'
                                                         }
                                                     >
-                                                        {item.variant.name}
+                                                        {item.variant?.name ?? ""}
                                                     </h2>
 
                                                     <p
@@ -398,7 +388,7 @@ function ContactContent() {
 
                                                 <div className="rounded-2xl bg-orange-500 px-3 py-2 text-sm font-semibold text-white">
                                                     {formatPrice(
-                                                        item.variant.rate,
+                                                        item.rate,
                                                     )}
                                                 </div>
                                             </div>
@@ -406,11 +396,10 @@ function ContactContent() {
                                     ))
                                 ) : (
                                     <div
-                                        className={`rounded-3xl p-5 text-center ${
-                                            theme === 'dark'
-                                                ? 'bg-white/[0.04]'
-                                                : 'bg-orange-50/70'
-                                        } `}
+                                        className={`rounded-3xl p-5 text-center ${theme === 'dark'
+                                            ? 'bg-white/[0.04]'
+                                            : 'bg-orange-50/70'
+                                            } `}
                                     >
                                         <p
                                             className={
@@ -429,11 +418,10 @@ function ContactContent() {
 
                     {/* RIGHT */}
                     <div
-                        className={`order-1 rounded-[36px] p-6 backdrop-blur-2xl md:p-8 lg:order-2 ${
-                            theme === 'dark'
-                                ? 'theme-card-dark'
-                                : 'theme-card-light'
-                        }`}
+                        className={`order-1 rounded-[36px] p-6 backdrop-blur-2xl md:p-8 lg:order-2 ${theme === 'dark'
+                            ? 'theme-card-dark'
+                            : 'theme-card-light'
+                            }`}
                     >
                         <div className="mb-8 flex items-center justify-between">
                             <div>
@@ -604,8 +592,8 @@ function ContactContent() {
                                             data.pickupdate
                                                 ? data.pickupdate.split(' ')[0]
                                                 : new Date()
-                                                      .toISOString()
-                                                      .split('T')[0]
+                                                    .toISOString()
+                                                    .split('T')[0]
                                         }
                                         minHour={8}
                                         maxHour={22}
@@ -621,11 +609,10 @@ function ContactContent() {
                                     <div className="relative">
                                         <MapPin
                                             size={18}
-                                            className={`pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 ${
-                                                theme === 'dark'
-                                                    ? 'text-zinc-200'
-                                                    : 'text-zinc-500'
-                                            }`}
+                                            className={`pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 ${theme === 'dark'
+                                                ? 'text-zinc-200'
+                                                : 'text-zinc-500'
+                                                }`}
                                         />
 
                                         <select
@@ -638,15 +625,13 @@ function ContactContent() {
 
                                                 clearErrors('pickuplocation');
                                             }}
-                                            className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none ${
-                                                theme === 'dark'
-                                                    ? 'border-white/10 bg-white/[0.04] text-zinc-200'
-                                                    : 'border-orange-100 bg-orange-50/50 text-zinc-800'
-                                            } ${
-                                                errors.pickuplocation
+                                            className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none ${theme === 'dark'
+                                                ? 'border-white/10 bg-white/[0.04] text-zinc-200'
+                                                : 'border-orange-100 bg-orange-50/50 text-zinc-800'
+                                                } ${errors.pickuplocation
                                                     ? 'border-red-500 focus:border-red-500'
                                                     : ''
-                                            }`}
+                                                }`}
                                             style={{
                                                 colorScheme:
                                                     theme === 'dark'
@@ -685,11 +670,10 @@ function ContactContent() {
 
                                         <ChevronDown
                                             size={18}
-                                            className={`pointer-events-none absolute top-1/2 right-5 -translate-y-1/2 ${
-                                                theme === 'dark'
-                                                    ? 'text-zinc-400'
-                                                    : 'text-zinc-500'
-                                            }`}
+                                            className={`pointer-events-none absolute top-1/2 right-5 -translate-y-1/2 ${theme === 'dark'
+                                                ? 'text-zinc-400'
+                                                : 'text-zinc-500'
+                                                }`}
                                         />
                                     </div>
 
@@ -730,11 +714,10 @@ function ContactContent() {
                                 <div className="relative">
                                     <CreditCard
                                         size={18}
-                                        className={`pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 ${
-                                            theme === 'dark'
-                                                ? 'text-zinc-200'
-                                                : 'text-zinc-500'
-                                        }`}
+                                        className={`pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 ${theme === 'dark'
+                                            ? 'text-zinc-200'
+                                            : 'text-zinc-500'
+                                            }`}
                                     />
 
                                     <select
@@ -744,15 +727,13 @@ function ContactContent() {
 
                                             clearErrors('payment');
                                         }}
-                                        className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none ${
-                                            theme === 'dark'
-                                                ? 'border-white/10 bg-white/[0.04] text-zinc-200'
-                                                : 'border-orange-100 bg-orange-50/50 text-zinc-800'
-                                        } ${
-                                            errors.payment
+                                        className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none ${theme === 'dark'
+                                            ? 'border-white/10 bg-white/[0.04] text-zinc-200'
+                                            : 'border-orange-100 bg-orange-50/50 text-zinc-800'
+                                            } ${errors.payment
                                                 ? 'border-red-500 focus:border-red-500'
                                                 : ''
-                                        }`}
+                                            }`}
                                         style={{
                                             colorScheme:
                                                 theme === 'dark'
@@ -777,11 +758,10 @@ function ContactContent() {
 
                                     <ChevronDown
                                         size={18}
-                                        className={`pointer-events-none absolute top-1/2 right-5 -translate-y-1/2 ${
-                                            theme === 'dark'
-                                                ? 'text-zinc-400'
-                                                : 'text-zinc-500'
-                                        }`}
+                                        className={`pointer-events-none absolute top-1/2 right-5 -translate-y-1/2 ${theme === 'dark'
+                                            ? 'text-zinc-400'
+                                            : 'text-zinc-500'
+                                            }`}
                                     />
                                 </div>
 
@@ -810,11 +790,10 @@ function ContactContent() {
                                     placeholder={__(
                                         'Tulis kebutuhan tambahan anda...',
                                     )}
-                                    className={`w-full resize-none rounded-3xl border px-5 py-4 text-sm transition-all outline-none ${
-                                        theme === 'dark'
-                                            ? `border-white/10 bg-white/[0.04] text-white placeholder:text-zinc-200`
-                                            : `border-orange-100 bg-orange-50/50 text-zinc-800 placeholder:text-zinc-400`
-                                    } `}
+                                    className={`w-full resize-none rounded-3xl border px-5 py-4 text-sm transition-all outline-none ${theme === 'dark'
+                                        ? `border-white/10 bg-white/[0.04] text-white placeholder:text-zinc-200`
+                                        : `border-orange-100 bg-orange-50/50 text-zinc-800 placeholder:text-zinc-400`
+                                        } `}
                                 />
 
                                 {errors.note && (
@@ -892,19 +871,17 @@ function InputField({
     return (
         <div>
             <label
-                className={`mb-2 block text-sm font-medium ${
-                    theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'
-                } `}
+                className={`mb-2 block text-sm font-medium ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'
+                    } `}
             >
                 {label}
             </label>
 
             <div
-                className={`flex items-center gap-3 rounded-3xl border px-4 py-4 transition-all ${
-                    theme === 'dark'
-                        ? `border-white/10 bg-white/[0.04] text-white focus-within:border-orange-500`
-                        : `border-orange-100 bg-orange-50/50 text-zinc-800 focus-within:border-orange-400`
-                } `}
+                className={`flex items-center gap-3 rounded-3xl border px-4 py-4 transition-all ${theme === 'dark'
+                    ? `border-white/10 bg-white/[0.04] text-white focus-within:border-orange-500`
+                    : `border-orange-100 bg-orange-50/50 text-zinc-800 focus-within:border-orange-400`
+                    } `}
             >
                 <div
                     className={
@@ -919,11 +896,10 @@ function InputField({
                     value={value}
                     onChange={onChange}
                     placeholder={placeholder}
-                    className={`w-full bg-transparent text-sm outline-none ${
-                        theme === 'dark'
-                            ? 'placeholder:text-zinc-200'
-                            : 'placeholder:text-zinc-400'
-                    } `}
+                    className={`w-full bg-transparent text-sm outline-none ${theme === 'dark'
+                        ? 'placeholder:text-zinc-200'
+                        : 'placeholder:text-zinc-400'
+                        } `}
                 />
             </div>
 

@@ -1,10 +1,11 @@
 import { ShoppingBag } from 'lucide-react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import { formatPrice, useTranslation } from '@/helpers/global';
 
 import type { ThemeMode } from '@/types';
 import type { Product, ProductVariant } from '@/types/product';
+import ProductImagePlaceholder from '../product-image-placeholder';
 
 type ProductCardProps = {
     theme: ThemeMode;
@@ -22,6 +23,8 @@ type ProductCardProps = {
     ) => void;
 
     cartQty?: number;
+
+    cartQtyVariant?: Record<string, number>
 
     onAddToCart?: (product: Product, variant: ProductVariant) => void;
 };
@@ -42,19 +45,23 @@ export default function ProductCard({
     onDetail,
     onAddToCart,
     cartQty = 0,
+    cartQtyVariant = {}
 }: ProductCardProps) {
     const selectedVariant = getDefaultVariant(product, selectedVariantId);
 
     const category = product.categories?.[0];
     const { __ } = useTranslation();
     const detailButtonRef = useRef<HTMLButtonElement>(null);
+    const [imageError, setImageError] = useState(false);
 
-    const productImage = product?.image ?? 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop';
+    const productImage = product?.image ?? "";
     const productPriceValue = selectedVariant?.rate ?? product?.rate ?? 0;
     const productOriginalPriceValue = product?.originalPrice ?? 0;
     const hasPromoPrice = product?.hasPromo ?? (typeof productOriginalPriceValue === 'number' && productOriginalPriceValue > productPriceValue);
     const productPrice = formatPrice(productPriceValue);
     const productOriginalPrice = typeof productOriginalPriceValue === 'number' ? formatPrice(productOriginalPriceValue) : null;
+
+    console.log(cartQtyVariant);
 
     return (
         <article
@@ -88,11 +95,14 @@ export default function ProductCard({
                     </div>
                 )}
 
-                <img
-                    src={productImage}
-                    alt={product.name ?? 'Product Image'}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                />
+                {imageError || !productImage ? (<ProductImagePlaceholder theme={theme} />) : (
+                    <img
+                        src={productImage}
+                        alt={product.name ?? 'Product Image'}
+                        onError={() => setImageError(true)}
+                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    />
+                )}
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent" />
 
@@ -176,7 +186,7 @@ export default function ProductCard({
                                     }
                 `}
                             >
-                                📦 Best Value
+                                📦 {__("Best Value")}
                             </span>
                         </div>
                     ) : (
@@ -188,14 +198,20 @@ export default function ProductCard({
                                     <button
                                         key={variant.id}
                                         onClick={() => onSelectVariant?.(variant)}
-                                        className={`rounded-full px-3 py-1.5 text-[11px] font-medium transition-all duration-200 sm:text-xs ${isActive
-                                            ? 'bg-orange-500 text-white shadow-md'
-                                            : theme === 'dark'
-                                                ? 'border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]'
-                                                : 'border border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100'
+                                        className={`relative rounded-full px-3 py-1.5 text-[11px] font-medium transition-all duration-200 sm:text-xs ${isActive
+                                                ? 'bg-orange-500 text-white shadow-md'
+                                                : theme === 'dark'
+                                                    ? 'border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]'
+                                                    : 'border border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100'
                                             }`}
                                     >
                                         {variant.name}
+
+                                        {cartQtyVariant?.[variant.id] > 0 && (
+                                            <div className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-orange-500 shadow-md">
+                                                {cartQtyVariant[variant.id]}
+                                            </div>
+                                        )}
                                     </button>
                                 );
                             })}

@@ -73,7 +73,7 @@ function ProductCatalogContent() {
 
     const { products = [] } = usePage<ProductCatalogPageProps>().props;
 
-    const { addToCart, getItemQty } = useCart();
+    const { addToCart, getItemQty, getItemQtyVariant } = useCart();
 
     const [scrolled, setScrolled] = useState(false);
 
@@ -258,8 +258,8 @@ function ProductCatalogContent() {
                 <section>
                     <div
                         className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm backdrop-blur-xl ${theme === 'dark'
-                                ? 'border-orange-400/20 bg-orange-500/10 text-orange-200'
-                                : 'border-orange-200 bg-white/70 text-orange-700'
+                            ? 'border-orange-400/20 bg-orange-500/10 text-orange-200'
+                            : 'border-orange-200 bg-white/70 text-orange-700'
                             } `}
                     >
                         <SlidersHorizontal size={16} />
@@ -286,8 +286,8 @@ function ProductCatalogContent() {
                 <section className="sticky top-[72px] z-40 mt-6 md:top-24 md:mt-8">
                     <div
                         className={`overflow-hidden rounded-[28px] backdrop-blur-2xl ${theme === 'dark'
-                                ? 'theme-card-dark'
-                                : 'theme-card-light'
+                            ? 'theme-card-dark'
+                            : 'theme-card-light'
                             } `}
                     >
                         <div className="p-3">
@@ -296,8 +296,8 @@ function ProductCatalogContent() {
 
                                 <div
                                     className={`flex flex-1 items-center gap-3 rounded-2xl px-4 py-3 ${theme === 'dark'
-                                            ? 'bg-white/[0.04]'
-                                            : 'bg-orange-50/80'
+                                        ? 'bg-white/[0.04]'
+                                        : 'bg-orange-50/80'
                                         } `}
                                 >
                                     <Search
@@ -318,8 +318,8 @@ function ProductCatalogContent() {
                                             'Cari produk atau paket...',
                                         )}
                                         className={`w-full bg-transparent text-sm outline-none ${theme === 'dark'
-                                                ? 'text-white placeholder:text-zinc-500'
-                                                : 'text-zinc-800 placeholder:text-zinc-400'
+                                            ? 'text-white placeholder:text-zinc-500'
+                                            : 'text-zinc-800 placeholder:text-zinc-400'
                                             } `}
                                     />
                                 </div>
@@ -341,8 +341,8 @@ function ProductCatalogContent() {
                         {showFilters && (
                             <div
                                 className={`border-t px-3 pt-3 pb-4 ${theme === 'dark'
-                                        ? 'border-white/10'
-                                        : 'border-orange-100'
+                                    ? 'border-white/10'
+                                    : 'border-orange-100'
                                     } `}
                             >
                                 {/* TYPE */}
@@ -357,10 +357,10 @@ function ProductCatalogContent() {
                                                 setPage(1);
                                             }}
                                             className={`rounded-2xl px-4 py-2 text-sm transition-all ${activeType === type
-                                                    ? 'bg-orange-500 text-white'
-                                                    : theme === 'dark'
-                                                        ? `bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
-                                                        : `bg-orange-50 text-zinc-700 hover:bg-orange-100`
+                                                ? 'bg-orange-500 text-white'
+                                                : theme === 'dark'
+                                                    ? `bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
+                                                    : `bg-orange-50 text-zinc-700 hover:bg-orange-100`
                                                 } `}
                                         >
                                             {labelFromValue(type)}
@@ -380,10 +380,10 @@ function ProductCatalogContent() {
                                                 setPage(1);
                                             }}
                                             className={`rounded-2xl px-4 py-2 text-sm transition-all ${activeCategory === category
-                                                    ? 'bg-orange-500 text-white'
-                                                    : theme === 'dark'
-                                                        ? `bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
-                                                        : `bg-white text-zinc-700 hover:bg-orange-50`
+                                                ? 'bg-orange-500 text-white'
+                                                : theme === 'dark'
+                                                    ? `bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
+                                                    : `bg-white text-zinc-700 hover:bg-orange-50`
                                                 } `}
                                         >
                                             {getCategoryFilterLabel(
@@ -416,8 +416,8 @@ function ProductCatalogContent() {
                             setPage(1);
                         }}
                         className={`rounded-2xl border px-4 py-3 text-sm transition-all outline-none ${theme === 'dark'
-                                ? `border-white/10 bg-white/[0.04] text-white`
-                                : `border-orange-100 bg-white text-zinc-800`
+                            ? `border-white/10 bg-white/[0.04] text-white`
+                            : `border-orange-100 bg-white text-zinc-800`
                             } `}
                     >
                         {PER_PAGE_OPTIONS.map((option) => (
@@ -431,40 +431,57 @@ function ProductCatalogContent() {
                 {/* PRODUCTS */}
 
                 <section className="mt-6 grid gap-4 sm:grid-cols-2 md:gap-5 xl:grid-cols-3">
-                    {paginatedProducts.map((product) => {
-                        const selectedVariantId =
-                            selectedVariants[product.id] ??
-                            getDefaultVariantId(product);
+                    {paginatedProducts.length > 0 ? (
+                        paginatedProducts.map((product) => {
+                            const selectedVariantId = selectedVariants[product.id] ?? getDefaultVariantId(product);
+                            const idVariants = (product?.variants ?? []).map((variant) => String(variant.id));
 
-                        return (
-                            <ProductCard
-                                key={product.id}
-                                theme={theme}
-                                product={product}
-                                selectedVariantId={selectedVariantId}
-                                onSelectVariant={(variant) =>
-                                    setSelectedVariants((current) => ({
-                                        ...current,
-                                        [product.id]: String(variant.id),
-                                    }))
-                                }
-                                onDetail={(
-                                    selectedProduct,
-                                    selectedVariant,
-                                    buttonEl,
-                                ) => {
-                                    setSelectedButton(buttonEl);
+                            return (
+                                <ProductCard
+                                    key={product.id}
+                                    theme={theme}
+                                    product={product}
+                                    selectedVariantId={selectedVariantId}
+                                    onSelectVariant={(variant) =>
+                                        setSelectedVariants((current) => ({
+                                            ...current,
+                                            [product.id]: String(variant.id),
+                                        }))
+                                    }
+                                    onDetail={(
+                                        selectedProduct,
+                                        selectedVariant,
+                                        buttonEl,
+                                    ) => {
+                                        setSelectedButton(buttonEl);
 
-                                    setSelectedDetail({
-                                        product: selectedProduct,
-                                        variant: selectedVariant,
-                                    });
-                                }}
-                                cartQty={getItemQty(`${product.id}${selectedVariantId ? `-${selectedVariantId}` : ''}`)}
-                                onAddToCart={addToCart}
-                            />
-                        );
-                    })}
+                                        setSelectedDetail({
+                                            product: selectedProduct,
+                                            variant: selectedVariant,
+                                        });
+                                    }}
+                                    cartQtyVariant={getItemQtyVariant(idVariants)}
+                                    cartQty={getItemQty(`${product.id}${selectedVariantId ? `-${selectedVariantId}` : ''}`, idVariants.length > 0)}
+                                    onAddToCart={addToCart}
+
+                                />
+                            );
+                        })
+                    ) : (<div className="col-span-full flex flex-col items-center justify-center py-12 text-center">
+                        <img
+                            src="https://res.cloudinary.com/dikjbuftt/image/upload/v1781275155/ChatGPT_Image_Jun_11_2026_09_47_13_PM_vfvkx4.png"
+                            alt="No Products"
+                            className="mb-4 w-48 sm:w-80"
+                        />
+
+                        <h3 className="text-lg font-semibold">
+                            {__("Tidak ada produk yang ditemukan.")}
+                        </h3>
+
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            {__("Tidak ada produk yang tersedia.")}
+                        </p>
+                    </div>)}
                 </section>
 
                 {/* MODAL */}
@@ -496,8 +513,8 @@ function ProductCatalogContent() {
                             disabled={currentPage <= 1}
                             onClick={() => setPage(currentPage - 1)}
                             className={`flex h-11 w-11 items-center justify-center rounded-2xl border transition-all ${theme === 'dark'
-                                    ? `border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
-                                    : `border-orange-100 bg-white text-zinc-700 hover:bg-orange-50`
+                                ? `border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
+                                : `border-orange-100 bg-white text-zinc-700 hover:bg-orange-50`
                                 } `}
                         >
                             <ChevronLeft size={18} />
@@ -508,10 +525,10 @@ function ProductCatalogContent() {
                                 key={number}
                                 onClick={() => setPage(number)}
                                 className={`h-11 min-w-11 rounded-2xl px-4 text-sm font-semibold transition-all ${currentPage === number
-                                        ? 'bg-orange-500 text-white'
-                                        : theme === 'dark'
-                                            ? `border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
-                                            : `border border-orange-100 bg-white text-zinc-700 hover:bg-orange-50`
+                                    ? 'bg-orange-500 text-white'
+                                    : theme === 'dark'
+                                        ? `border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
+                                        : `border border-orange-100 bg-white text-zinc-700 hover:bg-orange-50`
                                     } `}
                             >
                                 {number}
@@ -522,8 +539,8 @@ function ProductCatalogContent() {
                             disabled={currentPage >= totalPages}
                             onClick={() => setPage(currentPage + 1)}
                             className={`flex h-11 w-11 items-center justify-center rounded-2xl border transition-all ${theme === 'dark'
-                                    ? `border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
-                                    : `border-orange-100 bg-white text-zinc-700 hover:bg-orange-50`
+                                ? `border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]`
+                                : `border-orange-100 bg-white text-zinc-700 hover:bg-orange-50`
                                 } `}
                         >
                             <ChevronRight size={18} />
