@@ -64,6 +64,9 @@ export default function ProductModalSave({
   countLanguageErrors,
   handleSubmit,
 }: ProductModalSaveProps) {
+  const typePackage = Boolean(types.filter((t) => t.id === data.typeId && t.name === 'PACKAGE').length > 0);
+  const withVariant = Boolean((data.variants ?? []).length <= 0);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-4xl">
@@ -76,7 +79,7 @@ export default function ProductModalSave({
         </DialogHeader>
 
         {/* FLAGS */}
-        <div className="grid gap-3 md:grid-cols-3">
+        <div className={`grid gap-3 md:${withVariant ? "grid-cols-4" : "grid-cols-3"}`}>
           <div className="flex items-center justify-between rounded-xl border p-4">
             <div>
               <p className="font-medium">Active</p>
@@ -127,6 +130,25 @@ export default function ProductModalSave({
               }
             />
           </div>
+
+          {(withVariant) && (
+            <div className="flex items-center justify-between rounded-xl border p-4">
+              <div>
+                <p className="font-medium">Marinade</p>
+
+                <p className="text-xs text-muted-foreground">
+                  Mark this product as marinated
+                </p>
+              </div>
+
+              <Switch
+                checked={data.marinade}
+                onCheckedChange={(value) =>
+                  setData('marinade', value)
+                }
+              />
+            </div>
+          )}
         </div>
 
         {/* BASIC INFO */}
@@ -148,7 +170,7 @@ export default function ProductModalSave({
             />
           </div>
 
-          {(data.variants ?? []).length <= 0 && (
+          {withVariant && (
             <div className="space-y-2">
               <Label>Rate</Label>
 
@@ -339,98 +361,97 @@ export default function ProductModalSave({
         </div>
 
         {/* PRODUCT VARIANTS */}
-        {types.filter(
-          (t) => t.id === data.typeId && t.name === 'PACKAGE',
-        ).length > 0 && (
-            <div className="space-y-4 rounded-xl border p-4">
-              <div className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b flex items-center justify-between pb-3">
+        {typePackage && (
+          <div className="space-y-4 rounded-xl border p-4">
+            <div className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b flex items-center justify-between pb-3">
 
-                <div>
-                  <h3 className="font-semibold">
-                    Product Variants
-                  </h3>
+              <div>
+                <h3 className="font-semibold">
+                  Product Variants
+                </h3>
 
-                  <p className="text-sm text-muted-foreground">
-                    Create pricing variants for this
-                    package.
-                  </p>
-                </div>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setData('rate', 0);
-                    setData('variants', [
-                      ...(data.variants ?? []),
-                      {
-                        id: null,
-                        rate: null,
-                        minPerson: null,
-                        maxPerson: null,
-                        active: true,
-                        translations: {
-                          id: {
-                            name: '',
-                            description: '',
-                          },
-                          en: {
-                            name: '',
-                            description: '',
-                          },
-                        },
-                      },
-                    ]);
-                  }}
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Variant
-                </Button>
+                <p className="text-sm text-muted-foreground">
+                  Create pricing variants for this
+                  package.
+                </p>
               </div>
 
-              {(data.variants ?? []).length === 0 && (
-                <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
-                  No variants added yet.
-                </div>
-              )}
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setData('rate', 0);
+                  setData('marinade', false);
+                  setData('variants', [
+                    ...(data.variants ?? []),
+                    {
+                      id: null,
+                      rate: null,
+                      minPerson: null,
+                      maxPerson: null,
+                      active: true,
+                      marinade: false,
+                      translations: {
+                        id: {
+                          name: '',
+                          description: '',
+                        },
+                        en: {
+                          name: '',
+                          description: '',
+                        },
+                      },
+                    },
+                  ]);
+                }}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Variant
+              </Button>
+            </div>
 
-              {(data.variants ?? []).map((variant, index) => (
-                <Card key={index} className='py-1'>
-                  <CardContent className="space-y-4 p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium">
-                          Variant #{index + 1}
-                        </h4>
+            {(data.variants ?? []).length === 0 && (
+              <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
+                No variants added yet.
+              </div>
+            )}
 
-                        <p className="text-xs text-muted-foreground">
-                          Package pricing option
-                        </p>
-                      </div>
+            {(data.variants ?? []).map((variant, index) => (
+              <Card key={index} className='py-1'>
+                <CardContent className="space-y-4 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium">
+                        Variant #{index + 1}
+                      </h4>
 
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => {
-                          setData(
-                            'variants',
-                            data.variants.filter(
-                              (_, i) =>
-                                i !== index,
-                            ),
-                          );
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <p className="text-xs text-muted-foreground">
+                        Package pricing option
+                      </p>
                     </div>
 
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => {
+                        setData(
+                          'variants',
+                          data.variants.filter(
+                            (_, i) =>
+                              i !== index,
+                          ),
+                        );
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                     <div className="flex items-center justify-between rounded-lg border p-3">
                       <div>
-                        <p className="font-medium">
-                          Active
-                        </p>
+                        <p className="font-medium">Active</p>
 
                         <p className="text-xs text-muted-foreground">
                           Variant available
@@ -440,11 +461,51 @@ export default function ProductModalSave({
                       <Switch
                         checked={variant.active}
                         onCheckedChange={(value) => {
+                          const variants = [...data.variants];
+
+                          variants[index].active = value;
+
+                          setData('variants', variants);
+                        }}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between rounded-lg border p-3">
+                      <div>
+                        <p className="font-medium">Marinade</p>
+
+                        <p className="text-xs text-muted-foreground">
+                          Mark this variant as marinated
+                        </p>
+                      </div>
+
+                      <Switch
+                        checked={variant.marinade}
+                        onCheckedChange={(value) => {
+                          const variants = [...data.variants];
+
+                          variants[index].marinade = value;
+
+                          setData('variants', variants);
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-3">
+                    <div>
+                      <Label>Rate</Label>
+
+                      <InputNumber
+                        currency
+                        prefix="IDR"
+                        value={variant.rate}
+                        onChange={(value) => {
                           const variants = [
                             ...data.variants,
                           ];
 
-                          variants[index].active =
+                          variants[index].rate =
                             value;
 
                           setData(
@@ -455,197 +516,173 @@ export default function ProductModalSave({
                       />
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-3">
-                      <div>
-                        <Label>Rate</Label>
+                    <div>
+                      <Label>Min Person</Label>
 
-                        <InputNumber
-                          currency
-                          prefix="IDR"
-                          value={variant.rate}
-                          onChange={(value) => {
-                            const variants = [
-                              ...data.variants,
-                            ];
+                      <InputNumber
+                        value={variant.minPerson}
+                        onChange={(value) => {
+                          const variants = [
+                            ...data.variants,
+                          ];
 
-                            variants[index].rate =
-                              value;
+                          variants[
+                            index
+                          ].minPerson =
+                            value as number;
 
-                            setData(
-                              'variants',
-                              variants,
-                            );
-                          }}
-                        />
-                      </div>
-
-                      <div>
-                        <Label>Min Person</Label>
-
-                        <InputNumber
-                          value={variant.minPerson}
-                          onChange={(value) => {
-                            const variants = [
-                              ...data.variants,
-                            ];
-
-                            variants[
-                              index
-                            ].minPerson =
-                              value as number;
-
-                            setData(
-                              'variants',
-                              variants,
-                            );
-                          }}
-                        />
-                      </div>
-
-                      <div>
-                        <Label>Max Person</Label>
-
-                        <InputNumber
-                          value={variant.maxPerson}
-                          onChange={(value) => {
-                            const variants = [
-                              ...data.variants,
-                            ];
-
-                            variants[
-                              index
-                            ].maxPerson =
-                              value as number;
-
-                            setData(
-                              'variants',
-                              variants,
-                            );
-                          }}
-                        />
-                      </div>
+                          setData(
+                            'variants',
+                            variants,
+                          );
+                        }}
+                      />
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label>Name (Indonesia)</Label>
+                    <div>
+                      <Label>Max Person</Label>
 
-                        <Input
-                          value={
-                            variant.translations.id
-                              .name
-                          }
-                          onChange={(e) => {
-                            const variants = [
-                              ...data.variants,
-                            ];
+                      <InputNumber
+                        value={variant.maxPerson}
+                        onChange={(value) => {
+                          const variants = [
+                            ...data.variants,
+                          ];
 
-                            variants[
-                              index
-                            ].translations.id.name =
-                              e.target.value;
+                          variants[
+                            index
+                          ].maxPerson =
+                            value as number;
 
-                            setData(
-                              'variants',
-                              variants,
-                            );
-                          }}
-                        />
-                      </div>
+                          setData(
+                            'variants',
+                            variants,
+                          );
+                        }}
+                      />
+                    </div>
+                  </div>
 
-                      <div className="space-y-2">
-                        <Label>Name (English)</Label>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label>Name (Indonesia)</Label>
 
-                        <Input
-                          value={
-                            variant.translations.en
-                              .name
-                          }
-                          onChange={(e) => {
-                            const variants = [
-                              ...data.variants,
-                            ];
+                      <Input
+                        value={
+                          variant.translations.id
+                            .name
+                        }
+                        onChange={(e) => {
+                          const variants = [
+                            ...data.variants,
+                          ];
 
-                            variants[
-                              index
-                            ].translations.en.name =
-                              e.target.value;
+                          variants[
+                            index
+                          ].translations.id.name =
+                            e.target.value;
 
-                            setData(
-                              'variants',
-                              variants,
-                            );
-                          }}
-                        />
-                      </div>
+                          setData(
+                            'variants',
+                            variants,
+                          );
+                        }}
+                      />
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div>
-                        <Label>
-                          Description (Indonesia)
-                        </Label>
+                    <div className="space-y-2">
+                      <Label>Name (English)</Label>
 
-                        <textarea
-                          rows={3}
-                          value={
-                            variant.translations.id
-                              .description
-                          }
-                          onChange={(e) => {
-                            const variants = [
-                              ...data.variants,
-                            ];
+                      <Input
+                        value={
+                          variant.translations.en
+                            .name
+                        }
+                        onChange={(e) => {
+                          const variants = [
+                            ...data.variants,
+                          ];
 
-                            variants[
-                              index
-                            ].translations.id.description =
-                              e.target.value;
+                          variants[
+                            index
+                          ].translations.en.name =
+                            e.target.value;
 
-                            setData(
-                              'variants',
-                              variants,
-                            );
-                          }}
-                          className="w-full rounded-xl border px-3 py-2"
-                        />
-                      </div>
-
-                      <div>
-                        <Label>
-                          Description (English)
-                        </Label>
-
-                        <textarea
-                          rows={3}
-                          value={
-                            variant.translations.en
-                              .description
-                          }
-                          onChange={(e) => {
-                            const variants = [
-                              ...data.variants,
-                            ];
-
-                            variants[
-                              index
-                            ].translations.en.description =
-                              e.target.value;
-
-                            setData(
-                              'variants',
-                              variants,
-                            );
-                          }}
-                          className="w-full rounded-xl border px-3 py-2"
-                        />
-                      </div>
+                          setData(
+                            'variants',
+                            variants,
+                          );
+                        }}
+                      />
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <Label>
+                        Description (Indonesia)
+                      </Label>
+
+                      <textarea
+                        rows={3}
+                        value={
+                          variant.translations.id
+                            .description
+                        }
+                        onChange={(e) => {
+                          const variants = [
+                            ...data.variants,
+                          ];
+
+                          variants[
+                            index
+                          ].translations.id.description =
+                            e.target.value;
+
+                          setData(
+                            'variants',
+                            variants,
+                          );
+                        }}
+                        className="w-full rounded-xl border px-3 py-2"
+                      />
+                    </div>
+
+                    <div>
+                      <Label>
+                        Description (English)
+                      </Label>
+
+                      <textarea
+                        rows={3}
+                        value={
+                          variant.translations.en
+                            .description
+                        }
+                        onChange={(e) => {
+                          const variants = [
+                            ...data.variants,
+                          ];
+
+                          variants[
+                            index
+                          ].translations.en.description =
+                            e.target.value;
+
+                          setData(
+                            'variants',
+                            variants,
+                          );
+                        }}
+                        className="w-full rounded-xl border px-3 py-2"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
 
         {/* PACKAGE ITEMS */}
         {types.some(

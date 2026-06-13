@@ -15,6 +15,7 @@ export type Product = {
     featured: boolean;
     new: boolean;
     active: boolean;
+    marinade: boolean;
 
     translations: {
         id: ProductTranslation;
@@ -45,6 +46,7 @@ export type ProductVariant = {
     maxPerson: number | null;
 
     active: boolean;
+    marinade: boolean;
 
     translations: {
         id: ProductVariantTranslation;

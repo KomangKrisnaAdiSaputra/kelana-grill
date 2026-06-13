@@ -22,6 +22,7 @@ return new class extends Migration
             $table->unsignedInteger('max_person')->nullable();
 
             $table->boolean('active')->default(true);
+            $table->boolean('marinade')->default(false);
 
             $table->timestamps();
 

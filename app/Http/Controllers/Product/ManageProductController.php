@@ -212,6 +212,7 @@ class ManageProductController extends Controller
             $product->featured = $request->featured;
             $product->new = $request->new;
             $product->active = $request->active;
+            $product->marinade = $request->marinade;
 
             if ($request->hasFile('image')) {
 
@@ -262,6 +263,7 @@ class ManageProductController extends Controller
                 $variant->min_person = $variantData['minPerson']  ?? null;
                 $variant->max_person = $variantData['maxPerson'] ?? null;
                 $variant->active = $variantData['active'];
+                $variant->marinade = $variantData['marinade'];
                 $variant->save();
 
                 $submittedVariantIds[] = $variant->id;
@@ -352,6 +354,7 @@ class ManageProductController extends Controller
             'featured' => $product->featured,
             'new' => $product->new,
             'active' => $product->active,
+            'marinade' => $product->marinade,
             'translations' => $product->translations->mapWithKeys(fn($translation) => [
                 $translation->language => [
                     'name' => $translation->name,
@@ -368,6 +371,7 @@ class ManageProductController extends Controller
                 'minPerson' => $variant->min_person,
                 'maxPerson' => $variant->max_person,
                 'active' => $variant->active,
+                'marinade' => $variant->marinade,
                 'translations' => $variant->translations->mapWithKeys(fn($translation) => [
                     $translation->language => [
                         'name' => $translation->name,

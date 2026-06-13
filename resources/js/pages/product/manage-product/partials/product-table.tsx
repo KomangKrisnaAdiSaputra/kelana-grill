@@ -1,11 +1,5 @@
 import { router } from '@inertiajs/react';
-import {
-  MoreHorizontal,
-  Package,
-  Pencil,
-  Search,
-  Trash2,
-} from 'lucide-react';
+import { MoreHorizontal, Package, Pencil, Search, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -35,11 +29,7 @@ import {
 
 import { formatPrice } from '@/helpers/global';
 
-import type {
-  Product,
-  PaginatedProducts,
-  ProductType,
-} from './types';
+import type { Product, PaginatedProducts, ProductType } from './types';
 
 interface ProductTableProps {
   products: PaginatedProducts;
@@ -112,8 +102,7 @@ export default function ProductTable({
 
     const minRate = sortedVariants[0]?.rate ?? 0;
 
-    const maxRate =
-      sortedVariants[sortedVariants.length - 1]?.rate ?? 0;
+    const maxRate = sortedVariants[sortedVariants.length - 1]?.rate ?? 0;
 
     return minRate === maxRate
       ? formatPrice(minRate)
@@ -125,9 +114,7 @@ export default function ProductTable({
       <div className="border-b p-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="font-semibold">
-              Products
-            </h2>
+            <h2 className="font-semibold">Products</h2>
 
             <p className="text-sm text-muted-foreground">
               {products.total} records found
@@ -140,9 +127,7 @@ export default function ProductTable({
 
               <Input
                 value={search}
-                onChange={(e) =>
-                  setSearch(e.target.value)
-                }
+                onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search product..."
                 className="pl-9"
               />
@@ -150,20 +135,13 @@ export default function ProductTable({
 
             <select
               value={typeId}
-              onChange={(e) =>
-                setTypeId(e.target.value)
-              }
+              onChange={(e) => setTypeId(e.target.value)}
               className="h-10 rounded-xl border bg-background px-3 text-sm"
             >
-              <option value="">
-                All Types
-              </option>
+              <option value="">All Types</option>
 
               {types.map((type) => (
-                <option
-                  key={type.id}
-                  value={type.id}
-                >
+                <option key={type.id} value={type.id}>
                   {type.name}
                 </option>
               ))}
@@ -171,22 +149,14 @@ export default function ProductTable({
 
             <select
               value={status}
-              onChange={(e) =>
-                setStatus(e.target.value)
-              }
+              onChange={(e) => setStatus(e.target.value)}
               className="h-10 rounded-xl border bg-background px-3 text-sm"
             >
-              <option value="">
-                All Status
-              </option>
+              <option value="">All Status</option>
 
-              <option value="1">
-                Active
-              </option>
+              <option value="1">Active</option>
 
-              <option value="0">
-                Inactive
-              </option>
+              <option value="0">Inactive</option>
             </select>
 
             <Button
@@ -208,30 +178,12 @@ export default function ProductTable({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>
-                  Product
-                </TableHead>
-
-                <TableHead>
-                  Type
-                </TableHead>
-
-                <TableHead>
-                  Rate
-                </TableHead>
-
-                <TableHead>
-                  Featured
-                </TableHead>
-
-                <TableHead>
-                  New
-                </TableHead>
-
-                <TableHead>
-                  Status
-                </TableHead>
-
+                <TableHead>Product</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Rate</TableHead>
+                <TableHead>Featured</TableHead>
+                <TableHead>New</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead className="w-[80px] text-right">
                   Action
                 </TableHead>
@@ -239,125 +191,101 @@ export default function ProductTable({
             </TableHeader>
 
             <TableBody>
-              {products.data.map(
-                (product) => (
-                  <TableRow
-                    key={product.id}
-                  >
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <div className="h-12 w-12 overflow-hidden rounded-lg border">
-                          {product.image ? (
-                            <img
-                              src={
-                                product.image as string
-                              }
-                              alt={
-                                product
-                                  .translations
-                                  .id
-                                  .name
-                              }
-                              className="h-full w-full object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-full items-center justify-center bg-muted">
-                              <Package className="h-4 w-4" />
-                            </div>
-                          )}
-                        </div>
-
-                        <div>
-                          <div className="font-medium">
-                            {
-                              product
-                                .translations
-                                .id
-                                .name
+              {products.data.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <div className="h-12 w-12 overflow-hidden rounded-lg border">
+                        {product.image ? (
+                          <img
+                            src={
+                              product.image as string
                             }
+                            alt={
+                              product.translations
+                                .id.name
+                            }
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center bg-muted">
+                            <Package className="h-4 w-4" />
                           </div>
+                        )}
+                      </div>
+
+                      <div>
+                        <div className="font-medium">
+                          {
+                            product.translations.id
+                              .name
+                          }
                         </div>
                       </div>
-                    </TableCell>
+                    </div>
+                  </TableCell>
 
-                    <TableCell>
-                      {
-                        product
-                          .type
-                          ?.name
-                      }
-                    </TableCell>
+                  <TableCell>{product.type?.name}</TableCell>
 
-                    <TableCell>
-                      {getDisplayRate(
-                        product,
-                      )}
-                    </TableCell>
+                  <TableCell>
+                    {getDisplayRate(product)}
+                  </TableCell>
 
-                    <TableCell>
-                      {product.featured
-                        ? 'Yes'
-                        : 'No'}
-                    </TableCell>
+                  <TableCell>
+                    {product.featured ? 'Yes' : 'No'}
+                  </TableCell>
 
-                    <TableCell>
-                      {product.new
-                        ? 'Yes'
-                        : 'No'}
-                    </TableCell>
+                  <TableCell>
+                    {product.new ? 'Yes' : 'No'}
+                  </TableCell>
 
-                    <TableCell>
-                      {product.active ? (
-                        <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
-                          Active
-                        </span>
-                      ) : (
-                        <span className="inline-flex rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-700">
-                          Inactive
-                        </span>
-                      )}
-                    </TableCell>
+                  <TableCell>
+                    {product.active ? (
+                      <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+                        Active
+                      </span>
+                    ) : (
+                      <span className="inline-flex rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-700">
+                        Inactive
+                      </span>
+                    )}
+                  </TableCell>
 
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                        >
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
 
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            onClick={() =>
-                              onEdit(
-                                product,
-                              )
-                            }
-                          >
-                            <Pencil className="mr-2 h-4 w-4" />
-                            Edit
-                          </DropdownMenuItem>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          onClick={() =>
+                            onEdit(product)
+                          }
+                        >
+                          <Pencil className="mr-2 h-4 w-4" />
+                          Edit
+                        </DropdownMenuItem>
 
-                          <DropdownMenuItem
-                            className="text-red-600"
-                            onClick={() =>
-                              onDelete(
-                                product,
-                              )
-                            }
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ),
-              )}
+                        <DropdownMenuItem
+                          className="text-red-600"
+                          onClick={() =>
+                            onDelete(product)
+                          }
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         ) : (
@@ -367,76 +295,44 @@ export default function ProductTable({
 
       <div className="flex flex-col gap-3 border-t p-4 md:flex-row md:items-center md:justify-between">
         <p className="text-sm text-muted-foreground">
-          Showing page {products.current_page} of{' '}
-          {products.last_page}
+          Showing page {products.current_page} of {products.last_page}
         </p>
 
         <div className="flex flex-wrap gap-1">
-          {products.links.map(
-            (link, index) => {
-              const label =
-                link.label
-                  .replace(
-                    '&laquo;',
-                    '',
-                  )
-                  .replace(
-                    '&raquo;',
-                    '',
-                  )
-                  .replace(
-                    'Previous',
-                    'Prev',
-                  )
-                  .replace(
-                    'pagination.previous',
-                    'Prev',
-                  )
-                  .replace(
-                    'pagination.next',
-                    'Next',
-                  )
-                  .trim();
+          {products.links.map((link, index) => {
+            const label = link.label
+              .replace('&laquo;', '')
+              .replace('&raquo;', '')
+              .replace('Previous', 'Prev')
+              .replace('pagination.previous', 'Prev')
+              .replace('pagination.next', 'Next')
+              .trim();
 
-              return (
-                <Button
-                  key={index}
-                  size="sm"
-                  variant={
-                    link.active
-                      ? 'default'
-                      : 'outline'
+            return (
+              <Button
+                key={index}
+                size="sm"
+                variant={link.active ? 'default' : 'outline'}
+                disabled={!link.url}
+                onClick={() => {
+                  if (!link.url) {
+                    return;
                   }
-                  disabled={
-                    !link.url
-                  }
-                  onClick={() => {
-                    if (
-                      !link.url
-                    ) {
-                      return;
-                    }
 
-                    router.visit(
-                      link.url,
-                      {
-                        preserveState:
-                          true,
-                        preserveScroll:
-                          true,
-                      },
-                    );
+                  router.visit(link.url, {
+                    preserveState: true,
+                    preserveScroll: true,
+                  });
+                }}
+              >
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: label,
                   }}
-                >
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: label,
-                    }}
-                  />
-                </Button>
-              );
-            },
-          )}
+                />
+              </Button>
+            );
+          })}
         </div>
       </div>
     </DataTable>

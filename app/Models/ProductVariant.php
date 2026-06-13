@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Support\Collection;
 
-#[Fillable(['product_id', 'rate', 'min_person', 'max_person', 'active'])]
+#[Fillable(['product_id', 'rate', 'min_person', 'max_person', 'active', 'marinade'])]
 class ProductVariant extends Model
 {
     use HasUuids;
@@ -18,6 +18,7 @@ class ProductVariant extends Model
         'min_person' => 'integer',
         'max_person' => 'integer',
         'active' => 'boolean',
+        'marinade' => 'boolean'
     ];
 
     public function product()

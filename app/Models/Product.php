@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Support\Collection;
 
-#[Fillable(["type_id", "rate", "featured", "new", "active", "image"])]
+#[Fillable(["type_id", "rate", "featured", "new", "active", "marinade", "image"])]
 class Product extends Model
 {
     public const TYPE_PACKAGE = "PACKAGE";
@@ -19,6 +19,7 @@ class Product extends Model
         "featured" => "boolean",
         "new" => "boolean",
         "active" => "boolean",
+        "marinade" => "boolean"
     ];
 
     public function type()

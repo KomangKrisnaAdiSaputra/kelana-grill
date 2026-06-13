@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean('featured')->default(false);
             $table->boolean('new')->default(true);
             $table->boolean('active')->default(true);
+            $table->boolean('marinade')->default(false);
 
             $table->text('image')->nullable();
 
