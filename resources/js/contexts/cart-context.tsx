@@ -3,6 +3,24 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { Product, ProductItem, ProductVariant } from '@/types/product';
 import QuestionDialog from './partials/modal-question';
 
+export type CartPackageInstance = {
+  items?: (ProductItem & {
+    marinadeItems: {
+      id: string;
+      name: string;
+    }[];
+    choiceItems: {
+      id: string;
+      name: string;
+    }[];
+  })[];
+
+  productMarinade?: {
+    id: string;
+    name: string;
+  } | null;
+};
+
 export type CartItem = {
   id: string;
   name: string;
@@ -15,20 +33,8 @@ export type CartItem = {
   rate: number;
   type: string;
   image: string;
-  items?: (ProductItem & {
-    marinadeItems: {
-      id: string;
-      name: string;
-    }[];
-    choiceItems: {
-      id: string;
-      name: string;
-    }[];
-  })[];
-  productMarinade?: {
-    id: string;
-    name: string;
-  } | null;
+
+  packageInstances: CartPackageInstance[];
 };
 
 type CartContextType = {
@@ -93,10 +99,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     insertCart(product, variant);
   };
 
+
   const insertCart = (
     product: Product,
     variant: ProductVariant | null,
-    items?: CartItem['items'],
+    items?: CartPackageInstance['items'],
     productMarinade?: {
       id: string;
       name: string;
@@ -108,14 +115,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const exists = current.find((item) => item.id === itemId);
 
       if (exists) {
-        return current.map((item) =>
-          item.id === itemId
-            ? {
-              ...item,
-              qty: item.qty + 1,
-            }
-            : item,
-        );
+        return current.map((cartItem) => {
+          if (cartItem.id !== itemId) {
+            return cartItem;
+          }
+
+          return {
+            ...cartItem,
+            qty: cartItem.qty + 1,
+
+            packageInstances: [
+              ...cartItem.packageInstances,
+              {
+                items,
+                productMarinade,
+              },
+            ],
+          };
+        });
       }
 
       return [
@@ -134,8 +151,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           rate: variant?.rate ?? product.rate ?? 0,
           type: product.type ?? '',
           image: product.image ?? '',
-          items,
-          productMarinade,
+
+          packageInstances: [
+            {
+              items,
+              productMarinade,
+            },
+          ],
         },
       ];
     });
@@ -143,28 +165,50 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const increaseQty = (id: string) => {
     setCartItems((current) =>
-      current.map((item) =>
-        item.id === id
-          ? {
-            ...item,
-            qty: item.qty + 1,
-          }
-          : item,
-      ),
+      current.map((item) => {
+        if (item.id !== id) {
+          return item;
+        }
+
+        const lastPackage =
+          item.packageInstances[
+          item.packageInstances.length - 1
+          ];
+
+        return {
+          ...item,
+          qty: item.qty + 1,
+
+          packageInstances: [
+            ...item.packageInstances,
+
+            structuredClone(lastPackage),
+          ],
+        };
+      }),
     );
   };
 
   const decreaseQty = (id: string) => {
     setCartItems((current) =>
       current
-        .map((item) =>
-          item.id === id
-            ? {
-              ...item,
-              qty: item.qty - 1,
-            }
-            : item,
-        )
+        .map((item) => {
+          if (item.id !== id) {
+            return item;
+          }
+
+          const packageInstances = [
+            ...item.packageInstances,
+          ];
+
+          packageInstances.pop();
+
+          return {
+            ...item,
+            qty: packageInstances.length,
+            packageInstances,
+          };
+        })
         .filter((item) => item.qty > 0),
     );
   };

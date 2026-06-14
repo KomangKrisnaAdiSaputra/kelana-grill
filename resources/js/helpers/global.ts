@@ -35,3 +35,15 @@ export function useTranslation() {
 
     return { __ };
 }
+
+export function groupMarinades(
+    marinades: { id: string; name: string }[],
+): Record<string, number> {
+    const grouped: Record<string, number> = {};
+
+    marinades.forEach((item) => {
+        grouped[item.name] = (grouped[item.name] ?? 0) + 1;
+    });
+
+    return grouped;
+}

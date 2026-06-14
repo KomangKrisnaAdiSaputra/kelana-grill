@@ -214,3 +214,16 @@
         @apply bg-white/80 ring-1 ring-orange-100;
     }
 }
+
+/* resources/css/app.css */
+
+@layer utilities {
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+}

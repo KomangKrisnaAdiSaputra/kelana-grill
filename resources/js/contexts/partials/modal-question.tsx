@@ -28,13 +28,9 @@ type Props = {
   selectedMarinades: Record<string, string[]>;
   selectedChoices: Record<string, string[]>;
 
-  setSelectedMarinades: React.Dispatch<
-    React.SetStateAction<Record<string, string[]>>
-  >;
+  setSelectedMarinades: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
 
-  setSelectedChoices: React.Dispatch<
-    React.SetStateAction<Record<string, string[]>>
-  >;
+  setSelectedChoices: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
 
   onCancel: () => void;
 
@@ -65,16 +61,10 @@ export default function QuestionDialog({
       return;
     }
 
-    const productNeedMarinade =
-      variant?.marinade ??
-      product?.marinade ??
-      false;
+    const productNeedMarinade = variant?.marinade ?? product?.marinade ?? false;
+    const productMarinadeSelected = productNeedMarinade && !selectedMarinades["product"]?.[0] && (product?.items ?? []).length <= 0;
 
-    const productMarinadeSelected =
-      !productNeedMarinade ||
-      !!selectedMarinades["product"]?.[0];
-
-    if (!productMarinadeSelected) {
+    if (productMarinadeSelected) {
       toast.error("Marinasi wajib dipilih", {
         description:
           "Silakan pilih marinasi untuk produk terlebih dahulu.",
@@ -83,18 +73,11 @@ export default function QuestionDialog({
       return;
     }
 
-    const allMarinadesSelected =
-      product.items
-        ?.filter((item) => item.marinade)
-        .every((item) => {
-          const selected =
-            selectedMarinades[item.name] ?? [];
+    const allMarinadesSelected = product.items?.filter((item) => item.marinade).every((item) => {
+      const selected = selectedMarinades[item.name] ?? [];
 
-          return (
-            selected.length === item.qty &&
-            selected.every(Boolean)
-          );
-        });
+      return (selected.length === item.qty && selected.every(Boolean));
+    });
 
     if (!allMarinadesSelected) {
       toast.error("Data belum lengkap", {
@@ -105,20 +88,11 @@ export default function QuestionDialog({
       return;
     }
 
-    const allChoicesSelected =
-      product.items
-        ?.filter(
-          (item) => item.type === "CHOICE",
-        )
-        .every((item) => {
-          const selected =
-            selectedChoices[item.name] ?? [];
+    const allChoicesSelected = product.items?.filter((item) => item.type === "CHOICE").every((item) => {
+      const selected = selectedChoices[item.name] ?? [];
 
-          return (
-            selected.length === item.qty &&
-            selected.every(Boolean)
-          );
-        });
+      return (selected.length === item.qty && selected.every(Boolean));
+    });
 
     if (!allChoicesSelected) {
       toast.error("Data belum lengkap", {
@@ -129,70 +103,27 @@ export default function QuestionDialog({
       return;
     }
 
-    const productMarinadeId =
-      selectedMarinades["product"]?.[0];
-
-    const productMarinade =
-      marinades.find(
-        (m) =>
-          String(m.id) ===
-          String(productMarinadeId),
-      ) ?? null;
-
-    const items =
-      product.items?.map((item) => ({
-        ...item,
-
-        marinadeItems: item.marinade
-          ? (
-            selectedMarinades[item.name] ?? []
-          )
-            .map((id) =>
-              marinades.find(
-                (m) =>
-                  String(m.id) ===
-                  String(id),
-              ),
-            )
-            .filter(Boolean)
-            .map((m) => ({
-              id: m!.id,
-              name: m!.name,
-            }))
-          : [],
-
-        choiceItems:
-          item.type === "CHOICE"
-            ? (
-              selectedChoices[
-              item.name
-              ] ?? []
-            )
-              .map((id) =>
-                (
-                  item.choices ?? []
-                ).find(
-                  (c) =>
-                    String(c.id) ===
-                    String(id),
-                ),
-              )
-              .filter(Boolean)
-              .map((c) => ({
-                id: c!.id,
-                name: c!.name,
-              }))
-            : [],
-      })) ?? [];
+    const productMarinadeId = selectedMarinades["product"]?.[0];
+    const productMarinade = marinades.find((m) => String(m.id) === String(productMarinadeId)) ?? null;
+    const items = product.items?.map((item) => ({
+      ...item,
+      marinadeItems: item.marinade ? (selectedMarinades[item.name] ?? []).map((id) => marinades.find((m) => String(m.id) === String(id)))
+        .filter(Boolean)
+        .map((m) => ({
+          id: m!.id,
+          name: m!.name,
+        })) : [],
+      choiceItems: item.type === "CHOICE" ? (selectedChoices[item.name] ?? []).map((id) => (item.choices ?? []).find((c) => String(c.id) === String(id)))
+        .filter(Boolean)
+        .map((c) => ({
+          id: c!.id,
+          name: c!.name,
+        })) : [],
+    })) ?? [];
 
     onSubmit(
       items,
-      productMarinade
-        ? {
-          id: productMarinade.id,
-          name: productMarinade.name,
-        }
-        : null,
+      productMarinade ? { id: productMarinade.id, name: productMarinade.name } : null
     );
   };
 
