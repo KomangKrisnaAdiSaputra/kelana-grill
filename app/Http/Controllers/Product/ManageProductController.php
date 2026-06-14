@@ -45,10 +45,11 @@ class ManageProductController extends Controller
         ]);
 
         $alaCarteProducts = Product::query()->with(['type', 'translations'])
-            ->whereHas('type', fn($query) => $query->where('name', 'ALA CARTE'))
+            ->whereHas('type', fn($query) => $query->whereIn('name', ['ALA CARTE', 'MARINADE', 'CHOICE']))
             ->where('active', true)->orderBy('id')->get()->map(fn($product) => [
                 'id' => $product->id,
-                'name' => $product->translations->firstWhere('language', 'id')?->name  ?? $product->translations->firstWhere('language', 'en')?->name ?? 'Unnamed Product'
+                'name' => $product->translations->firstWhere('language', 'id')?->name  ?? $product->translations->firstWhere('language', 'en')?->name ?? 'Unnamed Product',
+                'description' => $product->translations->firstWhere('language', 'id')?->description  ?? $product->translations->firstWhere('language', 'en')?->description ?? '-',
             ])->values();
 
         return Inertia::render('product/manage-product/index', [
@@ -384,7 +385,8 @@ class ManageProductController extends Controller
             'items' => $product->items->map(fn($item) => [
                 'itemProductId' => $item->pivot->item_product_id,
                 'qty' => $item->pivot->qty,
-                'unit' => $item->pivot->unit
+                'unit' => $item->pivot->unit,
+                'description' => $item->translation->description
             ])
         ];
     }

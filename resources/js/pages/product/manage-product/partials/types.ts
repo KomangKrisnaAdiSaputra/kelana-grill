@@ -63,6 +63,7 @@ export type ProductItem = {
     itemProductId: string;
     qty: number;
     unit: string | null;
+    description: string;
 };
 
 export type PaginatedProducts = {
@@ -98,4 +99,5 @@ export type ProductBadge = {
 export type AlaCarteProduct = {
     id: string;
     name: string;
+    description: string;
 };

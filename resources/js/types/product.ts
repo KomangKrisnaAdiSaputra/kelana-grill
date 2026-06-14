@@ -30,6 +30,7 @@ export type ProductVariant = {
 
     minPerson: number | null;
     maxPerson: number | null;
+    marinade: boolean;
 
     slug?: string | null;
 
@@ -38,10 +39,14 @@ export type ProductVariant = {
 };
 
 export type ProductItem = {
+    id: string;
     name: string;
     description?: string | null;
     qty: string | number | null;
     unit?: string | null;
+    marinade: boolean;
+    type: string;
+    choices?: ProductItem[];
 };
 
 export type Product = {
@@ -69,6 +74,7 @@ export type Product = {
     featured: boolean;
 
     new: boolean;
+    marinade: boolean;
 
     categories: ProductCategory[];
     badges: ProductBadge[];

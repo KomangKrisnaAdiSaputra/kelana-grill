@@ -50,6 +50,7 @@ class ProductVariant extends Model
             "rate" => $this->rate,
             "minPerson" => $this->min_person,
             "maxPerson" => $this->max_person,
+            "marinade" => $this->marinade,
 
             "name" => $translation->name,
             "description" => $translation->description

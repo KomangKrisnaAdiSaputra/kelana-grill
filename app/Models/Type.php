@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 class Type extends Model
 {
     use HasUuids;
+    public const PACKAGE = "PACKAGE";
+    public const MARINADE = "MARINADE";
 
     protected $casts = [
         'active' => 'boolean',

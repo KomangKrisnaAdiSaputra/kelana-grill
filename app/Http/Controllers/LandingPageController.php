@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Data\KelanaGrillData;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
@@ -14,19 +15,24 @@ class LandingPageController extends Controller
 {
     public function index(Request $request)
     {
-        $featuredProduct = Product::active()->featured()->inRandomOrder()->first()->generateDataLanding();
-        $products = Product::active()->whereHas("type", fn($q) => $q->where("name", Product::TYPE_PACKAGE))->whereNot("id", $featuredProduct["id"])->inRandomOrder()->limit(3)->get()->map->generateDataLanding();
-
+        $featuredProduct = Product::notShow()->active()->featured()->inRandomOrder()->first()->generateDataLanding();
+        $products = Product::notShow()->active()->whereHas("type", fn($q) => $q->where("name", Type::PACKAGE))->whereNot("id", $featuredProduct["id"])->inRandomOrder()->limit(3)->get()->map->generateDataLanding();
+        $marinades = Product::active()->whereHas("type", fn($q) => $q->where("name", Type::MARINADE))->get()->map->generateDataMarinade();
         return Inertia::render('landing/index', [
             'featuredProduct' => $featuredProduct,
             'products' => $products,
+            'marinades' => $marinades
         ]);
     }
 
     public function indexProduct(Request $request)
     {
+        $products = Product::notShow()->active()->get()->map->generateDataLanding();
+        $marinades = Product::active()->whereHas("type", fn($q) => $q->where("name", Type::MARINADE))->get()->map->generateDataMarinade();
+
         return Inertia::render('landing/product', [
-            'products' => Product::active()->get()->map->generateDataLanding(),
+            'products' => $products,
+            'marinades' => $marinades
         ]);
     }
 

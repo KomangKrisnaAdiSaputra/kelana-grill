@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 #[Fillable(["type_id", "rate", "featured", "new", "active", "marinade", "image"])]
 class Product extends Model
 {
-    public const TYPE_PACKAGE = "PACKAGE";
     use HasUuids;
 
     protected $casts = [
@@ -82,16 +81,27 @@ class Product extends Model
         return $query->where("new", true);
     }
 
+    public function scopeNotShow(Builder $query): Builder
+    {
+        return $query->whereHas("type", fn($q) => $q->whereNotIn("name", ["CHOICE"]));
+    }
+
     function generateDataItem(): Collection
     {
         $translation = $this->translation;
         $productItem = $this->pivot;
 
         return collect([
+            "id" => $this->id,
             "name" => $translation->name,
             "description" => $translation->description,
             "qty" => $productItem->qty,
-            "unit" => $productItem->unit
+            "unit" => $productItem->unit,
+            "marinade" => $this->marinade,
+            "type" => $this->type->name,
+            ...($this->type->name == "CHOICE" ? [
+                "choices" => $this->items->map->generateDataItem()
+            ] : [])
         ]);
     }
 
@@ -104,6 +114,7 @@ class Product extends Model
             "rate" => $this->rate,
             "featured" => $this->featured,
             "new" => $this->new,
+            "marinade" => $this->marinade,
             "image" => $this->image,
 
             "name" => $translation->name,
@@ -117,6 +128,16 @@ class Product extends Model
             "variants" => $this->variants->map->generateData(),
 
             "items" => $this->items->map->generateDataItem()
+        ]);
+    }
+
+    public function generateDataMarinade(): Collection
+    {
+        $translation = $this->translation;
+
+        return collect([
+            "id" => $this->id,
+            "name" => $translation->name,
         ]);
     }
 }

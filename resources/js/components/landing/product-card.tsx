@@ -6,6 +6,7 @@ import { formatPrice, useTranslation } from '@/helpers/global';
 import type { ThemeMode } from '@/types';
 import type { Product, ProductVariant } from '@/types/product';
 import ProductImagePlaceholder from '../product-image-placeholder';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 type ProductCardProps = {
     theme: ThemeMode;
@@ -60,8 +61,6 @@ export default function ProductCard({
     const hasPromoPrice = product?.hasPromo ?? (typeof productOriginalPriceValue === 'number' && productOriginalPriceValue > productPriceValue);
     const productPrice = formatPrice(productPriceValue);
     const productOriginalPrice = typeof productOriginalPriceValue === 'number' ? formatPrice(productOriginalPriceValue) : null;
-
-    console.log(cartQtyVariant);
 
     return (
         <article
@@ -148,29 +147,36 @@ export default function ProductCard({
 
                     {/* DESCRIPTION */}
 
-                    <div className="group/tooltip relative mt-2">
-                        <div className="min-h-[40px]">
-                            <p
-                                className={`line-clamp-2 text-[13px] leading-5 ${theme === 'dark'
-                                    ? 'text-zinc-400'
-                                    : 'text-zinc-600'
-                                    }`}
-                            >
-                                {product.description}
-                            </p>
-                        </div>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <div className="mt-2">
+                                    <div className="min-h-[40px]">
+                                        <p
+                                            className={`line-clamp-2 text-[13px] leading-5 cursor-help ${theme === 'dark'
+                                                ? 'text-zinc-400'
+                                                : 'text-zinc-600'
+                                                }`}
+                                        >
+                                            {product.description}
+                                        </p>
+                                    </div>
+                                </div>
+                            </TooltipTrigger>
 
-                        {product.description && (
-                            <div
-                                className={`pointer-events-none absolute bottom-full left-0 z-50 mb-2 hidden w-64 rounded-2xl px-3 py-2 text-xs leading-5 shadow-2xl group-hover/tooltip:block ${theme === 'dark'
-                                    ? 'border border-white/10 bg-zinc-900 text-zinc-200'
-                                    : 'border border-zinc-200 bg-white text-zinc-700'
-                                    }`}
-                            >
-                                {product.description}
-                            </div>
-                        )}
-                    </div>
+                            {product.description && (
+                                <TooltipContent
+                                    side="top"
+                                    align="start"
+                                    className="max-w-xs whitespace-normal break-words"
+                                >
+                                    <p className="text-xs leading-5">
+                                        {product.description}
+                                    </p>
+                                </TooltipContent>
+                            )}
+                        </Tooltip>
+                    </TooltipProvider>
 
                 </div>
                 {/* VARIANTS */}
@@ -199,10 +205,10 @@ export default function ProductCard({
                                         key={variant.id}
                                         onClick={() => onSelectVariant?.(variant)}
                                         className={`relative rounded-full px-3 py-1.5 text-[11px] font-medium transition-all duration-200 sm:text-xs ${isActive
-                                                ? 'bg-orange-500 text-white shadow-md'
-                                                : theme === 'dark'
-                                                    ? 'border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]'
-                                                    : 'border border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100'
+                                            ? 'bg-orange-500 text-white shadow-md'
+                                            : theme === 'dark'
+                                                ? 'border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08]'
+                                                : 'border border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100'
                                             }`}
                                     >
                                         {variant.name}

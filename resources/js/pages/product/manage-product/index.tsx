@@ -160,6 +160,7 @@ export default function Index({
                             featured: false,
                             new: true,
                             active: true,
+                            marinade: false,
                             translations: {
                                 id: {
                                     name: '',
