@@ -84,6 +84,23 @@ return [
   "Gambar Tidak Ditemukan" => "Image Not Found",
   "Tidak ada produk yang ditemukan." => "No Products Found",
   "Tidak ada produk yang tersedia." => "There are no products available.",
+  "Marinasi wajib dipilih" => "Marinade must be selected",
+  "Silakan pilih marinasi untuk produk terlebih dahulu." => "Please select the marination for the product first.",
+  "Data belum lengkap" => "Data is incomplete",
+  "Silakan pilih semua marinasi item terlebih dahulu." => "Please select all marination items first.",
+  "Silakan pilih semua pilihan item terlebih dahulu." => "Please select all item options first.",
+  "Pertanyaan" => "Question",
+  "Simpan Perubahan" => "Save Changes",
+  "Tambah ke keranjang" => "Add to cart",
+  "Batal" => "Cancel",
+  "Marinasi" => "Marinate",
+  "Pilih jenis marinasi untuk setiap item." => "Select the type of marinade for each item.",
+  "Pilih jenis marinasi untuk produk." => "Select the type of marination for the product.",
+  "Pilih Marinasi" => "Select Marinade",
+  "Pilihan Tambahan" => "Additional Options",
+  "Pilih opsi yang tersedia untuk produk ini." => "Select the available options for this product.",
+  "Pilihan" => "Choice",
+  "Pilih Opsi" => "Select Options",
   // End Product
 
   // CTA

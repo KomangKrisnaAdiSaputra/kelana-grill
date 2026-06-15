@@ -1,5 +1,6 @@
 import DynamicSelect from "@/components/dynamic-select";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "@/helpers/global";
 import type { ProductItem } from "@/types/product";
 
 type Props = {
@@ -16,16 +17,17 @@ export default function ChoiceSection({
   selectedChoices,
   setSelectedChoices,
 }: Props) {
+  const { __ } = useTranslation();
+
   return (
     <section className="space-y-4">
       <div>
         <h3 className="text-sm font-semibold">
-          Pilihan Tambahan
+          {__("Pilihan Tambahan")}
         </h3>
 
         <p className="text-xs text-muted-foreground">
-          Pilih opsi yang tersedia untuk
-          produk ini.
+          {__("Pilih opsi yang tersedia untuk produk ini.")}
         </p>
       </div>
 
@@ -60,7 +62,7 @@ export default function ChoiceSection({
                   className="space-y-2"
                 >
                   <Label>
-                    Pilihan #{idx + 1}
+                    {__("Pilihan")} #{idx + 1}
                   </Label>
 
                   <DynamicSelect
@@ -85,7 +87,7 @@ export default function ChoiceSection({
                     }}
                     getValue={(item) => item.id}
                     getLabel={(item) => item.name}
-                    placeholder="Pilih Opsi"
+                    placeholder={__("Pilih Opsi")}
                   />
                 </div>
               ))}

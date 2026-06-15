@@ -1,5 +1,6 @@
 import DynamicSelect from "@/components/dynamic-select";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "@/helpers/global";
 import type { Product } from "@/types/product";
 
 type Props = {
@@ -18,16 +19,17 @@ export default function ProductMarinadeSection({
   selectedMarinades,
   setSelectedMarinades,
 }: Props) {
+  const { __ } = useTranslation();
 
   return (
     <section className="space-y-4">
       <div>
         <h3 className="text-sm font-semibold">
-          Marinasi
+          {__("Marinasi")}
         </h3>
 
         <p className="text-xs text-muted-foreground">
-          Pilih jenis marinasi untuk produk.
+          {__("Pilih jenis marinasi untuk produk.")}
         </p>
       </div>
 
@@ -51,7 +53,7 @@ export default function ProductMarinadeSection({
         </div>
 
         <div className="space-y-2">
-          <Label>Marinasi</Label>
+          <Label>{__("Marinasi")}</Label>
 
           <DynamicSelect
             options={marinades}
@@ -66,7 +68,7 @@ export default function ProductMarinadeSection({
             }}
             getValue={(item) => item.id}
             getLabel={(item) => item.name}
-            placeholder="Pilih Marinasi"
+            placeholder={__("Pilih Marinasi")}
           />
         </div>
       </div>

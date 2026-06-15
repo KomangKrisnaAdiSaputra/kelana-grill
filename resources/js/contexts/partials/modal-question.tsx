@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useTranslation } from "@/helpers/global";
 import type { Product, ProductVariant } from "@/types/product";
 import ChoiceSection from "./question/choice-section";
 import MarinadeSection from "./question/marinade-section";
@@ -58,6 +59,7 @@ export default function QuestionDialog({
   onSubmit,
   isEditing,
 }: Props) {
+  const { __ } = useTranslation();
   const handleSubmit = () => {
     if (!product) {
       return;
@@ -67,9 +69,9 @@ export default function QuestionDialog({
     const productMarinadeSelected = productNeedMarinade && !selectedMarinades["product"]?.[0] && (product?.items ?? []).length <= 0;
 
     if (productMarinadeSelected) {
-      toast.error("Marinasi wajib dipilih", {
+      toast.error(__("Marinasi wajib dipilih"), {
         description:
-          "Silakan pilih marinasi untuk produk terlebih dahulu.",
+          __("Silakan pilih marinasi untuk produk terlebih dahulu."),
       });
 
       return;
@@ -82,9 +84,9 @@ export default function QuestionDialog({
     });
 
     if (!allMarinadesSelected) {
-      toast.error("Data belum lengkap", {
+      toast.error(__("Data belum lengkap"), {
         description:
-          "Silakan pilih semua marinasi item terlebih dahulu.",
+          __("Silakan pilih semua marinasi item terlebih dahulu."),
       });
 
       return;
@@ -97,9 +99,9 @@ export default function QuestionDialog({
     });
 
     if (!allChoicesSelected) {
-      toast.error("Data belum lengkap", {
+      toast.error(__("Data belum lengkap"), {
         description:
-          "Silakan pilih semua pilihan item terlebih dahulu.",
+          __("Silakan pilih semua pilihan item terlebih dahulu."),
       });
 
       return;
@@ -138,7 +140,7 @@ export default function QuestionDialog({
         <div className="flex max-h-[80vh] flex-col">
           <DialogHeader className="border-b px-6 py-4">
             <DialogTitle>
-              Pertanyaan
+              {__("Pertanyaan")}
             </DialogTitle>
           </DialogHeader>
 
@@ -185,11 +187,11 @@ export default function QuestionDialog({
                 onOpenChange(false);
               }}
             >
-              Batal
+              {__("Batal")}
             </Button>
 
             <Button onClick={handleSubmit}>
-              {isEditing ? 'Simpan Perubahan' : 'Tambah ke Cart'}
+              {__(isEditing ? 'Simpan Perubahan' : 'Tambah ke keranjang')}
             </Button>
           </DialogFooter>
         </div>

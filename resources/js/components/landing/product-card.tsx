@@ -10,32 +10,21 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 
 type ProductCardProps = {
     theme: ThemeMode;
-
     product: Product;
-
     selectedVariantId?: string;
-
     onSelectVariant?: (variant: ProductVariant) => void;
-
     onDetail?: (
         product: Product,
         variant: ProductVariant,
         buttonEl: HTMLButtonElement,
     ) => void;
-
     cartQty?: number;
-
     cartQtyVariant?: Record<string, number>
-
     onAddToCart?: (product: Product, variant: ProductVariant) => void;
 };
 
 function getDefaultVariant(product: Product, selectedVariantId?: string) {
-    return (
-        product.variants.find(
-            (variant) => String(variant.id) === String(selectedVariantId),
-        ) ?? product.variants[0]
-    );
+    return ((product?.variants ?? []).find((variant) => String(variant.id) === String(selectedVariantId)) ?? ((product?.variants ?? [])[0] ?? null));
 }
 
 export default function ProductCard({
@@ -129,9 +118,9 @@ export default function ProductCard({
 
                     {/* BADGES */}
 
-                    {product.badges?.length > 0 && (
+                    {(product.badges ?? []).length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-1.5">
-                            {product.badges.map((badge) => (
+                            {(product?.badges ?? []).map((badge) => (
                                 <span
                                     key={badge.id}
                                     className={`rounded-full px-2 py-1 text-[10px] font-medium ${theme === 'dark'
@@ -181,23 +170,20 @@ export default function ProductCard({
                 </div>
                 {/* VARIANTS */}
                 <div className="mt-4">
-                    {product.variants.length <= 1 ? (
+                    {(product?.variants ?? []).length <= 1 ? (
                         <div className="flex flex-wrap">
                             <span
-                                className={`
-                    rounded-full px-3 py-1.5 text-[11px] font-medium transition-all duration-200 sm:text-xs
-                    ${theme === 'dark'
-                                        ? 'border border-white/10 bg-white/5 text-zinc-400'
-                                        : 'border border-zinc-200 bg-zinc-50 text-zinc-500'
-                                    }
-                `}
+                                className={` rounded-full px-3 py-1.5 text-[11px] font-medium transition-all duration-200 sm:text-xs ${theme === 'dark'
+                                    ? 'border border-white/10 bg-white/5 text-zinc-400'
+                                    : 'border border-zinc-200 bg-zinc-50 text-zinc-500'
+                                    } `}
                             >
                                 📦 {__("Best Value")}
                             </span>
                         </div>
                     ) : (
                         <div className="flex flex-wrap gap-2">
-                            {product.variants.map((variant) => {
+                            {(product?.variants ?? []).map((variant) => {
                                 const isActive = selectedVariant?.id === variant.id;
 
                                 return (
@@ -213,9 +199,9 @@ export default function ProductCard({
                                     >
                                         {variant.name}
 
-                                        {cartQtyVariant?.[variant.id] > 0 && (
+                                        {cartQtyVariant?.[variant?.id ?? ""] > 0 && (
                                             <div className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-orange-500 shadow-md">
-                                                {cartQtyVariant[variant.id]}
+                                                {cartQtyVariant[variant?.id ?? ""]}
                                             </div>
                                         )}
                                     </button>

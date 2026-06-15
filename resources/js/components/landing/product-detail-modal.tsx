@@ -37,7 +37,6 @@ export default function ProductDetailModal({
     const modalRef = useRef<HTMLDivElement>(null);
     const productImage = product?.image ?? 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop';
 
-
     const [showContent, setShowContent] = useState(false);
 
     const getButtonRect = useCallback(() => {
@@ -230,7 +229,7 @@ export default function ProductDetailModal({
                         <div className="space-y-5 p-5 md:p-7">
                             {/* VARIANT */}
 
-                            {product.variants.length > 0 && (
+                            {(product?.variants ?? []).length > 0 && (
                                 <div
                                     className={`rounded-[28px] border p-5 ${isDark
                                         ? 'theme-card-dark'
@@ -276,12 +275,10 @@ export default function ProductDetailModal({
 
                                     {/* OTHER VARIANTS */}
 
-                                    {product.variants.length > 1 && (
+                                    {(product?.variants ?? []).length > 1 && (
                                         <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                                            {product.variants.map((variant) => {
-                                                const isSelected =
-                                                    selectedVariant.id ===
-                                                    variant.id;
+                                            {(product?.variants ?? []).map((variant) => {
+                                                const isSelected = selectedVariant.id === variant.id;
 
                                                 return (
                                                     <div
@@ -335,7 +332,7 @@ export default function ProductDetailModal({
 
                             {/* ITEMS */}
 
-                            {product?.items.length > 0 ? (
+                            {(product?.items ?? []).length > 0 ? (
                                 <div
                                     className={`rounded-[28px] border p-5 ${isDark
                                         ? 'border-white/10 bg-white/[0.04]'
@@ -353,12 +350,12 @@ export default function ProductDetailModal({
                                                 : 'bg-zinc-100 text-zinc-500'
                                                 } `}
                                         >
-                                            {product.items.length} item
+                                            {(product?.items ?? []).length} item
                                         </span>
                                     </div>
 
                                     <div className="mt-4 grid gap-2">
-                                        {product.items.map((item) => (
+                                        {(product?.items ?? []).map((item) => (
                                             <div
                                                 key={item.name}
                                                 className={`flex items-start justify-between gap-4 rounded-2xl px-4 py-3 text-sm ${isDark

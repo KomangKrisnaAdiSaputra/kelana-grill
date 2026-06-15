@@ -24,27 +24,16 @@ type SelectedDetail = {
 
 export default function ProductSection({ theme, products = [] }: Props) {
     const { __ } = useTranslation();
-
     const { addToCart, getItemQty } = useCart();
-
     const sliderRef = useRef<HTMLDivElement | null>(null);
 
     const [activeSlide, setActiveSlide] = useState(0);
-
     const [itemsPerView, setItemsPerView] = useState(1);
-
-    const [selectedDetail, setSelectedDetail] = useState<SelectedDetail | null>(
-        null,
-    );
-
-    const [selectedVariants, setSelectedVariants] = useState<
-        Record<string, string>
-    >({});
+    const [selectedDetail, setSelectedDetail] = useState<SelectedDetail | null>(null);
+    const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
+    const [selectedButton, setSelectedButton] = useState<HTMLButtonElement | null>(null);
 
     const totalSlides = Math.ceil(products.length / itemsPerView);
-
-    const [selectedButton, setSelectedButton] =
-        useState<HTMLButtonElement | null>(null);
 
     const handleScroll = useCallback(() => {
         const slider = sliderRef.current;
@@ -59,9 +48,7 @@ export default function ProductSection({ theme, products = [] }: Props) {
             return setActiveSlide(0);
         }
 
-        const currentIndex = Math.round(
-            (slider.scrollLeft / maxScrollLeft) * (totalSlides - 1),
-        );
+        const currentIndex = Math.round((slider.scrollLeft / maxScrollLeft) * (totalSlides - 1));
 
         setActiveSlide(Math.min(currentIndex, totalSlides - 1));
     }, [totalSlides]);
@@ -71,10 +58,7 @@ export default function ProductSection({ theme, products = [] }: Props) {
             return;
         }
 
-        const slides = sliderRef.current.querySelectorAll(
-            '[data-product-slide]',
-        );
-
+        const slides = sliderRef.current.querySelectorAll('[data-product-slide]');
         const targetSlide = slides[index] as HTMLElement;
 
         targetSlide?.scrollIntoView({
@@ -139,17 +123,15 @@ export default function ProductSection({ theme, products = [] }: Props) {
                     </p>
 
                     <h2
-                        className={`mt-4 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl ${
-                            theme === 'dark' ? 'text-white' : 'text-zinc-950'
-                        }`}
+                        className={`mt-4 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl ${theme === 'dark' ? 'text-white' : 'text-zinc-950'
+                            }`}
                     >
                         {__('Pilih Paket BBQ Kamu.')}
                     </h2>
 
                     <p
-                        className={`mx-auto mt-5 max-w-2xl text-base md:text-lg ${
-                            theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'
-                        }`}
+                        className={`mx-auto mt-5 max-w-2xl text-base md:text-lg ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'
+                            }`}
                     >
                         {__(
                             'Pilih paket BBQ atau menu ala carte sesuai kebutuhan acara kamu.',
@@ -163,13 +145,9 @@ export default function ProductSection({ theme, products = [] }: Props) {
                     className="-mx-4 mt-12 flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [-ms-overflow-style:none] md:-mx-6 md:gap-5 md:px-6 xl:mx-0 xl:grid xl:grid-cols-3 xl:gap-6 xl:overflow-visible xl:px-0 xl:pb-0 [&::-webkit-scrollbar]:hidden"
                 >
                     {products.map((product) => {
-                        const selectedVariantId = selectedVariants[product.id];
+                        const selectedVariantId = selectedVariants[product?.id ?? ""];
 
-                        const selectedVariant =
-                            product.variants.find(
-                                (variant) =>
-                                    String(variant.id) === selectedVariantId,
-                            ) ?? product.variants[0];
+                        const selectedVariant = (product?.variants ?? []).find((variant) => String(variant.id) === selectedVariantId) ?? (product?.variants ?? [])[0];
 
                         return (
                             <div
@@ -192,7 +170,7 @@ export default function ProductSection({ theme, products = [] }: Props) {
                                     ) =>
                                         setSelectedVariants((current) => ({
                                             ...current,
-                                            [product.id]: String(variant.id),
+                                            [product?.id ?? ""]: String(variant.id),
                                         }))
                                     }
                                     onDetail={(
@@ -223,13 +201,12 @@ export default function ProductSection({ theme, products = [] }: Props) {
                                 type="button"
                                 onClick={() => goToSlide(index)}
                                 aria-label={`Go to product page ${index + 1}`}
-                                className={`rounded-full transition-all duration-300 ${
-                                    activeSlide === index
-                                        ? 'h-2 w-8 bg-orange-500'
-                                        : theme === 'dark'
-                                          ? 'h-2 w-2 bg-white/20 hover:bg-white/40'
-                                          : 'h-2 w-2 bg-zinc-300 hover:bg-zinc-400'
-                                }`}
+                                className={`rounded-full transition-all duration-300 ${activeSlide === index
+                                    ? 'h-2 w-8 bg-orange-500'
+                                    : theme === 'dark'
+                                        ? 'h-2 w-2 bg-white/20 hover:bg-white/40'
+                                        : 'h-2 w-2 bg-zinc-300 hover:bg-zinc-400'
+                                    }`}
                             />
                         ))}
                     </div>
