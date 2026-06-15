@@ -77,6 +77,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [openMarinadeModal, setOpenMarinadeModal] = useState(false);
   const [selectedMarinades, setSelectedMarinades] = useState<Record<string, string[]>>({});
   const [selectedChoices, setSelectedChoices] = useState<Record<string, string[]>>({});
+  const [selectedButton, setSelectedButton] = useState<HTMLButtonElement | null>(null);
+
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -97,7 +99,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (product: Product, variant: ProductVariant) => {
+  const addToCart = (product: Product, variant: ProductVariant, buttonEl: HTMLButtonElement | null = null) => {
+    setSelectedButton(buttonEl);
     const withQuestion = variant?.marinade ?? product?.marinade ?? false;
 
     if (withQuestion) {
@@ -445,6 +448,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           editingCartId !== null &&
           editingPackageIndex !== null
         }
+        buttonEl={selectedButton}
+
       />
     </CartContext.Provider>
   );

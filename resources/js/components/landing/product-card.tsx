@@ -20,7 +20,7 @@ type ProductCardProps = {
     ) => void;
     cartQty?: number;
     cartQtyVariant?: Record<string, number>
-    onAddToCart?: (product: Product, variant: ProductVariant) => void;
+    onAddToCart?: (product: Product, variant: ProductVariant, buttonEl: HTMLButtonElement | null) => void;
 };
 
 function getDefaultVariant(product: Product, selectedVariantId?: string) {
@@ -42,6 +42,7 @@ export default function ProductCard({
     const category = product.categories?.[0];
     const { __ } = useTranslation();
     const detailButtonRef = useRef<HTMLButtonElement>(null);
+    const addButtonRef = useRef<HTMLButtonElement>(null);
     const [imageError, setImageError] = useState(false);
 
     const productImage = product?.image ?? "";
@@ -268,9 +269,14 @@ export default function ProductCard({
                             </button>
 
                             <button
-                                onClick={() =>
-                                    onAddToCart?.(product, selectedVariant)
-                                }
+                                ref={addButtonRef}
+                                onClick={() => {
+                                    if (!addButtonRef.current) {
+                                        return;
+                                    }
+
+                                    onAddToCart?.(product, selectedVariant, addButtonRef.current)
+                                }}
                                 className="relative flex h-11 flex-1 items-center justify-center gap-2 rounded-2xl bg-orange-500 px-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-orange-600 active:scale-[0.98] sm:flex-none"
                             >
                                 <ShoppingBag size={16} />
