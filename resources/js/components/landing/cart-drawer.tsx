@@ -21,7 +21,7 @@ export default function CartDrawer({ open, onClose }: Props) {
 
     const [imageError, setImageError] = useState(false);
 
-    const { cartItems, increaseQty, decreaseQty, removeItem, clearCart } = useCart();
+    const { cartItems, increaseQty, decreaseQty, removeItem, clearCart, editPackage } = useCart();
     const [expandedItems, setExpandedItems] = useState<
         Record<string, boolean>
     >({});
@@ -53,7 +53,7 @@ export default function CartDrawer({ open, onClose }: Props) {
     }
 
     return (
-        <div className="fixed inset-0 z-[999]">
+        <div className="fixed inset-0 z-[50]">
             {/* BACKDROP */}
 
             <button
@@ -239,15 +239,30 @@ export default function CartDrawer({ open, onClose }: Props) {
                                                                                     >
 
                                                                                         <div className="mb-2 flex items-center justify-between">
-                                                                                            <span className="text-xs font-semibold text-orange-500">
-                                                                                                Paket #{pkgIndex + 1}
-                                                                                            </span>
-
-                                                                                            {pkg.productMarinade && (
-                                                                                                <span className="text-xs text-orange-500">
-                                                                                                    {pkg.productMarinade.name}
+                                                                                            <div>
+                                                                                                <span className="text-xs font-semibold text-orange-500">
+                                                                                                    Paket #{pkgIndex + 1}
                                                                                                 </span>
-                                                                                            )}
+
+                                                                                                {pkg.productMarinade && (
+                                                                                                    <div className="text-xs text-orange-500">
+                                                                                                        {pkg.productMarinade.name}
+                                                                                                    </div>
+                                                                                                )}
+                                                                                            </div>
+
+                                                                                            <button
+                                                                                                type="button"
+                                                                                                onClick={() =>
+                                                                                                    editPackage(
+                                                                                                        item.id,
+                                                                                                        pkgIndex,
+                                                                                                    )
+                                                                                                }
+                                                                                                className="rounded-md border border-orange-500/20 px-2 py-1 text-xs text-orange-500 hover:bg-orange-500/10"
+                                                                                            >
+                                                                                                Edit
+                                                                                            </button>
                                                                                         </div>
 
                                                                                         <div className="space-y-2">

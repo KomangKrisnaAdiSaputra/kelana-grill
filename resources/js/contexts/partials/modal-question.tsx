@@ -41,6 +41,7 @@ type Props = {
       name: string;
     } | null,
   ) => void;
+  isEditing?: boolean;
 };
 
 export default function QuestionDialog({
@@ -55,6 +56,7 @@ export default function QuestionDialog({
   setSelectedChoices,
   onCancel,
   onSubmit,
+  isEditing,
 }: Props) {
   const handleSubmit = () => {
     if (!product) {
@@ -187,7 +189,7 @@ export default function QuestionDialog({
             </Button>
 
             <Button onClick={handleSubmit}>
-              Tambah ke Cart
+              {isEditing ? 'Simpan Perubahan' : 'Tambah ke Cart'}
             </Button>
           </DialogFooter>
         </div>

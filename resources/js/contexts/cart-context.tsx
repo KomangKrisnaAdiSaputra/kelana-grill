@@ -25,10 +25,15 @@ export type CartItem = {
   id: string;
   name: string;
   descrption: string;
+
+  product: Product;
+  variantData: ProductVariant | null;
+
   variant: {
     name: string;
     description: string;
   } | null;
+
   qty: number;
   rate: number;
   type: string;
@@ -47,6 +52,13 @@ type CartContextType = {
   clearCart: () => void;
   getItemQty: (id: string, variant?: boolean) => number;
   getItemQtyVariant: (ids: string[]) => Record<string, number>;
+  editPackage: (cartId: string, packageIndex: number) => void;
+  updatePackage: (
+    cartId: string,
+    packageIndex: number,
+    items: CartPackageInstance['items'],
+    productMarinade?: { id: string; name: string } | null,
+  ) => void;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -60,6 +72,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }[];
   }>().props;
 
+  const [editingCartId, setEditingCartId] = useState<string | null>(null);
+  const [editingPackageIndex, setEditingPackageIndex] = useState<number | null>(null);
   const [pendingProduct, setPendingProduct] = useState<Product | null>(null);
   const [pendingVariant, setPendingVariant] = useState<ProductVariant | null>(null);
   const [openMarinadeModal, setOpenMarinadeModal] = useState(false);
@@ -141,12 +155,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           id: itemId,
           name: product.name ?? '',
           descrption: product.description ?? '',
+
+          product,
+          variantData: variant,
+
           variant: variant
             ? {
               name: variant.name ?? '',
               description: variant.description ?? '',
             }
             : null,
+
           qty: 1,
           rate: variant?.rate ?? product.rate ?? 0,
           type: product.type ?? '',
@@ -252,7 +271,87 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const totalQty = useMemo(() => {
     return cartItems.reduce((total, item) => total + item.qty, 0);
   }, [cartItems]);
+
+  const editPackage = (
+    cartId: string,
+    packageIndex: number,
+  ) => {
+    const cart = cartItems.find(
+      (item) => item.id === cartId,
+    );
+
+    if (!cart) {
+      return;
+    }
+
+    const pkg = cart.packageInstances[packageIndex];
+
+    if (!pkg) {
+      return;
+    }
+
+    setEditingCartId(cartId);
+    setEditingPackageIndex(packageIndex);
+    setPendingProduct(cart.product);
+    setPendingVariant(cart.variantData);
+
+    const marinadesData: Record<string, string[]> = {};
+    const choicesData: Record<string, string[]> = {};
+
+    if (pkg.productMarinade) {
+      marinadesData.product = [
+        String(pkg.productMarinade.id),
+      ];
+    }
+
+    (pkg.items ?? []).forEach((item) => {
+      marinadesData[item.name] =
+        item.marinadeItems?.map((m) => String(m.id)) ?? [];
+
+      choicesData[item.name] =
+        item.choiceItems?.map((c) => String(c.id)) ?? [];
+    });
+
+    setSelectedMarinades(marinadesData);
+    setSelectedChoices(choicesData);
+
+    setOpenMarinadeModal(true);
+  };
+
+  const updatePackage = (
+    cartId: string,
+    packageIndex: number,
+    items: CartPackageInstance['items'],
+    productMarinade?: {
+      id: string;
+      name: string;
+    } | null,
+  ) => {
+    setCartItems((current) =>
+      current.map((item) => {
+        if (item.id !== cartId) {
+          return item;
+        }
+
+        return {
+          ...item,
+          packageInstances:
+            item.packageInstances.map((pkg, index) =>
+              index === packageIndex
+                ? {
+                  ...pkg,
+                  items,
+                  productMarinade,
+                }
+                : pkg,
+            ),
+        };
+      }),
+    );
+  };
+
   console.log(cartItems);
+
 
   return (
     <CartContext.Provider
@@ -266,13 +365,28 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         getItemQty,
         getItemQtyVariant,
+        editPackage,
+        updatePackage,
       }}
     >
       {children}
 
       <QuestionDialog
         open={openMarinadeModal}
-        onOpenChange={setOpenMarinadeModal}
+        onOpenChange={(open) => {
+          setOpenMarinadeModal(open);
+
+          if (!open) {
+            setEditingCartId(null);
+            setEditingPackageIndex(null);
+
+            setSelectedMarinades({});
+            setSelectedChoices({});
+
+            setPendingProduct(null);
+            setPendingVariant(null);
+          }
+        }}
         product={pendingProduct}
         variant={pendingVariant}
         marinades={marinades}
@@ -281,25 +395,49 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         setSelectedMarinades={setSelectedMarinades}
         setSelectedChoices={setSelectedChoices}
         onCancel={() => {
+          setEditingCartId(null);
+          setEditingPackageIndex(null);
+
           setSelectedMarinades({});
           setSelectedChoices({});
+
           setPendingProduct(null);
           setPendingVariant(null);
         }}
         onSubmit={(items, productMarinade) => {
-          insertCart(
-            pendingProduct!,
-            pendingVariant,
-            items,
-            productMarinade,
-          );
+          if (
+            editingCartId !== null &&
+            editingPackageIndex !== null
+          ) {
+            updatePackage(
+              editingCartId,
+              editingPackageIndex,
+              items,
+              productMarinade,
+            );
+          } else {
+            insertCart(
+              pendingProduct!,
+              pendingVariant,
+              items,
+              productMarinade,
+            );
+          }
+
+          setEditingCartId(null);
+          setEditingPackageIndex(null);
 
           setSelectedMarinades({});
           setSelectedChoices({});
           setPendingProduct(null);
           setPendingVariant(null);
+
           setOpenMarinadeModal(false);
         }}
+        isEditing={
+          editingCartId !== null &&
+          editingPackageIndex !== null
+        }
       />
     </CartContext.Provider>
   );
