@@ -21,15 +21,15 @@ export type ProductBadge = {
 };
 
 export type ProductVariant = {
-    id: string | number;
+    id?: string | number;
 
     name: string | null;
     description: string | null;
 
-    rate: number;
+    rate?: number;
 
-    minPerson: number | null;
-    maxPerson: number | null;
+    minPerson?: number | null;
+    maxPerson?: number | null;
     marinade: boolean;
 
     slug?: string | null;
@@ -50,7 +50,7 @@ export type ProductItem = {
 };
 
 export type Product = {
-    id: string | number;
+    id?: string | number;
 
     type?: ProductType;
 
@@ -61,9 +61,9 @@ export type Product = {
 
     featuredLabel?: string | null;
 
-    image: string | null;
+    image?: string | null;
 
-    rate: number;
+    rate?: number;
 
     price?: number;
     originalPrice?: number | null;
@@ -71,15 +71,15 @@ export type Product = {
     hasPromo?: boolean;
     promo?: ProductPromo | null;
 
-    featured: boolean;
+    featured?: boolean;
 
-    new: boolean;
-    marinade: boolean;
+    new?: boolean;
+    marinade?: boolean;
 
-    categories: ProductCategory[];
-    badges: ProductBadge[];
+    categories?: ProductCategory[];
+    badges?: ProductBadge[];
 
-    variants: ProductVariant[];
+    variants?: ProductVariant[];
 
-    items: ProductItem[];
+    items?: ProductItem[];
 };

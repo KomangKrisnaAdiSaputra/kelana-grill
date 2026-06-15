@@ -26,12 +26,10 @@ export type CartItem = {
   name: string;
   descrption: string;
 
-  product: Product;
-  variantData: ProductVariant | null;
-
   variant: {
     name: string;
     description: string;
+    marinade: string;
   } | null;
 
   qty: number;
@@ -155,16 +153,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           id: itemId,
           name: product.name ?? '',
           descrption: product.description ?? '',
+          marinade: product.marinade ?? '',
 
-          product,
-          variantData: variant,
-
-          variant: variant
-            ? {
-              name: variant.name ?? '',
-              description: variant.description ?? '',
-            }
-            : null,
+          variant: variant ? {
+            name: variant.name ?? '',
+            description: variant.description ?? '',
+            marinade: String(variant.marinade ?? '')
+          } : null,
 
           qty: 1,
           rate: variant?.rate ?? product.rate ?? 0,
@@ -292,8 +287,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     setEditingCartId(cartId);
     setEditingPackageIndex(packageIndex);
-    setPendingProduct(cart.product);
-    setPendingVariant(cart.variantData);
+
+    setPendingProduct({
+      name: cart.name,
+      description: cart.descrption,
+      items: pkg.items
+    });
+    setPendingVariant(
+      cart.variant
+        ? {
+          ...cart.variant,
+          marinade: cart.variant.marinade === 'true',
+        }
+        : null,
+    );
 
     const marinadesData: Record<string, string[]> = {};
     const choicesData: Record<string, string[]> = {};

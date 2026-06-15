@@ -151,7 +151,7 @@ export default function QuestionDialog({
               {(product?.items ?? []).length > 0 ? (
                 (product?.items ?? []).some((item) => item.marinade) && (
                   <MarinadeSection
-                    items={product!.items.filter((item) => item.marinade)}
+                    items={(product!.items ?? []).filter((item) => item.marinade)}
                     marinades={marinades}
                     selectedMarinades={selectedMarinades}
                     setSelectedMarinades={setSelectedMarinades}
@@ -169,7 +169,7 @@ export default function QuestionDialog({
               {/* PILIHAN */}
               {(product?.items ?? []).some((item) => item.type === 'CHOICE') && (
                 <ChoiceSection
-                  items={product!.items.filter((item) => item.type === "CHOICE")}
+                  items={(product!.items ?? []).filter((item) => item.type === "CHOICE")}
                   selectedChoices={selectedChoices}
                   setSelectedChoices={setSelectedChoices}
                 />
