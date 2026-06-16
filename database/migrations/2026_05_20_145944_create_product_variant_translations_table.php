@@ -10,11 +10,7 @@ return new class extends Migration
     {
         Schema::create('product_variant_translations', function (Blueprint $table) {
             $table->uuid('id')->primary();
-
-            $table->foreignUuid('product_variant_id')
-                ->constrained('product_variants')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+            $table->foreignUuid('product_variant_id')->constrained('product_variants')->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->string('language', 10);
 

@@ -10,13 +10,9 @@ return new class extends Migration
     {
         Schema::create('product_variants', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->foreignUuid('product_id')->constrained('products')->cascadeOnUpdate()->cascadeOnDelete();
 
-            $table->foreignUuid('product_id')
-                ->constrained('products')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-
-            $table->decimal('rate', 15, 2)->default(0);
+            $table->double('rate')->default(0);
 
             $table->unsignedInteger('min_person')->nullable();
             $table->unsignedInteger('max_person')->nullable();

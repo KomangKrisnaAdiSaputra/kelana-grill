@@ -10,15 +10,8 @@ return new class extends Migration
     {
         Schema::create('product_badges', function (Blueprint $table) {
 
-            $table->foreignUuid('product_id')
-                ->constrained('products')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
-
-            $table->foreignUuid('badge_id')
-                ->constrained('badges')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+            $table->foreignUuid('product_id')->constrained('products')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignUuid('badge_id')->constrained('badges')->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->timestamps();
 

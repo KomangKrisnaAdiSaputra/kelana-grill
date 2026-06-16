@@ -10,11 +10,7 @@ return new class extends Migration
     {
         Schema::create('badge_translations', function (Blueprint $table) {
             $table->uuid('id')->primary();
-
-            $table->foreignUuid('badge_id')
-                ->constrained('badges')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+            $table->foreignUuid('badge_id')->constrained('badges')->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->string('language', 10);
 

@@ -10,13 +10,9 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->foreignUuid('type_id')->constrained('types')->cascadeOnUpdate()->restrictOnDelete();
 
-            $table->foreignUuid('type_id')
-                ->constrained('types')
-                ->cascadeOnUpdate()
-                ->restrictOnDelete();
-
-            $table->decimal('rate', 15, 2)->default(0);
+            $table->double('rate')->default(0);
 
             $table->boolean('featured')->default(false);
             $table->boolean('new')->default(true);

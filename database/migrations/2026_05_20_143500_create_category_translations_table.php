@@ -10,11 +10,7 @@ return new class extends Migration
     {
         Schema::create('category_translations', function (Blueprint $table) {
             $table->uuid('id')->primary();
-
-            $table->foreignUuid('category_id')
-                ->constrained('categories')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+            $table->foreignUuid('category_id')->constrained('categories')->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->string('language', 10);
 

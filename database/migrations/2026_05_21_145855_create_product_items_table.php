@@ -9,17 +9,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_items', function (Blueprint $table) {
-            $table->foreignUuid('product_id')
-                ->constrained('products')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+            $table->foreignUuid('product_id')->constrained('products')->cascadeOnUpdate()->cascadeOnDelete();
 
-            $table->foreignUuid('item_product_id')
-                ->constrained('products')
-                ->cascadeOnUpdate()
-                ->restrictOnDelete();
+            $table->foreignUuid('item_product_id')->constrained('products')->cascadeOnUpdate()->restrictOnDelete();
 
-            $table->decimal('qty', 10, 2)->default(1);
+            $table->integer('qty')->default(1);
             $table->string('unit')->nullable();
 
             $table->timestamps();

@@ -11,10 +11,7 @@ return new class extends Migration
         Schema::create('product_translations', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->foreignUuid('product_id')
-                ->constrained('products')
-                ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+            $table->foreignUuid('product_id')->constrained('products')->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->string('language', 10);
 
