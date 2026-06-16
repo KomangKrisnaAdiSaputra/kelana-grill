@@ -192,13 +192,8 @@ export default function QuestionDialog({
       return;
     }
 
-    const productNeedMarinade =
-      variant?.marinade ?? product?.marinade ?? false;
-
-    const productMarinadeSelected =
-      productNeedMarinade &&
-      !selectedMarinades["product"]?.[0] &&
-      (product?.items ?? []).length <= 0;
+    const productNeedMarinade = variant?.marinade ?? product?.marinade ?? false;
+    const productMarinadeSelected = productNeedMarinade && !selectedMarinades["product"]?.[0] && (product?.items ?? []).length <= 0;
 
     if (productMarinadeSelected) {
       toast.error(__("Marinasi wajib dipilih"), {
@@ -210,17 +205,11 @@ export default function QuestionDialog({
       return;
     }
 
-    const allMarinadesSelected = product.items
-      ?.filter((item) => item.marinade)
-      .every((item) => {
-        const selected =
-          selectedMarinades[item.name] ?? [];
+    const allMarinadesSelected = product.items?.filter((item) => item.marinade).every((item) => {
+      const selected = selectedMarinades[item.name] ?? [];
 
-        return (
-          selected.length === item.qty &&
-          selected.every(Boolean)
-        );
-      });
+      return (selected.length === item.qty && selected.every(Boolean));
+    });
 
     if (!allMarinadesSelected) {
       toast.error(__("Data belum lengkap"), {
@@ -232,17 +221,11 @@ export default function QuestionDialog({
       return;
     }
 
-    const allChoicesSelected = product.items
-      ?.filter((item) => item.type === "CHOICE")
-      .every((item) => {
-        const selected =
-          selectedChoices[item.name] ?? [];
+    const allChoicesSelected = product.items?.filter((item) => item.type === "CHOICE").every((item) => {
+      const selected = selectedChoices[item.name] ?? [];
 
-        return (
-          selected.length === item.qty &&
-          selected.every(Boolean)
-        );
-      });
+      return (selected.length === item.qty && selected.every(Boolean));
+    });
 
     if (!allChoicesSelected) {
       toast.error(__("Data belum lengkap"), {
@@ -254,61 +237,28 @@ export default function QuestionDialog({
       return;
     }
 
-    const productMarinadeId =
-      selectedMarinades["product"]?.[0];
+    const productMarinadeId = selectedMarinades["product"]?.[0];
+    const productMarinade = marinades.find((m) => String(m.id) === String(productMarinadeId)) ?? null;
+    const items = product.items?.map((item) => ({
+      ...item,
+      marinadeItems: item.marinade ? (selectedMarinades[item.name] ?? []).map((id) => marinades.find((m) => String(m.id) === String(id)))
+        .filter(Boolean).map((m) => ({
+          id: m!.id,
+          name: m!.name,
+        })) : [],
+      choiceItems: item.type === "CHOICE" ? (selectedChoices[item.name] ?? []).map((id) => (item.choices ?? []).find((c) => String(c.id) === String(id)))
+        .filter(Boolean).map((c) => ({
+          id: c!.id,
+          name: c!.name,
+        })) : [],
+    })) ?? [];
 
-    const productMarinade =
-      marinades.find(
-        (m) =>
-          String(m.id) ===
-          String(productMarinadeId),
-      ) ?? null;
+    onSubmit(items, productMarinade ? {
+      id: productMarinade.id,
+      name: productMarinade.name,
+    } : null);
 
-    const items =
-      product.items?.map((item) => ({
-        ...item,
-
-        marinadeItems: item.marinade
-          ? (selectedMarinades[item.name] ?? [])
-            .map((id) =>
-              marinades.find(
-                (m) =>
-                  String(m.id) === String(id),
-              ),
-            )
-            .filter(Boolean)
-            .map((m) => ({
-              id: m!.id,
-              name: m!.name,
-            }))
-          : [],
-
-        choiceItems:
-          item.type === "CHOICE"
-            ? (selectedChoices[item.name] ?? [])
-              .map((id) =>
-                (item.choices ?? []).find(
-                  (c) =>
-                    String(c.id) === String(id),
-                ),
-              )
-              .filter(Boolean)
-              .map((c) => ({
-                id: c!.id,
-                name: c!.name,
-              }))
-            : [],
-      })) ?? [];
-
-    onSubmit(
-      items,
-      productMarinade
-        ? {
-          id: productMarinade.id,
-          name: productMarinade.name,
-        }
-        : null,
-    );
+    handleClose();
   };
 
   if (!visible) {

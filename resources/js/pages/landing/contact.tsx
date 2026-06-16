@@ -24,6 +24,8 @@ import MobileNavbar from '@/components/landing/mobile-navbar';
 import Navbar from '@/components/landing/navbar';
 
 import AppProvider from '@/contexts/app-provider';
+import type { CartItem } from '@/contexts/cart-context';
+import { useCart } from '@/contexts/cart-context';
 
 import { useTheme } from '@/contexts/theme-context';
 
@@ -49,9 +51,8 @@ function ContactContent() {
     const locale = props.params.locale;
 
     const { theme, toggleTheme } = useTheme();
-
+    const { cartItems } = useCart();
     const [scrolled, setScrolled] = useState(false);
-
     const { __ } = useTranslation();
 
     const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '-';
@@ -81,14 +82,12 @@ function ContactContent() {
         guarantee: '',
         payment: 'Cash',
         note: '',
-        cart: [],
+        carts: [] as CartItem[],
     });
 
     useEffect(() => {
-        const cart = JSON.parse(localStorage.getItem(cartName) || '[]');
-
-        setData('cart', cart);
-    }, [setData]);
+        setData('carts', cartItems ?? []);
+    }, [setData, cartItems]);
 
     useEffect(() => {
         if (data.pickupdate && data.returndate) {
@@ -343,14 +342,14 @@ function ContactContent() {
                                 </h3>
 
                                 <div className="rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-white">
-                                    {data.cart.length} Item
+                                    {data.carts.length} Item
                                 </div>
                             </div>
 
                             <div className="mt-6">
-                                {data.cart.length > 0 ? (
+                                {data.carts.length > 0 ? (
                                     <div className="max-h-[500px] space-y-3 overflow-y-auto scrollbar-hide">
-                                        {data.cart.map((item: any, index) => {
+                                        {data.carts.map((item: any, index) => {
                                             const packageCount =
                                                 item.packageInstances?.length ?? 0;
 
@@ -875,9 +874,9 @@ function ContactContent() {
                                 )}
                             </div>
 
-                            {errors.cart && (
+                            {errors.carts && (
                                 <div className="flex flex-col gap-4 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-500 sm:flex-row sm:items-center sm:justify-between">
-                                    <div>{__(errors.cart)}</div>
+                                    <div>{__(errors.carts)}</div>
 
                                     <a
                                         href={produk({ locale }).url}

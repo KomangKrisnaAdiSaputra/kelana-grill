@@ -24,13 +24,15 @@ export type CartPackageInstance = {
 export type CartItem = {
   id: string;
   name: string;
-  descrption: string;
+  description: string;
 
   variant: {
     name: string;
     description: string;
-    marinade: string;
+    marinade: boolean;
   } | null;
+
+  marinade: boolean;
 
   qty: number;
   rate: number;
@@ -124,7 +126,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       name: string;
     } | null,
   ) => {
-    const itemId = (product?.variants ?? []).length <= 0 ? `${product.id}` : `${product.id}-${variant?.id ?? ''}`;
+    const itemId = (product?.variants ?? []).length <= 0 ? `${product.id}` : `${product.id};${variant?.id ?? ''}`;
 
     setCartItems((current) => {
       const exists = current.find((item) => item.id === itemId);
@@ -155,13 +157,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         {
           id: itemId,
           name: product.name ?? '',
-          descrption: product.description ?? '',
-          marinade: product.marinade ?? '',
+          description: product.description ?? '',
+          marinade: product.marinade ?? false,
 
           variant: variant ? {
             name: variant.name ?? '',
             description: variant.description ?? '',
-            marinade: String(variant.marinade ?? '')
+            marinade: variant.marinade ?? false
           } : null,
 
           qty: 1,
@@ -296,14 +298,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     setPendingProduct({
       name: cart.name,
-      description: cart.descrption,
+      description: cart.description,
       items: pkg.items
     });
     setPendingVariant(
       cart.variant
         ? {
           ...cart.variant,
-          marinade: cart.variant.marinade === 'true',
+          marinade: cart.variant.marinade,
         }
         : null,
     );

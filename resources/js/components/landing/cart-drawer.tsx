@@ -249,19 +249,22 @@ export default function CartDrawer({ open, onClose }: Props) {
                                                                                                 )}
                                                                                             </div>
 
-                                                                                            <button
-                                                                                                type="button"
-                                                                                                onClick={(e) => {
-                                                                                                    editPackage(
-                                                                                                        item.id,
-                                                                                                        pkgIndex,
-                                                                                                        e.currentTarget
-                                                                                                    )
-                                                                                                }}
-                                                                                                className="rounded-md border border-orange-500/20 px-2 py-1 text-xs text-orange-500 hover:bg-orange-500/10"
-                                                                                            >
-                                                                                                Edit
-                                                                                            </button>
+                                                                                            {(item.variant?.marinade || item.marinade) && (
+
+                                                                                                <button
+                                                                                                    type="button"
+                                                                                                    onClick={(e) => {
+                                                                                                        editPackage(
+                                                                                                            item.id,
+                                                                                                            pkgIndex,
+                                                                                                            e.currentTarget
+                                                                                                        )
+                                                                                                    }}
+                                                                                                    className="rounded-md border border-orange-500/20 px-2 py-1 text-xs text-orange-500 hover:bg-orange-500/10"
+                                                                                                >
+                                                                                                    Edit
+                                                                                                </button>
+                                                                                            )}
                                                                                         </div>
 
                                                                                         <div className="space-y-2">
