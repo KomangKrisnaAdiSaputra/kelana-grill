@@ -24,7 +24,7 @@ type SelectedDetail = {
 
 export default function ProductSection({ theme, products = [] }: Props) {
     const { __ } = useTranslation();
-    const { addToCart, getItemQty } = useCart();
+    const { addToCart, getItemQty, getItemQtyVariant } = useCart();
     const sliderRef = useRef<HTMLDivElement | null>(null);
 
     const [activeSlide, setActiveSlide] = useState(0);
@@ -148,6 +148,7 @@ export default function ProductSection({ theme, products = [] }: Props) {
                         const selectedVariantId = selectedVariants[product?.id ?? ""];
 
                         const selectedVariant = (product?.variants ?? []).find((variant) => String(variant.id) === selectedVariantId) ?? (product?.variants ?? [])[0];
+                        const idVariants = (product?.variants ?? []).map((variant) => String(variant.id));
 
                         return (
                             <div
@@ -160,9 +161,6 @@ export default function ProductSection({ theme, products = [] }: Props) {
                                     product={product}
                                     selectedVariantId={String(
                                         selectedVariant?.id,
-                                    )}
-                                    cartQty={getItemQty(
-                                        `${product.id}-${selectedVariant?.id}`,
                                     )}
                                     onAddToCart={addToCart}
                                     onSelectVariant={(
@@ -185,6 +183,8 @@ export default function ProductSection({ theme, products = [] }: Props) {
                                             variant: selectedVariant,
                                         });
                                     }}
+                                    cartQtyVariant={getItemQtyVariant(idVariants)}
+                                    cartQty={getItemQty(`${product.id}${selectedVariantId ? `-${selectedVariantId}` : ''}`, idVariants.length > 0)}
                                 />
                             </div>
                         );
@@ -219,6 +219,32 @@ export default function ProductSection({ theme, products = [] }: Props) {
                     theme={theme}
                     product={selectedDetail.product}
                     selectedVariant={selectedDetail.variant}
+                    onVariantChange={(variant) => {
+                        setSelectedDetail((current) =>
+                            current
+                                ? {
+                                    ...current,
+                                    variant,
+                                }
+                                : null,
+                        );
+
+                        setSelectedVariants((current) => ({
+                            ...current,
+                            [selectedDetail.product.id ?? ""]: String(
+                                variant.id,
+                            ),
+                        }));
+                    }}
+                    onAddToCart={(variant, buttonEl) => {
+                        addToCart(
+                            selectedDetail.product,
+                            variant,
+                            buttonEl
+                        );
+
+                        // setSelectedDetail(null);
+                    }}
                     text={{
                         modalTitle: __('Detail Produk'),
                         categoriesLabel: __('Kategori'),

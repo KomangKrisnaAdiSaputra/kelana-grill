@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -81,6 +81,22 @@ export default function QuestionDialog({
     return () => window.clearTimeout(id);
   }, [open]);
 
+
+  const getButtonRect = useCallback(() => {
+    if (!buttonEl) {
+      return {
+        top: window.innerHeight / 2,
+        left: window.innerWidth / 2,
+        width: 0,
+        height: 0,
+      };
+    }
+
+    const rect = buttonEl.getBoundingClientRect();
+
+    return rect;
+  }, [buttonEl]);
+
   useEffect(() => {
     if (!visible) {
       return;
@@ -92,32 +108,31 @@ export default function QuestionDialog({
       return;
     }
 
-    const rect = buttonEl?.getBoundingClientRect() ?? {
-      top: window.innerHeight / 2,
-      left: window.innerWidth / 2,
-      width: 0,
-      height: 0,
-    };
+    const rect = getButtonRect();
+
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
 
     modal.style.transition = "none";
 
-    modal.style.top = `${rect.top}px`;
-    modal.style.left = `${rect.left}px`;
+    modal.style.top = `${centerY}px`;
+    modal.style.left = `${centerX}px`;
 
-    modal.style.width = `${rect.width}px`;
-    modal.style.height = `${rect.height}px`;
+    modal.style.width = `${Math.max(rect.width, 20)}px`;
+    modal.style.height = `${Math.max(rect.height, 20)}px`;
 
+    modal.style.transform = "translate(-50%, -50%)";
     modal.style.borderRadius = "18px";
 
     void modal.offsetHeight;
 
     modal.style.transition = `
-      top .45s cubic-bezier(.2,.8,.2,1),
-      left .45s cubic-bezier(.2,.8,.2,1),
-      width .45s cubic-bezier(.2,.8,.2,1),
-      height .45s cubic-bezier(.2,.8,.2,1),
-      border-radius .45s cubic-bezier(.2,.8,.2,1)
-    `;
+    top .45s cubic-bezier(.2,.8,.2,1),
+    left .45s cubic-bezier(.2,.8,.2,1),
+    width .45s cubic-bezier(.2,.8,.2,1),
+    height .45s cubic-bezier(.2,.8,.2,1),
+    border-radius .45s cubic-bezier(.2,.8,.2,1)
+  `;
 
     requestAnimationFrame(() => {
       modal.style.top = "50%";
@@ -125,10 +140,7 @@ export default function QuestionDialog({
 
       modal.style.width = "700px";
       modal.style.maxWidth = "95vw";
-
       modal.style.height = "80vh";
-
-      modal.style.transform = "translate(-50%, -50%)";
 
       modal.style.borderRadius = "28px";
 
@@ -136,7 +148,7 @@ export default function QuestionDialog({
         setShowContent(true);
       }, 180);
     });
-  }, [visible, buttonEl]);
+  }, [visible, getButtonRect]);
 
   const handleClose = () => {
     const modal = modalRef.current;

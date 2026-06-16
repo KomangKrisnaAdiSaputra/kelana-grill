@@ -43,14 +43,14 @@ export type CartItem = {
 type CartContextType = {
   cartItems: CartItem[];
   totalQty: number;
-  addToCart: (product: Product, variant: ProductVariant) => void;
+  addToCart: (product: Product, variant: ProductVariant, buttonEl?: HTMLButtonElement | null) => void;
   increaseQty: (id: string) => void;
   decreaseQty: (id: string) => void;
   removeItem: (id: string) => void;
   clearCart: () => void;
   getItemQty: (id: string, variant?: boolean) => number;
   getItemQtyVariant: (ids: string[]) => Record<string, number>;
-  editPackage: (cartId: string, packageIndex: number) => void;
+  editPackage: (cartId: string, packageIndex: number, buttonEl: HTMLButtonElement | null) => void;
   updatePackage: (
     cartId: string,
     packageIndex: number,
@@ -273,7 +273,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const editPackage = (
     cartId: string,
     packageIndex: number,
+    buttonEl: HTMLButtonElement | null = null
   ) => {
+    setSelectedButton(buttonEl);
+
     const cart = cartItems.find(
       (item) => item.id === cartId,
     );
@@ -359,9 +362,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }),
     );
   };
-
-  console.log(cartItems);
-
 
   return (
     <CartContext.Provider

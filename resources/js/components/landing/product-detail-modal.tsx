@@ -22,6 +22,13 @@ type ProductDetailModalProps = {
     selectedVariant: ProductVariant;
     text: ProductDetailModalText;
     buttonEl: HTMLButtonElement | null;
+    onVariantChange?: (
+        variant: ProductVariant,
+    ) => void;
+    onAddToCart?: (
+        variant: ProductVariant,
+        buttonEl: HTMLButtonElement | null
+    ) => void;
     onClose: () => void;
 };
 
@@ -32,10 +39,13 @@ export default function ProductDetailModal({
     text,
     buttonEl,
     onClose,
+    onVariantChange,
+    onAddToCart,
 }: ProductDetailModalProps) {
     const isDark = theme === 'dark';
     const modalRef = useRef<HTMLDivElement>(null);
     const productImage = product?.image ?? 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop';
+    const addButtonRef = useRef<HTMLButtonElement>(null);
 
     const [showContent, setShowContent] = useState(false);
 
@@ -248,7 +258,7 @@ export default function ProductDetailModal({
                                             </p>
 
                                             <h4 className="mt-2 text-lg font-semibold">
-                                                {/* {selectedVariant.name} */}
+                                                {selectedVariant.name}
                                             </h4>
                                         </div>
 
@@ -278,12 +288,13 @@ export default function ProductDetailModal({
                                     {(product?.variants ?? []).length > 1 && (
                                         <div className="mt-5 grid gap-3 sm:grid-cols-2">
                                             {(product?.variants ?? []).map((variant) => {
-                                                const isSelected = selectedVariant.id === variant.id;
+                                                const isSelected = selectedVariant?.id === variant.id;
 
                                                 return (
                                                     <div
                                                         key={variant.id}
-                                                        className={`rounded-2xl border p-4 transition ${isSelected
+                                                        onClick={() => onVariantChange?.(variant)}
+                                                        className={`cursor-pointer rounded-2xl border p-4 transition-all hover:scale-[1.02] ${isSelected
                                                             ? 'border-orange-400 bg-orange-500/10'
                                                             : isDark
                                                                 ? 'border-white/10 bg-black/20'
@@ -411,18 +422,38 @@ export default function ProductDetailModal({
                         className={`border-t p-4 md:p-5 ${isDark
                             ? 'border-white/10 bg-zinc-950/95'
                             : 'border-zinc-100 bg-white/95'
-                            } `}
+                            }`}
                     >
-                        <button
-                            type="button"
-                            onClick={handleClose}
-                            className={`w-full rounded-2xl px-5 py-3 text-sm font-semibold transition ${isDark
-                                ? 'bg-white text-zinc-950 hover:bg-orange-100'
-                                : 'bg-zinc-950 text-white hover:bg-orange-500'
-                                } `}
-                        >
-                            {text.closeLabel}
-                        </button>
+                        <div className="flex gap-3">
+                            <button
+                                type="button"
+                                onClick={handleClose}
+                                className={`flex-1 rounded-2xl px-5 py-3 text-sm font-semibold transition ${isDark
+                                    ? 'border border-white/10 bg-transparent text-white hover:bg-white/10'
+                                    : 'border border-zinc-200 bg-white text-zinc-900 hover:bg-zinc-50'
+                                    }`}
+                            >
+                                {text.closeLabel}
+                            </button>
+
+                            <button
+                                ref={addButtonRef}
+                                type="button"
+                                onClick={() => {
+                                    if (!addButtonRef.current) {
+                                        return;
+                                    }
+
+                                    onAddToCart?.(
+                                        selectedVariant,
+                                        addButtonRef.current
+                                    )
+                                }}
+                                className="flex-1 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600"
+                            >
+                                Tambah ke Keranjang
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

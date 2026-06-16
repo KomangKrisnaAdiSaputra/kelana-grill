@@ -4,6 +4,9 @@ return [
   "Promo" => "Promo",
   "Keranjang kosong" => "Your cart is empty",
   "Tambahkan produk favoritmu ke dalam keranjang." => "Add your favorite products to your cart.",
+  "konfigurasi paket" => "package configuration",
+  "Sembunyikan" => "Hide",
+  "Lihat Detail" => "See Details",
 
   // Navbar
   "Premium BBQ Rental" => "Premium BBQ Rental",

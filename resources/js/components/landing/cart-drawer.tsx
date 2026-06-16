@@ -22,9 +22,7 @@ export default function CartDrawer({ open, onClose }: Props) {
     const [imageError, setImageError] = useState(false);
 
     const { cartItems, increaseQty, decreaseQty, removeItem, clearCart, editPackage } = useCart();
-    const [expandedItems, setExpandedItems] = useState<
-        Record<string, boolean>
-    >({});
+    const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
     const total = useMemo(() => {
         return cartItems.reduce(
             (sum, item) => sum + item.qty * (item.rate ?? 0),
@@ -207,7 +205,7 @@ export default function CartDrawer({ open, onClose }: Props) {
                                                                 {/* FIXED HEADER */}
                                                                 <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-background pb-2">
                                                                     <span className="text-xs text-muted-foreground">
-                                                                        {item.packageInstances.length} konfigurasi paket
+                                                                        {item.packageInstances.length} {__("konfigurasi paket")}
                                                                     </span>
 
                                                                     <button
@@ -220,7 +218,7 @@ export default function CartDrawer({ open, onClose }: Props) {
                                                                             }))
                                                                         }
                                                                     >
-                                                                        {expanded ? 'Sembunyikan' : 'Lihat Detail'}
+                                                                        {__(expanded ? 'Sembunyikan' : 'Lihat Detail')}
                                                                     </button>
                                                                 </div>
 
@@ -241,7 +239,7 @@ export default function CartDrawer({ open, onClose }: Props) {
                                                                                         <div className="mb-2 flex items-center justify-between">
                                                                                             <div>
                                                                                                 <span className="text-xs font-semibold text-orange-500">
-                                                                                                    Paket #{pkgIndex + 1}
+                                                                                                    {__("Paket")} #{pkgIndex + 1}
                                                                                                 </span>
 
                                                                                                 {pkg.productMarinade && (
@@ -253,12 +251,13 @@ export default function CartDrawer({ open, onClose }: Props) {
 
                                                                                             <button
                                                                                                 type="button"
-                                                                                                onClick={() =>
+                                                                                                onClick={(e) => {
                                                                                                     editPackage(
                                                                                                         item.id,
                                                                                                         pkgIndex,
+                                                                                                        e.currentTarget
                                                                                                     )
-                                                                                                }
+                                                                                                }}
                                                                                                 className="rounded-md border border-orange-500/20 px-2 py-1 text-xs text-orange-500 hover:bg-orange-500/10"
                                                                                             >
                                                                                                 Edit

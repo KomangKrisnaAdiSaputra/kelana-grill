@@ -433,7 +433,7 @@ function ProductCatalogContent() {
                 <section className="mt-6 grid gap-4 sm:grid-cols-2 md:gap-5 xl:grid-cols-3">
                     {paginatedProducts.length > 0 ? (
                         paginatedProducts.map((product) => {
-                            const selectedVariantId = selectedVariants[product.id] ?? getDefaultVariantId(product);
+                            const selectedVariantId = selectedVariants[product?.id ?? ""] ?? getDefaultVariantId(product);
                             const idVariants = (product?.variants ?? []).map((variant) => String(variant.id));
 
                             return (
@@ -445,7 +445,7 @@ function ProductCatalogContent() {
                                     onSelectVariant={(variant) =>
                                         setSelectedVariants((current) => ({
                                             ...current,
-                                            [product.id]: String(variant.id),
+                                            [product?.id ?? ""]: String(variant.id),
                                         }))
                                     }
                                     onDetail={(
@@ -492,6 +492,32 @@ function ProductCatalogContent() {
                         theme={theme}
                         product={selectedDetail.product}
                         selectedVariant={selectedDetail.variant}
+                        onVariantChange={(variant) => {
+                            setSelectedDetail((current) =>
+                                current
+                                    ? {
+                                        ...current,
+                                        variant,
+                                    }
+                                    : null,
+                            );
+
+                            setSelectedVariants((current) => ({
+                                ...current,
+                                [selectedDetail.product.id ?? ""]: String(
+                                    variant.id,
+                                ),
+                            }));
+                        }}
+                        onAddToCart={(variant, buttonEl) => {
+                            addToCart(
+                                selectedDetail.product,
+                                variant,
+                                buttonEl
+                            );
+
+                            // setSelectedDetail(null);
+                        }}
                         text={{
                             modalTitle: __('Detail Produk'),
                             categoriesLabel: __('Kategori'),

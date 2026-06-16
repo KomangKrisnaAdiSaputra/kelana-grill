@@ -123,9 +123,7 @@ function ContactContent() {
                 }
             },
 
-            onError: (errors) => {
-                console.log(errors);
-
+            onError: () => {
                 toast.error('Mohon periksa kembali form booking');
             },
         });

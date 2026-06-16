@@ -170,7 +170,7 @@ export default function DynamicSelect<T>({
 
                 <PopoverContent
                     align="start"
-                    className="w-[var(--radix-popover-trigger-width)] p-0 overflow-hidden"
+                    className="z-[10050] w-[var(--radix-popover-trigger-width)] p-0"
                     onWheel={(e) => e.stopPropagation()}
                 >
                     <Command>
