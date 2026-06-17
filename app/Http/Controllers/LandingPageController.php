@@ -53,8 +53,8 @@ class LandingPageController extends Controller
     {
         $id = $request->id;
         $order = Order::findOrFail($id)->generateData();
-        dd($order);
-        dd($order->details->get(5)->packages->get(0)->items->get(0)->options);
+
+        return Inertia::render('landing/status', compact('order'));
     }
 
     public function booking(Request $request)
