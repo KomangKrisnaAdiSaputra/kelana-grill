@@ -18,7 +18,7 @@ class NewOrderMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public Collection $order)
+    public function __construct(public Collection $order, public $attachmentData = [])
     {
         //
     }
@@ -55,6 +55,13 @@ class NewOrderMail extends Mailable
      */
     public function attachments(): array
     {
+        $mailAttach = null;
+        if ($this->attachmentData != null) {
+            foreach ($this->attachmentData as $item) {
+                $mailAttach[] = Attachment::fromData(fn() => $item['attach'], $item['name']);
+            }
+        }
+        if ($mailAttach) return $mailAttach;
         return [];
     }
 }

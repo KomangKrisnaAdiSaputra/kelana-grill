@@ -10,7 +10,8 @@
                         <td
                             style=" background:#fff7ed; padding:48px 30px; text-align:center;border-bottom:4px solid #fb923c;">
                             <img src="https://res.cloudinary.com/dikjbuftt/image/upload/v1781186432/Logo_te88na.png"
-                                alt="Premium Rental Grill" width="90" style="display:block;margin:0 auto 18px;">
+                                loading="lazy" decoding="async" alt="Premium Rental Grill" width="90"
+                                style="display:block;margin:0 auto 18px;">
 
                             <div
                                 style="display:inline-block; background:#fed7aa; color:#9a3412; font-size:12px;font-weight:600; padding:6px 12px; border-radius:999px; margin-bottom:16px;">

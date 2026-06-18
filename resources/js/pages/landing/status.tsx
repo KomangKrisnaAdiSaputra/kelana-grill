@@ -8,14 +8,7 @@ import Navbar from '@/components/landing/navbar';
 import AppProvider from '@/contexts/app-provider';
 import { useTheme } from '@/contexts/theme-context';
 import { formatPrice, useTranslation } from '@/helpers/global';
-
-type OrderStatus =
-  | 'UNPAID'
-  | 'PAID'
-  | 'PROCESS'
-  | 'READY'
-  | 'COMPLETED'
-  | 'CANCELLED';
+import type { Order, OrderStatus } from '@/types/order';
 
 function getStatusConfig(status: OrderStatus) {
   switch (status) {
@@ -57,11 +50,15 @@ function getStatusConfig(status: OrderStatus) {
   }
 }
 
+type Props = {
+  order: Order
+};
+
 function StatusPageContent() {
   const { theme, toggleTheme } = useTheme();
   const { __ } = useTranslation();
 
-  const { order } = usePage<any>().props;
+  const { order } = usePage<Props>().props;
 
   const [openedItems, setOpenedItems] = useState<Record<string, boolean>>({});
   const [scrolled, setScrolled] = useState(false);
@@ -92,30 +89,6 @@ function StatusPageContent() {
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // const payments = [
-  //   {
-  //     id: 1,
-  //     title: 'DP 50%',
-  //     amount: 500000,
-  //     status: 'PAID',
-  //     paidAt: '12 Jun 2026',
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Pelunasan',
-  //     amount: 1000000,
-  //     status: 'PAID',
-  //     paidAt: '18 Jun 2026',
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'Deposit Alat',
-  //     amount: 500000,
-  //     status: 'UNPAID',
-  //     paidAt: null,
-  //   },
-  // ];
 
   return (
     <div

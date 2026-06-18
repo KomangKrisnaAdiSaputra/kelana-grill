@@ -7,23 +7,7 @@
             'DP 50% tetap berlaku untuk reservasi tertentu.',
         ];
 
-        $accountBankLists = [
-            [
-                'bank' => 'BCA',
-                'name' => 'I Komang Krisna Adi Saputra',
-                'no' => '6955216435',
-            ],
-            [
-                'bank' => 'Mandiri',
-                'name' => 'Putu Diah Gayatri Purnama Dewi',
-                'no' => '1450015296474',
-            ],
-            [
-                'bank' => 'Seabank',
-                'name' => 'I Komang Krisna Adi Saputra',
-                'no' => '901414714730',
-            ],
-        ];
+        $accountBankLists = accountBankLists();
     @endphp
 
     <div>

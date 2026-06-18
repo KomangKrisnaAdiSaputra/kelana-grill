@@ -44,3 +44,24 @@ function translate(string $text, string $file = 'index'): string
 
   return $text;
 }
+
+function accountBankLists(): array
+{
+  return [
+    [
+      'bank' => 'BCA',
+      'name' => 'I Komang Krisna Adi Saputra',
+      'no' => '6955216435',
+    ],
+    [
+      'bank' => 'Mandiri',
+      'name' => 'Putu Diah Gayatri Purnama Dewi',
+      'no' => '1450015296474',
+    ],
+    [
+      'bank' => 'Seabank',
+      'name' => 'I Komang Krisna Adi Saputra',
+      'no' => '901414714730',
+    ],
+  ];
+}

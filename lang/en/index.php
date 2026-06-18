@@ -327,4 +327,22 @@ return [
   "Informasi Penting" => "Important Information",
   "Lihat Status Pesanan" => "View Order Status",
   // End Mail
+
+  // PDF Invoice
+  "Terima kasih telah memilih" => "Thank you for choosing us",
+  "Pesanan yang berisi produk daging atau reservasi yang dilakukan jauh sebelum tanggal pengambilan memerlukan deposit minimal 50%." => "Orders containing meat products or reservations made well in advance of the pickup date require a minimum 50% deposit.",
+  "Informasi Pelanggan" => "Customer Details",
+  "Nama Pelanggan" => "Customer Name",
+  "Nomor Telepon" => "Contact Number",
+  "Informasi Pemesanan" => "Booking Details",
+  "Detail Pesanan" => "Order Details",
+  "Minimal Deposit 50% Diperlukan" => "Minimum 50% Deposit Required",
+  "Pesanan yang berisi produk daging atau reservasi yang dilakukan lebih awal memerlukan deposit minimal untuk mengamankan stok dan mengonfirmasi pemesanan." => "Orders containing meat products or early reservations require a minimum deposit to secure inventory and confirm the booking.",
+  "Informasi Pembayaran" => "Payment Information",
+  "Setelah melakukan pembayaran, harap simpan bukti transfer sebagai bukti pembayaran untuk keperluan verifikasi." => "Please keep your transfer receipt as proof of payment for verification purposes.",
+  "Pembayaran dapat dilakukan saat pengambilan." => "Payment can be made upon pickup.",
+  "Mohon siapkan uang pas sesuai dengan jumlah pada invoice." => "Please prepare the exact amount in cash according to the invoice.",
+  "Deposit 50% masih mungkin diperlukan untuk beberapa reservasi tertentu." => "A 50% deposit may still be required for certain reservations.",
+  "Catatan Pelanggan" => "Customer Note"
+  // End PDF Invoice
 ];

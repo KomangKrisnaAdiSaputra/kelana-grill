@@ -7,6 +7,7 @@ use App\Mail\NewOrder\NewOrderMail;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Type;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -56,7 +57,7 @@ class LandingPageController extends Controller
     {
         $id = $request->id;
         $order = Order::findOrFail($id)->generateData();
-        return new NewOrderMail($order);
+
         return Inertia::render('landing/status', compact('order'));
     }
 
@@ -254,7 +255,12 @@ class LandingPageController extends Controller
         $data = Order::find($order->id)->generateData(['hide' => false]);
         $url = $this->generateWaUrl($data);
 
-        Mail::to($data['email'])->send(new NewOrderMail($data));
+        $attachmentData = [[
+            'attach' => Pdf::loadView('pdf.invoice.index', ["order" => $data])->setOption(['isRemoteEnabled' => true])->output(),
+            'name' => 'Invoice #' . $order['bookingId'] . '.pdf',
+            'option' => ['mime' => 'application/pdf']
+        ]];
+        Mail::to($data['email'])->send(new NewOrderMail($data, $attachmentData));
 
         return redirect()->back()->with([
             'booking' => [
