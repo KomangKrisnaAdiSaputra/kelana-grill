@@ -303,6 +303,28 @@ return [
   "Pengambilan" => "Pickup",
   "Pengembalian" => "Return",
   "Pesanan" => "Order",
-  "Barang" => "Item"
+  "Barang" => "Item",
   // End Status
+
+  // Mail
+  "Pesanan Berhasil Dibuat" => "Created Order Success",
+  "Terima kasih telah mempercayakan kebutuhan grill Anda kepada kami." => "Thank you for trust your grill needs to us.",
+  "Halo" => "Hello",
+  "Terima kasih atas pesanan Anda." => "Thank you for your order.",
+  "Pesanan Anda telah berhasil dibuat dan sedang menunggu pembayaran." => "Your order has been success created and is waiting for payment.",
+  "Ringkasan Pesanan" => "Order Summary",
+  "Total Pesanan" => "Total Orders",
+  "DP Minimum" => "Minimum Down Payment",
+  "Silakan transfer ke salah satu rekening berikut:" => "Please transfer to one of the following accounts:",
+  "After transfer, save your proof of payment." => "After transfer, save your proof of payment.",
+  "Pesanan yang mengandung produk daging atau dilakukan jauh hari sebelum tanggal pengambilan diwajibkan melakukan pembayaran DP minimal" => "Please note that orders containing meat products, as well as reservations made significantly before the pickup date, require a minimum deposit of",
+  "sebagai tanda jadi dan reservasi stok." => "to secure the booking and reserve stock.",
+  "Setelah transfer, simpan bukti pembayaran Anda." => "After making the payment, please keep the transfer receipt as proof of payment for the verification process.",
+  "Pembayaran Cash" => "Cash Payment",
+  "Pembayaran dilakukan saat pengambilan." => "Payment can be made upon pickup.",
+  "Mohon siapkan uang tunai sesuai tagihan." => "Please prepare the exact amount in cash according to the invoice.",
+  "DP 50% tetap berlaku untuk reservasi tertentu." => "A 50% deposit may still be required for certain reservations.",
+  "Informasi Penting" => "Important Information",
+  "Lihat Status Pesanan" => "View Order Status",
+  // End Mail
 ];

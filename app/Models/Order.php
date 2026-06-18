@@ -62,15 +62,15 @@ class Order extends Model
         return $this->hasMany(OrderDetail::class);
     }
 
-    function generateData(): Collection
+    function generateData(?array $request = []): Collection
     {
         return collect([
             "id" => $this->id,
             "bookingId" => $this->booking_id,
             "firstName" => $this->first_name,
             "lastName" => $this->last_name,
-            "phone" => maskPhone($this->phone),
-            "email" => maskEmail($this->email),
+            "phone" => maskPhone($this->phone, ($request['hide'] ?? true)),
+            "email" => maskEmail($this->email, ($request['hide'] ?? true)),
             "address" => $this->address,
             "pickupDate" => Carbon::parse($this->pickup_date)->locale(app()->getLocale())->translatedFormat('d M Y H:i'),
             "returnDate" => Carbon::parse($this->return_date)->locale(app()->getLocale())->translatedFormat('d M Y H:i'),

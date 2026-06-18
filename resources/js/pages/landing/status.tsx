@@ -131,15 +131,15 @@ function StatusPageContent() {
 
         <section className="relative overflow-hidden">
           <div className="mx-auto max-w-7xl px-4 md:px-6">
-            <div className="relative overflow-hidden rounded-[48px]">
+            <div className="relative overflow-hidden rounded-[32px] md:rounded-[48px]">
               {/* Background */}
 
               <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-white/[0.03]' : 'bg-white/70'}`} />
               <div className="absolute -top-24 right-0 h-80 w-80 rounded-full bg-orange-500/20 blur-3xl" />
               <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-orange-400/10 blur-3xl" />
-              <div className={`absolute inset-0 border ${theme === 'dark' ? 'border-white/10' : 'border-orange-100'} rounded-[48px]`} />
+              <div className={`absolute inset-0 border ${theme === 'dark' ? 'border-white/10' : 'border-orange-100'} rounded-[32px] md:rounded-[48px]`} />
 
-              <div className="relative grid gap-10 p-6 md:p-10 lg:grid-cols-[1.2fr_0.8fr] lg:p-14">
+              <div className="relative grid gap-8 p-5 sm:p-6 md:gap-10 md:p-8 lg:grid-cols-[1.2fr_0.8fr] lg:p-14">
                 {/* LEFT */}
 
                 <div>
@@ -151,9 +151,9 @@ function StatusPageContent() {
                     Booking Status
                   </div>
 
-                  <h1 className="mt-6 text-2xl font-black tracking-tight md:text-4xl">
+                  <h1 className="mt-6 break-words text-2xl font-black tracking-tight sm:text-3xl md:text-4xl">
                     {__("Pesanan")} #
-                    <span className=" bg-gradient-to-r from-orange-500 via-amber-400 to-yellow-300 bg-clip-text text-transparent">
+                    <span className="ml-1 break-all bg-gradient-to-r from-orange-500 via-amber-400 to-yellow-300 bg-clip-text text-transparent">
                       {order.bookingId}
                     </span>
                   </h1>
@@ -166,11 +166,11 @@ function StatusPageContent() {
                     </span>
                   </div>
 
-                  <h2 className="mt-8 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-300 bg-clip-text text-5xl font-black text-transparent md:text-7xl">
+                  <h2 className="mt-8 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-300 bg-clip-text text-4xl font-black text-transparent sm:text-5xl md:text-6xl lg:text-7xl">
                     {formatPrice(order.total)}
                   </h2>
 
-                  <div className="mt-10 flex flex-wrap gap-3">
+                  <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     <div
                       className={`rounded-2xl px-5 py-4 backdrop-blur-xl ${theme === 'dark'
                         ? 'bg-white/[0.04] ring-1 ring-white/10'
@@ -217,10 +217,10 @@ function StatusPageContent() {
                     </div>
                   </div>
 
-                  <div className="mt-10 flex flex-wrap gap-3">
+                  <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                     <a
                       href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}`}
-                      className="rounded-2xl bg-orange-500 px-6 py-4 font-semibold text-white shadow-lg shadow-orange-500/20 transition hover:-translate-y-1 hover:bg-orange-600"
+                      className="flex items-center justify-center rounded-2xl bg-orange-500 px-6 py-4 font-semibold text-white shadow-lg shadow-orange-500/20 transition hover:-translate-y-1 hover:bg-orange-600"
                     >
                       {__("Kontak Kami")}
                     </a>
@@ -230,7 +230,7 @@ function StatusPageContent() {
                       onClick={() => {
                         document.getElementById('order-items')?.scrollIntoView({ behavior: 'smooth' });
                       }}
-                      className={`rounded-2xl px-6 py-4 font-semibold transition ${theme === 'dark'
+                      className={`flex items-center justify-center rounded-2xl px-6 py-4 font-semibold transition ${theme === 'dark'
                         ? 'border border-white/10 bg-white/[0.04] hover:bg-white/[0.08]'
                         : 'border border-orange-100 bg-white/80 hover:bg-orange-50'
                         }`}
@@ -242,9 +242,9 @@ function StatusPageContent() {
 
                 {/* RIGHT */}
 
-                <div className="relative">
+                <div className="relative lg:sticky lg:top-28">
                   <div
-                    className={`rounded-[32px] p-6 backdrop-blur-xl ${theme === 'dark'
+                    className={`rounded-[24px] md:rounded-[32px] p-6 backdrop-blur-xl ${theme === 'dark'
                       ? 'bg-white/[0.05] ring-1 ring-white/10'
                       : 'bg-white/90 ring-1 ring-orange-100'
                       } `}
@@ -253,11 +253,11 @@ function StatusPageContent() {
                       Customer
                     </p>
 
-                    <h3 className="mt-4 text-2xl font-bold">
+                    <h3 className="mt-4 break-words text-xl font-bold sm:text-2xl">
                       {order.firstName} {order.lastName}
                     </h3>
 
-                    <div className="mt-6 space-y-5">
+                    <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
                       <div>
                         <p className="text-xs text-zinc-500">
                           Phone
@@ -310,7 +310,7 @@ function StatusPageContent() {
                           Total
                         </span>
 
-                        <span className="text-2xl font-bold">
+                        <span className="text-xl font-bold sm:text-2xl">
                           {formatPrice(order.total)}
                         </span>
                       </div>

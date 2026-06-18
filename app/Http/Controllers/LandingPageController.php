@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\NewOrder\NewOrderMail;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -54,7 +56,7 @@ class LandingPageController extends Controller
     {
         $id = $request->id;
         $order = Order::findOrFail($id)->generateData();
-
+        return new NewOrderMail($order);
         return Inertia::render('landing/status', compact('order'));
     }
 
@@ -249,8 +251,10 @@ class LandingPageController extends Controller
             DB::rollBack();
         }
 
-        $data = Order::find($order->id)->generateData();
+        $data = Order::find($order->id)->generateData(['hide' => false]);
         $url = $this->generateWaUrl($data);
+
+        Mail::to($data['email'])->send(new NewOrderMail($data));
 
         return redirect()->back()->with([
             'booking' => [

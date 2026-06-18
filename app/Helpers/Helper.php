@@ -7,22 +7,40 @@ function translations()
   return Lang::get("index", [], null, false);
 }
 
-function maskPhone(?string $phone): ?string
+function maskPhone(?string $phone, ?bool $hide = true): ?string
 {
   if (!$phone) {
     return null;
   }
 
+  if (!$hide) {
+    return $phone;
+  }
+
   return substr($phone, 0, 4) . str_repeat('*', max(strlen($phone) - 7, 0)) . substr($phone, -3);
 }
 
-function maskEmail(?string $email): ?string
+function maskEmail(?string $email, ?bool $hide = true): ?string
 {
   if (!$email || !str_contains($email, '@')) {
+    return $email;
+  }
+
+  if (!$hide) {
     return $email;
   }
 
   [$name, $domain] = explode('@', $email);
 
   return substr($name, 0, 2) . str_repeat('*', max(strlen($name) - 2, 0)) . '@' . $domain;
+}
+
+function translate(string $text, string $file = 'index'): string
+{
+  if (app()->getLocale() !== 'id') {
+    $translate = __("{$file}.{$text}");
+    return str_replace("{$file}.", "", $translate);
+  }
+
+  return $text;
 }
