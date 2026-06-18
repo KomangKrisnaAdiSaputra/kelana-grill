@@ -1,5 +1,5 @@
 import { usePage } from '@inertiajs/react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import AmbientBackground from '@/components/landing/ambient-background';
 import Footer from '@/components/landing/footer';
@@ -7,7 +7,7 @@ import MobileNavbar from '@/components/landing/mobile-navbar';
 import Navbar from '@/components/landing/navbar';
 import AppProvider from '@/contexts/app-provider';
 import { useTheme } from '@/contexts/theme-context';
-import { formatPrice } from '@/helpers/global';
+import { formatPrice, useTranslation } from '@/helpers/global';
 
 type OrderStatus =
   | 'UNPAID'
@@ -22,55 +22,49 @@ function getStatusConfig(status: OrderStatus) {
     case 'PAID':
       return {
         label: 'Paid',
-        color:
-          'border-emerald-500/20 bg-emerald-500/10 text-emerald-500',
+        color: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-500',
       };
 
     case 'PROCESS':
       return {
         label: 'Preparing',
-        color:
-          'border-blue-500/20 bg-blue-500/10 text-blue-500',
+        color: 'border-blue-500/20 bg-blue-500/10 text-blue-500',
       };
 
     case 'READY':
       return {
         label: 'Ready Pickup',
-        color:
-          'border-purple-500/20 bg-purple-500/10 text-purple-500',
+        color: 'border-purple-500/20 bg-purple-500/10 text-purple-500',
       };
 
     case 'COMPLETED':
       return {
         label: 'Completed',
-        color:
-          'border-green-500/20 bg-green-500/10 text-green-500',
+        color: 'border-green-500/20 bg-green-500/10 text-green-500',
       };
 
     case 'CANCELLED':
       return {
         label: 'Cancelled',
-        color:
-          'border-red-500/20 bg-red-500/10 text-red-500',
+        color: 'border-red-500/20 bg-red-500/10 text-red-500',
       };
 
     default:
       return {
-        label: 'Waiting Payment',
-        color:
-          'border-orange-500/20 bg-orange-500/10 text-orange-500',
+        label: 'Menunggu Pembayaran',
+        color: 'border-orange-500/20 bg-orange-500/10 text-orange-500',
       };
   }
 }
 
 function StatusPageContent() {
   const { theme, toggleTheme } = useTheme();
+  const { __ } = useTranslation();
 
   const { order } = usePage<any>().props;
 
-  const [openedItems, setOpenedItems] = useState<
-    Record<string, boolean>
-  >({});
+  const [openedItems, setOpenedItems] = useState<Record<string, boolean>>({});
+  const [scrolled, setScrolled] = useState(false);
 
   const status = getStatusConfig(order.status);
 
@@ -85,44 +79,52 @@ function StatusPageContent() {
     return order.details.length;
   }, [order]);
 
-  const payments = [
-    {
-      id: 1,
-      title: 'DP 50%',
-      amount: 500000,
-      status: 'PAID',
-      paidAt: '12 Jun 2026',
-    },
-    {
-      id: 2,
-      title: 'Pelunasan',
-      amount: 1000000,
-      status: 'PAID',
-      paidAt: '18 Jun 2026',
-    },
-    {
-      id: 3,
-      title: 'Deposit Alat',
-      amount: 500000,
-      status: 'UNPAID',
-      paidAt: null,
-    },
-  ];
+  const payments = order.payments;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 30);
+    };
+
+    handleScroll();
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // const payments = [
+  //   {
+  //     id: 1,
+  //     title: 'DP 50%',
+  //     amount: 500000,
+  //     status: 'PAID',
+  //     paidAt: '12 Jun 2026',
+  //   },
+  //   {
+  //     id: 2,
+  //     title: 'Pelunasan',
+  //     amount: 1000000,
+  //     status: 'PAID',
+  //     paidAt: '18 Jun 2026',
+  //   },
+  //   {
+  //     id: 3,
+  //     title: 'Deposit Alat',
+  //     amount: 500000,
+  //     status: 'UNPAID',
+  //     paidAt: null,
+  //   },
+  // ];
 
   return (
     <div
-      className={`min-h-screen overflow-hidden transition-all duration-500 ${theme === 'dark'
-        ? 'bg-theme-dark'
-        : 'bg-theme-light'
+      className={`min-h-screen overflow-hidden transition-all duration-500 ${theme === 'dark' ? 'bg-theme-dark' : 'bg-theme-light'
         }`}
     >
       <AmbientBackground theme={theme} />
 
-      <Navbar
-        theme={theme}
-        scrolled={true}
-        onToggleTheme={toggleTheme}
-      />
+      <Navbar theme={theme} scrolled={scrolled} onToggleTheme={toggleTheme} />
 
       <main className="pt-28 pb-16">
         {/* HERO */}
@@ -132,73 +134,35 @@ function StatusPageContent() {
             <div className="relative overflow-hidden rounded-[48px]">
               {/* Background */}
 
-              <div
-                className={`absolute inset-0 ${theme === 'dark'
-                  ? 'bg-white/[0.03]'
-                  : 'bg-white/70'
-                  }`}
-              />
-
+              <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-white/[0.03]' : 'bg-white/70'}`} />
               <div className="absolute -top-24 right-0 h-80 w-80 rounded-full bg-orange-500/20 blur-3xl" />
-
               <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-orange-400/10 blur-3xl" />
-
-              <div
-                className={`absolute inset-0 border ${theme === 'dark'
-                  ? 'border-white/10'
-                  : 'border-orange-100'
-                  } rounded-[48px]`}
-              />
+              <div className={`absolute inset-0 border ${theme === 'dark' ? 'border-white/10' : 'border-orange-100'} rounded-[48px]`} />
 
               <div className="relative grid gap-10 p-6 md:p-10 lg:grid-cols-[1.2fr_0.8fr] lg:p-14">
                 {/* LEFT */}
 
                 <div>
                   <div
-                    className={`
-                            inline-flex
-                            items-center
-                            gap-2
-                            rounded-full
-                            border
-                            px-4
-                            py-2
-                            text-sm
-                            backdrop-blur-xl
-
-                            ${theme === 'dark'
-                        ? 'border-orange-400/20 bg-orange-500/10 text-orange-200'
-                        : 'border-orange-200 bg-white/70 text-orange-700'
-                      }
-                        `}
-                  >
+                    className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm backdrop-blur-xl ${theme === 'dark'
+                      ? 'border-orange-400/20 bg-orange-500/10 text-orange-200'
+                      : 'border-orange-200 bg-white/70 text-orange-700'
+                      } `} >
                     Booking Status
                   </div>
 
-                  <h1 className="mt-6 text-4xl font-black tracking-tight md:text-6xl">
-                    Order #
-                    <span className="block bg-gradient-to-r from-orange-500 via-amber-400 to-yellow-300 bg-clip-text text-transparent">
-                      {order.id}
+                  <h1 className="mt-6 text-2xl font-black tracking-tight md:text-4xl">
+                    {__("Pesanan")} #
+                    <span className=" bg-gradient-to-r from-orange-500 via-amber-400 to-yellow-300 bg-clip-text text-transparent">
+                      {order.bookingId}
                     </span>
                   </h1>
 
                   <div className="mt-6 flex items-center gap-3">
-                    <span
-                      className={`h-3 w-3 rounded-full ${order.status === 'PAID'
-                        ? 'bg-green-500'
-                        : order.status === 'UNPAID'
-                          ? 'bg-amber-500'
-                          : 'bg-zinc-400'
-                        }`}
-                    />
+                    <span className={`h-3 w-3 rounded-full ${order.status === 'PAID' ? 'bg-green-500' : order.status === 'UNPAID' ? 'bg-amber-500' : 'bg-zinc-400'}`} />
 
-                    <span
-                      className={`font-semibold ${theme === 'dark'
-                        ? 'text-white'
-                        : 'text-zinc-900'
-                        }`}
-                    >
-                      {status.label}
+                    <span className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-zinc-900'}`}>
+                      {__(status.label)}
                     </span>
                   </div>
 
@@ -213,8 +177,8 @@ function StatusPageContent() {
                         : 'bg-white/80 ring-1 ring-orange-100'
                         }`}
                     >
-                      <p className="text-xs uppercase tracking-wide text-zinc-500">
-                        Pickup
+                      <p className="text-xs tracking-wide text-zinc-500 uppercase">
+                        {__("Pengambilan")}
                       </p>
 
                       <p className="mt-1 font-semibold">
@@ -228,8 +192,8 @@ function StatusPageContent() {
                         : 'bg-white/80 ring-1 ring-orange-100'
                         }`}
                     >
-                      <p className="text-xs uppercase tracking-wide text-zinc-500">
-                        Return
+                      <p className="text-xs tracking-wide text-zinc-500 uppercase">
+                        {__("Pengembalian")}
                       </p>
 
                       <p className="mt-1 font-semibold">
@@ -243,12 +207,12 @@ function StatusPageContent() {
                         : 'bg-white/80 ring-1 ring-orange-100'
                         }`}
                     >
-                      <p className="text-xs uppercase tracking-wide text-zinc-500">
-                        Items
+                      <p className="text-xs tracking-wide text-zinc-500 uppercase">
+                        {__("Barang")}
                       </p>
 
                       <p className="mt-1 font-semibold">
-                        {totalItems} Products
+                        {totalItems} {__("Produk")}
                       </p>
                     </div>
                   </div>
@@ -258,24 +222,20 @@ function StatusPageContent() {
                       href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}`}
                       className="rounded-2xl bg-orange-500 px-6 py-4 font-semibold text-white shadow-lg shadow-orange-500/20 transition hover:-translate-y-1 hover:bg-orange-600"
                     >
-                      Contact Us
+                      {__("Kontak Kami")}
                     </a>
 
                     <button
                       type="button"
                       onClick={() => {
-                        document
-                          .getElementById('order-items')
-                          ?.scrollIntoView({
-                            behavior: 'smooth',
-                          });
+                        document.getElementById('order-items')?.scrollIntoView({ behavior: 'smooth' });
                       }}
                       className={`rounded-2xl px-6 py-4 font-semibold transition ${theme === 'dark'
                         ? 'border border-white/10 bg-white/[0.04] hover:bg-white/[0.08]'
                         : 'border border-orange-100 bg-white/80 hover:bg-orange-50'
                         }`}
                     >
-                      View Order
+                      {__("Lihat")} Order
                     </button>
                   </div>
                 </div>
@@ -284,18 +244,12 @@ function StatusPageContent() {
 
                 <div className="relative">
                   <div
-                    className={`
-                            rounded-[32px]
-                            p-6
-                            backdrop-blur-xl
-
-                            ${theme === 'dark'
-                        ? 'bg-white/[0.05] ring-1 ring-white/10'
-                        : 'bg-white/90 ring-1 ring-orange-100'
-                      }
-                        `}
+                    className={`rounded-[32px] p-6 backdrop-blur-xl ${theme === 'dark'
+                      ? 'bg-white/[0.05] ring-1 ring-white/10'
+                      : 'bg-white/90 ring-1 ring-orange-100'
+                      } `}
                   >
-                    <p className="text-sm uppercase tracking-[0.2em] text-orange-500">
+                    <p className="text-sm tracking-[0.2em] text-orange-500 uppercase">
                       Customer
                     </p>
 
@@ -326,7 +280,7 @@ function StatusPageContent() {
 
                       <div>
                         <p className="text-xs text-zinc-500">
-                          Payment
+                          {__("Pembayaran")}
                         </p>
 
                         <p className="mt-1 font-medium">
@@ -336,7 +290,7 @@ function StatusPageContent() {
 
                       <div>
                         <p className="text-xs text-zinc-500">
-                          Guarantee
+                          {__("Jaminan")}
                         </p>
 
                         <p className="mt-1 font-medium">
@@ -369,352 +323,308 @@ function StatusPageContent() {
         </section>
 
         {/* ================= PAYMENT TIMELINE ================= */}
-        <section className="mx-auto max-w-7xl px-4 md:px-6 mt-10">
-          <div className={`
-    rounded-3xl border backdrop-blur-xl p-6 md:p-8
-    ${theme === 'dark'
-              ? 'border-blue-500/20 bg-blue-500/5'
-              : 'border-blue-200 bg-blue-50'
-            }
-  `}>
+        {payments.length > 0 && (
+          <section className="mx-auto mt-10 max-w-7xl px-4 md:px-6">
+            <div
+              className={`rounded-3xl border p-6 backdrop-blur-xl md:p-8 ${theme === 'dark'
+                ? 'border-blue-500/20 bg-blue-500/5'
+                : 'border-blue-200 bg-blue-50'
+                } `}
+            >
+              {/* HEADER */}
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-xs tracking-[0.3em] text-blue-500 uppercase">
+                    {__("Waktu Pemabayaran")}
+                  </p>
 
-            {/* HEADER */}
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-xs tracking-[0.3em] uppercase text-blue-500">
-                  Payment Timeline
-                </p>
+                  <h3
+                    className={`mt-2 text-xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-zinc-900'} `}
+                  >
+                    {__("Pembayaran")}
+                  </h3>
+                </div>
 
-                <h3 className={`
-          mt-2 text-xl font-semibold
-          ${theme === 'dark' ? 'text-white' : 'text-zinc-900'}
-        `}>
-                  Payments
-                </h3>
+                <span
+                  className={`rounded-full border px-3 py-1 text-xs ${theme === 'dark'
+                    ? 'border-blue-500/20 bg-blue-500/10 text-blue-300'
+                    : 'border-blue-200 bg-blue-100 text-blue-600'
+                    } `}
+                >
+                  {payments.length} items
+                </span>
               </div>
 
-              <span className={`
-        text-xs px-3 py-1 rounded-full border
-        ${theme === 'dark'
-                  ? 'bg-blue-500/10 text-blue-300 border-blue-500/20'
-                  : 'bg-blue-100 text-blue-600 border-blue-200'
-                }
-      `}>
-                {payments.length} items
-              </span>
-            </div>
+              {/* LIST */}
+              <div className="mt-8 space-y-6">
+                {payments.map((p: any) => (
+                  <div key={p.id} className="flex gap-4">
+                    {/* DOT */}
+                    <div className="flex flex-col items-center">
+                      <div
+                        className={`mt-2 h-3 w-3 rounded-full ${p.status === 'PAID'
+                          ? 'bg-blue-500'
+                          : theme === 'dark'
+                            ? 'bg-blue-500/30'
+                            : 'bg-blue-300'
+                          } `}
+                      />
 
-            {/* LIST */}
-            <div className="mt-8 space-y-6">
-
-              {payments.map((p) => (
-                <div key={p.id} className="flex gap-4">
-
-                  {/* DOT */}
-                  <div className="flex flex-col items-center">
-                    <div className={`
-              h-3 w-3 rounded-full mt-2
-              ${p.status === 'PAID'
-                        ? 'bg-blue-500'
-                        : theme === 'dark'
-                          ? 'bg-blue-500/30'
-                          : 'bg-blue-300'
-                      }
-            `} />
-
-                    <div className={`
-              w-px flex-1 mt-2
-              ${theme === 'dark' ? 'bg-blue-500/20' : 'bg-blue-200'}
-            `} />
-                  </div>
-
-                  {/* CONTENT */}
-                  <div className="flex-1 pb-6">
-
-                    <div className="flex justify-between">
-                      <div>
-                        <p className={theme === 'dark' ? 'text-blue-100 font-medium' : 'text-zinc-900 font-medium'}>
-                          {p.title}
-                        </p>
-
-                        <p className={`
-                  text-sm mt-1
-                  ${theme === 'dark' ? 'text-blue-200/60' : 'text-zinc-500'}
-                `}>
-                          {p.paidAt ?? 'Waiting payment'}
-                        </p>
-                      </div>
-
-                      <div className="text-right">
-                        <p className={theme === 'dark' ? 'text-blue-100 font-semibold' : 'text-zinc-900 font-semibold'}>
-                          {formatPrice(p.amount)}
-                        </p>
-
-                        <span className={`
-                  text-xs px-2 py-1 rounded-full inline-block mt-1
-                  ${p.status === 'PAID'
-                            ? theme === 'dark'
-                              ? 'bg-blue-500/10 text-blue-300'
-                              : 'bg-blue-100 text-blue-600'
-                            : theme === 'dark'
-                              ? 'bg-blue-500/5 text-blue-400'
-                              : 'bg-blue-50 text-blue-500'
-                          }
-                `}>
-                          {p.status}
-                        </span>
-                      </div>
+                      <div
+                        className={`mt-2 w-px flex-1 ${theme === 'dark' ? 'bg-blue-500/20' : 'bg-blue-200'} `}
+                      />
                     </div>
 
+                    {/* CONTENT */}
+                    <div className="flex-1 pb-6">
+                      <div className="flex justify-between">
+                        <div>
+                          <p
+                            className={
+                              theme === 'dark'
+                                ? 'font-medium text-blue-100'
+                                : 'font-medium text-zinc-900'
+                            }
+                          >
+                            {p.title}
+                          </p>
+
+                          <p
+                            className={`mt-1 text-sm ${theme === 'dark' ? 'text-blue-200/60' : 'text-zinc-500'} `}
+                          >
+                            {p.paidAt ?? 'Waiting payment'}
+                          </p>
+                        </div>
+
+                        <div className="text-right">
+                          <p
+                            className={
+                              theme === 'dark'
+                                ? 'font-semibold text-blue-100'
+                                : 'font-semibold text-zinc-900'
+                            }
+                          >
+                            {formatPrice(p.amount)}
+                          </p>
+
+                          <span
+                            className={`mt-1 inline-block rounded-full px-2 py-1 text-xs ${p.status === 'PAID'
+                              ? theme === 'dark'
+                                ? 'bg-blue-500/10 text-blue-300'
+                                : 'bg-blue-100 text-blue-600'
+                              : theme === 'dark'
+                                ? 'bg-blue-500/5 text-blue-400'
+                                : 'bg-blue-50 text-blue-500'
+                              } `}
+                          >
+                            {p.status}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
-
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-
+          </section>
+        )}
 
         {/* ================= ORDER ITEMS ================= */}
-        <section className="mt-12">
+        <section className="mt-12 scroll-mt-32" id="order-items">
           <div className="mx-auto max-w-7xl px-4 md:px-6">
-
-            <div className={`
-      rounded-3xl border backdrop-blur-xl overflow-hidden
-      ${theme === 'dark'
+            <div
+              className={`overflow-hidden rounded-3xl border backdrop-blur-xl ${theme === 'dark'
                 ? 'border-orange-500/20 bg-orange-500/5'
                 : 'border-orange-200 bg-orange-50'
-              }
-    `}>
-
+                } `}
+            >
               {/* HEADER */}
-              <div className={`
-        p-6 md:p-8 border-b
-        ${theme === 'dark' ? 'border-orange-500/20' : 'border-orange-200'}
-      `}>
-                <p className="text-xs tracking-[0.3em] uppercase text-orange-500">
-                  Ordered Items
+              <div
+                className={`border-b p-6 md:p-8 ${theme === 'dark' ? 'border-orange-500/20' : 'border-orange-200'} `}
+              >
+                <p className="text-xs tracking-[0.3em] text-orange-500 uppercase">
+                  {__("Barang yang Dipesan")}
                 </p>
 
-                <h2 className={`
-          mt-2 text-2xl md:text-3xl font-semibold
-          ${theme === 'dark' ? 'text-white' : 'text-zinc-900'}
-        `}>
-                  Your Order
+                <h2
+                  className={`mt-2 text-2xl font-semibold md:text-3xl ${theme === 'dark' ? 'text-white' : 'text-zinc-900'} `}
+                >
+                  {__("Pesanan Anda")}
                 </h2>
 
-                <p className={`
-          mt-1 text-sm
-          ${theme === 'dark' ? 'text-orange-200/60' : 'text-zinc-600'}
-        `}>
-                  {totalItems} items in this order
+                <p
+                  className={`mt-1 text-sm ${theme === 'dark' ? 'text-orange-200/60' : 'text-zinc-600'} `}
+                >
+                  {totalItems} {__("barang dalam pesanan ini")}
                 </p>
               </div>
 
               {/* LIST */}
-              <div className={`
-        divide-y
-        ${theme === 'dark' ? 'divide-orange-500/10' : 'divide-orange-200'}
-      `}>
-
+              <div
+                className={`divide-y ${theme === 'dark' ? 'divide-orange-500/10' : 'divide-orange-200'} `}
+              >
                 {order.details.map((item: any) => {
-                  const hasDetail =
-                    item.packages?.length > 0 &&
-                    item.packages.some((pkg: any) => pkg.items?.length > 0);
-
+                  const hasDetail = item.packages?.length > 0 && item.packages.some((pkg: any) => pkg.items?.length > 0);
                   const isOpen = openedItems[item.id] ?? false;
-
-                  const includedItems = item.packages?.reduce(
-                    (t: number, pkg: any) => t + (pkg.items?.length || 0),
-                    0
-                  );
+                  const includedItems = item.packages?.reduce((t: number, pkg: any) => t + (pkg.items?.length || 0), 0);
 
                   return (
                     <div key={item.id}>
-
                       {/* ITEM */}
                       <button
-                        onClick={() => hasDetail && toggleItem(item.id)}
-                        className={`
-                  w-full px-6 md:px-8 py-6 flex justify-between text-left transition
-                  ${theme === 'dark'
-                            ? 'hover:bg-orange-500/5'
-                            : 'hover:bg-orange-100/50'
-                          }
-                `}
+                        onClick={() =>
+                          hasDetail &&
+                          toggleItem(item.id)
+                        }
+                        className={`flex w-full justify-between px-6 py-6 text-left transition md:px-8 ${theme === 'dark'
+                          ? 'hover:bg-orange-500/5'
+                          : 'hover:bg-orange-100/50'
+                          } `}
                       >
-
                         {/* LEFT */}
                         <div className="pr-6">
-                          <div className="flex gap-2 flex-wrap items-center">
-
-                            <h3 className={`
-                      font-semibold text-base md:text-lg
-                      ${theme === 'dark' ? 'text-white' : 'text-zinc-900'}
-                    `}>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3
+                              className={`text-base font-semibold md:text-lg ${theme === 'dark' ? 'text-white' : 'text-zinc-900'} `}
+                            >
                               {item.name}
                             </h3>
 
                             {item.variant?.name && (
-                              <span className={`
-                        text-[11px] px-2 py-1 rounded-full
-                        ${theme === 'dark'
+                              <span
+                                className={`rounded-full px-2 py-1 text-[11px] ${theme ===
+                                  'dark'
                                   ? 'bg-orange-500/10 text-orange-300'
                                   : 'bg-orange-100 text-orange-600'
-                                }
-                      `}>
+                                  } `}
+                              >
                                 {item.variant.name}
                               </span>
                             )}
                           </div>
 
-                          <p className={`
-                    text-sm mt-1
-                    ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-600'}
-                  `}>
+                          <p
+                            className={`mt-1 text-sm ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-600'} `}>
                             {item.description}
                           </p>
 
                           {hasDetail && (
-                            <p className={`
-                      mt-2 text-xs
-                      ${theme === 'dark' ? 'text-orange-300' : 'text-orange-600'}
-                    `}>
-                              {includedItems} items included
+                            <p
+                              className={`mt-2 text-xs ${theme === 'dark' ? 'text-orange-300' : 'text-orange-600'} `}
+                            >
+                              {includedItems}{' '} {__("barang yang termasuk")}
                             </p>
                           )}
                         </div>
 
                         {/* RIGHT */}
                         <div className="text-right">
-                          <p className={theme === 'dark' ? 'text-white font-semibold' : 'text-zinc-900 font-semibold'}>
+                          <p
+                            className={
+                              theme === 'dark'
+                                ? 'font-semibold text-white'
+                                : 'font-semibold text-zinc-900'
+                            }
+                          >
                             {formatPrice(item.total)}
                           </p>
 
-                          <p className={`
-                    text-xs
-                    ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-500'}
-                  `}>
+                          <p
+                            className={`text-xs ${theme === 'dark' ? 'text-zinc-400' : 'text-zinc-500'} `} >
                             Qty × {item.qty}
                           </p>
 
                           {hasDetail && (
-                            <div className={`
-                      mt-2 inline-flex h-7 w-7 items-center justify-center rounded-full border
-                      ${theme === 'dark'
+                            <div
+                              className={`mt-2 inline-flex h-7 w-7 items-center justify-center rounded-full border ${theme === 'dark'
                                 ? 'border-orange-500/20 bg-orange-500/10 text-orange-300'
                                 : 'border-orange-200 bg-orange-100 text-orange-600'
-                              }
-                    `}>
+                                } `}
+                            >
                               {isOpen ? '−' : '+'}
                             </div>
                           )}
                         </div>
-
                       </button>
 
                       {/* DETAIL */}
                       {hasDetail && (
-                        <div className={`grid transition-all duration-300
-                  ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}
-                `}>
+                        <div
+                          className={`grid transition-all duration-300 ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'} `} >
                           <div className="overflow-hidden">
-
-                            <div className={`
-  rounded-2xl border p-4
-  ${theme === 'dark'
+                            <div
+                              className={`rounded-2xl border p-4 ${theme === 'dark'
                                 ? 'border-orange-500/10 bg-orange-500/5'
                                 : 'border-orange-200 bg-white'
-                              }
-`}>
-
+                                } `} >
                               <div className="space-y-3">
-
-                                {item.packages.flatMap((pkg: any) => pkg.items || []).map((detail: any, index: number) => (
-
-                                  <div key={detail.id} className="relative">
-
+                                {item.packages.flatMap((pkg: any) => pkg.items || []).map((
+                                  detail: any,
+                                  index: number,
+                                ) => (
+                                  <div
+                                    key={detail.id}
+                                    className="relative"
+                                  >
                                     {/* LINE (horizontal separator) */}
                                     {index !== 0 && (
-                                      <div className={`
-            absolute left-0 right-0 -top-1 h-px
-            ${theme === 'dark' ? 'bg-orange-500/10' : 'bg-orange-200'}
-          `} />
+                                      <div
+                                        className={`absolute -top-1 right-0 left-0 h-px ${theme === 'dark' ? 'bg-orange-500/10' : 'bg-orange-200'} `}
+                                      />
                                     )}
 
-                                    <div className="flex justify-between items-start py-3">
-
+                                    <div className="flex items-start justify-between py-3">
                                       {/* LEFT */}
                                       <div>
-                                        <p className={theme === 'dark' ? 'text-white text-sm' : 'text-zinc-900 text-sm'}>
+                                        <p
+                                          className={theme === 'dark' ? 'text-sm text-white' : 'text-sm text-zinc-900'} >
                                           {detail.name}
                                         </p>
 
                                         {detail.options?.length > 0 && (
-                                          <div className="flex gap-2 mt-1 flex-wrap">
+                                          <div className="mt-1 flex flex-wrap gap-2">
                                             {detail.options.map((opt: any) => (
                                               <span
                                                 key={opt.id}
-                                                className={`
-                      text-[10px] px-2 py-0.5 rounded-full
-                      ${theme === 'dark'
-                                                    ? 'bg-orange-500/10 text-orange-300'
-                                                    : 'bg-orange-100 text-orange-600'
-                                                  }
-                    `}
-                                              >
+                                                className={`rounded-full px-2 py-0.5 text-[10px] ${theme === 'dark' ? 'bg-orange-500/10 text-orange-300' : 'bg-orange-100 text-orange-600'} `} >
                                                 {opt.name}
                                               </span>
-                                            ))}
+                                            ),
+                                            )}
                                           </div>
                                         )}
                                       </div>
 
                                       {/* RIGHT */}
-                                      <span className={theme === 'dark' ? 'text-zinc-300' : 'text-zinc-500'}>
-                                        ×{detail.qty}
+                                      <span className={theme === 'dark' ? 'text-zinc-300' : 'text-zinc-500'} >
+                                        × {detail.qty}
                                       </span>
-
                                     </div>
-
                                   </div>
-
                                 ))}
-
                               </div>
                             </div>
-
                           </div>
                         </div>
                       )}
-
                     </div>
                   );
                 })}
-
               </div>
 
               {/* FOOTER */}
-              <div className={`
-        p-6 md:p-8 border-t flex justify-between
-        ${theme === 'dark' ? 'border-orange-500/20' : 'border-orange-200'}
-      `}>
-                <span className={theme === 'dark' ? 'text-zinc-300' : 'text-zinc-600'}>
-                  Grand Total
+              <div className={`flex justify-between border-t p-6 md:p-8 ${theme === 'dark' ? 'border-orange-500/20' : 'border-orange-200'} `} >
+                <span className={theme === 'dark' ? 'text-zinc-300' : 'text-zinc-600'} >
+                  {__("Jumlah Total")}
                 </span>
 
-                <span className={`
-          text-2xl font-bold
-          ${theme === 'dark' ? 'text-orange-300' : 'text-orange-600'}
-        `}>
+                <span className={`text-2xl font-bold ${theme === 'dark' ? 'text-orange-300' : 'text-orange-600'} `}>
                   {formatPrice(order.total)}
                 </span>
               </div>
-
             </div>
           </div>
         </section>
-
       </main>
 
       <MobileNavbar theme={theme} />

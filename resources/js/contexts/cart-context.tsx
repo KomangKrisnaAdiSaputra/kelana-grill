@@ -171,12 +171,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           type: product.type ?? '',
           image: product.image ?? '',
 
-          packageInstances: [
+          packageInstances: items || productMarinade ? [
             {
               items,
               productMarinade,
             },
-          ],
+          ] : [],
         },
       ];
     });

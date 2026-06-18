@@ -19,7 +19,7 @@ Route::prefix('{locale?}')->middleware(Locale::class)->where(['locale' => 'id|en
         Route::get('product', 'indexProduct')->name('.produk');
         Route::get('contact', 'indexContact')->name('.contact');
         Route::get('about', 'indexAbout')->name('.about');
-        Route::get('status/{id}', 'indexStatus')->name('.status');
+        Route::get('booking/status/{id}', 'indexStatus')->name('.status');
 
         Route::post('contact/booking', 'booking')->name('.contact.booking');
     });

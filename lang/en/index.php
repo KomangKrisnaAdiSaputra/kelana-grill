@@ -7,6 +7,8 @@ return [
   "konfigurasi paket" => "package configuration",
   "Sembunyikan" => "Hide",
   "Lihat Detail" => "See Details",
+  "Total Keranjang" => "Total Cart",
+  "item dalam keranjang" => "items in cart",
 
   // Navbar
   "Premium BBQ Rental" => "Premium BBQ Rental",
@@ -287,6 +289,20 @@ return [
   "Proses rental dibuat mudah dan cepat agar kamu bisa fokus menikmati acara BBQ." => "The rental process is made easy and fast so you can focus on enjoying your BBQ.",
   "Siap bikin acara BBQ lebih seru?" => "Ready to make your BBQ more exciting?",
   "Booking sekarang dan nikmati pengalaman grill tanpa ribet bersama" => "Book now and enjoy a hassle-free grilling experience with us.",
-
   // End About
+
+  // Status
+  "Lihat" => "View",
+  "Waktu Pemabayaran" => "Payment Timeline",
+  "Barang yang Dipesan" => "Ordered Items",
+  "Pesanan Anda" => "Your Order",
+  "barang dalam pesanan ini" => "items in this order",
+  "barang yang termasuk" => "items included",
+  "Jumlah Total" => "Grand Total",
+  "Menunggu Pembayaran" => "Waiting Payment",
+  "Pengambilan" => "Pickup",
+  "Pengembalian" => "Return",
+  "Pesanan" => "Order",
+  "Barang" => "Item"
+  // End Status
 ];

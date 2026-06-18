@@ -156,6 +156,8 @@ export default function CartDrawer({ open, onClose }: Props) {
                                                             <img
                                                                 src={item.image}
                                                                 alt={item.name}
+                                                                loading="lazy"
+                                                                decoding="async"
                                                                 className="h-full w-full object-cover"
                                                                 onError={() =>
                                                                     setImageError(true)

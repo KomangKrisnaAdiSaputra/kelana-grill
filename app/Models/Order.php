@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 #[Fillable([
+    "booking_id",
     "first_name",
     "last_name",
     "phone",
@@ -27,6 +30,33 @@ class Order extends Model
 {
     use HasUuids;
 
+    protected static function booted(): void
+    {
+        static::creating(function (Order $order) {
+            if (empty($order->booking_id)) {
+
+                $prefix = 'KG-' . now()->format('Ymd');
+
+                $lastOrder = self::where('booking_id', 'like', $prefix . '-%')
+                    ->orderByDesc('booking_id')
+                    ->first();
+
+                $nextNumber = 1;
+
+                if ($lastOrder) {
+                    $lastNumber = (int) substr($lastOrder->booking_id, -4);
+                    $nextNumber = $lastNumber + 1;
+                }
+
+                $order->booking_id = sprintf(
+                    '%s-%04d',
+                    $prefix,
+                    $nextNumber
+                );
+            }
+        });
+    }
+
     public function details()
     {
         return $this->hasMany(OrderDetail::class);
@@ -36,13 +66,15 @@ class Order extends Model
     {
         return collect([
             "id" => $this->id,
+            "bookingId" => $this->booking_id,
             "firstName" => $this->first_name,
             "lastName" => $this->last_name,
-            "phone" => $this->phone,
-            "email" => $this->email,
+            "phone" => maskPhone($this->phone),
+            "email" => maskEmail($this->email),
             "address" => $this->address,
-            "pickupDate" => $this->pickup_date,
-            "returnDate" => $this->return_date,
+            "pickupDate" => Carbon::parse($this->pickup_date)->locale(app()->getLocale())->translatedFormat('d M Y H:i'),
+            "returnDate" => Carbon::parse($this->return_date)->locale(app()->getLocale())->translatedFormat('d M Y H:i'),
+            "pickupLocation" => $this->pickup_location,
             "guarantee" => $this->guarantee,
             "payment" => $this->payment_method,
             "note" => $this->note,
@@ -50,7 +82,8 @@ class Order extends Model
             "subTotal" => $this->sub_total,
             "total" => $this->total,
 
-            "details" => $this->details->map->generateData()
+            "details" => $this->details->map->generateData(),
+            "payments" => []
         ]);
     }
 }

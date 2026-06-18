@@ -11,7 +11,7 @@ import {
     User,
 } from 'lucide-react';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { toast } from 'sonner';
 import DateTimePicker from '@/components/datetime-picker';
@@ -127,6 +127,20 @@ function ContactContent() {
             },
         });
     };
+
+    const minPickupDate = () => {
+        const date = new Date();
+        date.setDate(date.getDate() + 2);
+
+        return String(date.toISOString().split('T')[0]);
+    };
+
+    const totalCart = useMemo(() => {
+        return cartItems.reduce(
+            (sum, item) => sum + item.qty * (item.rate ?? 0),
+            0,
+        );
+    }, [cartItems]);
 
     return (
         <div
@@ -348,129 +362,151 @@ function ContactContent() {
 
                             <div className="mt-6">
                                 {data.carts.length > 0 ? (
-                                    <div className="max-h-[500px] space-y-3 overflow-y-auto scrollbar-hide">
-                                        {data.carts.map((item: any, index) => {
-                                            const packageCount =
-                                                item.packageInstances?.length ?? 0;
+                                    <>
+                                        <div className="max-h-[500px] space-y-3 overflow-y-auto scrollbar-hide">
+                                            {data.carts.map((item: any, index) => {
+                                                const packageCount =
+                                                    item.packageInstances?.length ?? 0;
 
-                                            const totalMarinades =
-                                                item.packageInstances?.reduce(
-                                                    (total: number, pkg: any) =>
-                                                        total +
-                                                        (pkg.items ?? []).reduce(
-                                                            (subTotal: number, subItem: any) =>
-                                                                subTotal +
-                                                                (subItem.marinadeItems?.length ?? 0),
-                                                            0,
-                                                        ),
-                                                    0,
-                                                ) ?? 0;
+                                                const totalMarinades =
+                                                    item.packageInstances?.reduce(
+                                                        (total: number, pkg: any) =>
+                                                            total +
+                                                            (pkg.items ?? []).reduce(
+                                                                (subTotal: number, subItem: any) =>
+                                                                    subTotal +
+                                                                    (subItem.marinadeItems?.length ?? 0),
+                                                                0,
+                                                            ),
+                                                        0,
+                                                    ) ?? 0;
 
-                                            const totalChoices =
-                                                item.packageInstances?.reduce(
-                                                    (total: number, pkg: any) =>
-                                                        total +
-                                                        (pkg.items ?? []).reduce(
-                                                            (subTotal: number, subItem: any) =>
-                                                                subTotal +
-                                                                (subItem.choiceItems?.length ?? 0),
-                                                            0,
-                                                        ),
-                                                    0,
-                                                ) ?? 0;
+                                                const totalChoices =
+                                                    item.packageInstances?.reduce(
+                                                        (total: number, pkg: any) =>
+                                                            total +
+                                                            (pkg.items ?? []).reduce(
+                                                                (subTotal: number, subItem: any) =>
+                                                                    subTotal +
+                                                                    (subItem.choiceItems?.length ?? 0),
+                                                                0,
+                                                            ),
+                                                        0,
+                                                    ) ?? 0;
 
-                                            return (
-                                                <div
-                                                    key={index}
-                                                    className={`rounded-2xl border p-4 ${theme === 'dark'
-                                                        ? 'border-white/10 bg-white/[0.04]'
-                                                        : 'border-orange-100 bg-orange-50/50'
-                                                        }`}
-                                                >
-                                                    <div className="flex items-start justify-between gap-4">
-                                                        <div className="min-w-0 flex-1">
-                                                            <h4 className="font-semibold">
-                                                                {item.name}
-                                                            </h4>
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className={`rounded-2xl border p-4 ${theme === 'dark'
+                                                            ? 'border-white/10 bg-white/[0.04]'
+                                                            : 'border-orange-100 bg-orange-50/50'
+                                                            }`}
+                                                    >
+                                                        <div className="flex items-start justify-between gap-4">
+                                                            <div className="min-w-0 flex-1">
+                                                                <h4 className="font-semibold">
+                                                                    {item.name}
+                                                                </h4>
 
-                                                            {item.variant?.name && (
-                                                                <p className="mt-1 text-xs text-orange-500">
-                                                                    {item.variant.name}
-                                                                </p>
-                                                            )}
+                                                                {item.variant?.name && (
+                                                                    <p className="mt-1 text-xs text-orange-500">
+                                                                        {item.variant.name}
+                                                                    </p>
+                                                                )}
 
-                                                            <div
-                                                                className={`mt-2 flex flex-wrap gap-2 text-xs ${theme === 'dark'
-                                                                    ? 'text-zinc-400'
-                                                                    : 'text-zinc-500'
-                                                                    }`}
-                                                            >
-                                                                <span className="rounded-full bg-orange-500/10 px-2 py-1">
-                                                                    Qty {item.qty}
-                                                                </span>
+                                                                <div
+                                                                    className={`mt-2 flex flex-wrap gap-2 text-xs ${theme === 'dark'
+                                                                        ? 'text-zinc-400'
+                                                                        : 'text-zinc-500'
+                                                                        }`}
+                                                                >
+                                                                    <span className="rounded-full bg-orange-500/10 px-2 py-1">
+                                                                        Qty {item.qty}
+                                                                    </span>
 
+                                                                    {packageCount > 0 && (
+                                                                        <span className="rounded-full bg-blue-500/10 px-2 py-1">
+                                                                            {packageCount} Paket
+                                                                        </span>
+                                                                    )}
+
+                                                                    {totalMarinades > 0 && (
+                                                                        <span className="rounded-full bg-green-500/10 px-2 py-1">
+                                                                            {totalMarinades} Marinasi
+                                                                        </span>
+                                                                    )}
+
+                                                                    {totalChoices > 0 && (
+                                                                        <span className="rounded-full bg-purple-500/10 px-2 py-1">
+                                                                            {totalChoices} Pilihan
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+
+                                                                {/* Preview konfigurasi */}
                                                                 {packageCount > 0 && (
-                                                                    <span className="rounded-full bg-blue-500/10 px-2 py-1">
-                                                                        {packageCount} Paket
-                                                                    </span>
-                                                                )}
+                                                                    <div className="mt-3 text-xs text-muted-foreground">
+                                                                        {item.packageInstances
+                                                                            .slice(0, 2)
+                                                                            .map(
+                                                                                (
+                                                                                    pkg: any,
+                                                                                    pkgIndex: number,
+                                                                                ) => (
+                                                                                    <div key={pkgIndex}>
+                                                                                        Paket #
+                                                                                        {pkgIndex + 1}
+                                                                                        {pkg.productMarinade &&
+                                                                                            ` • ${pkg.productMarinade.name}`}
+                                                                                    </div>
+                                                                                ),
+                                                                            )}
 
-                                                                {totalMarinades > 0 && (
-                                                                    <span className="rounded-full bg-green-500/10 px-2 py-1">
-                                                                        {totalMarinades} Marinasi
-                                                                    </span>
-                                                                )}
-
-                                                                {totalChoices > 0 && (
-                                                                    <span className="rounded-full bg-purple-500/10 px-2 py-1">
-                                                                        {totalChoices} Pilihan
-                                                                    </span>
+                                                                        {packageCount > 2 && (
+                                                                            <div>
+                                                                                +{packageCount - 2}{' '}
+                                                                                konfigurasi lainnya
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
                                                                 )}
                                                             </div>
 
-                                                            {/* Preview konfigurasi */}
-                                                            {packageCount > 0 && (
-                                                                <div className="mt-3 text-xs text-muted-foreground">
-                                                                    {item.packageInstances
-                                                                        .slice(0, 2)
-                                                                        .map(
-                                                                            (
-                                                                                pkg: any,
-                                                                                pkgIndex: number,
-                                                                            ) => (
-                                                                                <div key={pkgIndex}>
-                                                                                    Paket #
-                                                                                    {pkgIndex + 1}
-                                                                                    {pkg.productMarinade &&
-                                                                                        ` • ${pkg.productMarinade.name}`}
-                                                                                </div>
-                                                                            ),
-                                                                        )}
+                                                            <div className="text-right">
+                                                                <p className="font-semibold text-orange-500">
+                                                                    {formatPrice(item.rate)}
+                                                                </p>
 
-                                                                    {packageCount > 2 && (
-                                                                        <div>
-                                                                            +{packageCount - 2}{' '}
-                                                                            konfigurasi lainnya
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )}
-                                                        </div>
-
-                                                        <div className="text-right">
-                                                            <p className="font-semibold text-orange-500">
-                                                                {formatPrice(item.rate)}
-                                                            </p>
-
-                                                            <p className="mt-1 text-xs text-muted-foreground">
-                                                                / item
-                                                            </p>
+                                                                <p className="mt-1 text-xs text-muted-foreground">
+                                                                    / item
+                                                                </p>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                        <div
+                                            className={`mt-4 rounded-2xl border p-4 ${theme === 'dark'
+                                                ? 'border-white/10 bg-white/[0.04]'
+                                                : 'border-orange-100 bg-orange-50'
+                                                }`}
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <span className="font-medium">
+                                                    {__('Total Keranjang')}
+                                                </span>
+
+                                                <span className="text-xl font-bold text-orange-500">
+                                                    {formatPrice(totalCart)}
+                                                </span>
+                                            </div>
+
+                                            <p className="mt-1 text-xs text-muted-foreground">
+                                                {data.carts.length} {__("item dalam keranjang")}
+                                            </p>
+                                        </div>
+                                    </>
                                 ) : (
                                     <div
                                         className={`rounded-2xl p-4 text-center ${theme === 'dark'
@@ -624,6 +660,10 @@ function ContactContent() {
                                         onChange={(value) => {
                                             setData('pickupdate', value);
 
+                                            if (data.returndate && data.returndate < value) {
+                                                setData('returndate', '');
+                                            }
+
                                             clearErrors('pickupdate');
                                         }}
                                         blockedDates={[
@@ -631,11 +671,7 @@ function ContactContent() {
                                             '2026-05-29',
                                             '2026-06-02',
                                         ]}
-                                        minDate={
-                                            new Date()
-                                                .toISOString()
-                                                .split('T')[0]
-                                        }
+                                        minDate={minPickupDate()}
                                         maxDate={
                                             data.returndate
                                                 ? data.returndate.split(' ')[0]
@@ -662,9 +698,7 @@ function ContactContent() {
                                         minDate={
                                             data.pickupdate
                                                 ? data.pickupdate.split(' ')[0]
-                                                : new Date()
-                                                    .toISOString()
-                                                    .split('T')[0]
+                                                : minPickupDate()
                                         }
                                         minHour={8}
                                         maxHour={22}

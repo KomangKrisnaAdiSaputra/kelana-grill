@@ -1,3 +1,4 @@
+import { TooltipArrow } from '@radix-ui/react-tooltip';
 import { ShoppingBag } from 'lucide-react';
 import { useRef, useState } from 'react';
 
@@ -157,12 +158,15 @@ export default function ProductCard({
                             {product.description && (
                                 <TooltipContent
                                     side="top"
-                                    align="start"
-                                    className="max-w-xs whitespace-normal break-words"
+                                    align="center"
+                                    sideOffset={6}
+                                    className="w-fit max-w-xs whitespace-normal break-words"
                                 >
                                     <p className="text-xs leading-5">
                                         {product.description}
                                     </p>
+
+                                    <TooltipArrow className="fill-zinc-900 dark:fill-zinc-800" />
                                 </TooltipContent>
                             )}
                         </Tooltip>

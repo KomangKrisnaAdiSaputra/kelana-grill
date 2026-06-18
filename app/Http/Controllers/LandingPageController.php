@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Type;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -128,8 +129,8 @@ class LandingPageController extends Controller
 
         $validator->validate();
 
-        DB::transaction(function () use ($request) {
-
+        DB::beginTransaction();
+        try {
             $carts = collect($request->carts);
 
             $productIds = $carts->flatMap(fn($cart) => explode(';', $cart['id']))->filter()->unique()->values();
@@ -242,53 +243,15 @@ class LandingPageController extends Controller
                 'sub_total' => $subTotal,
                 'total' => $total,
             ]);
-        });
-        dd("huhu");
-        /*
-        |--------------------------------------------------------------------------
-        | WHATSAPP MESSAGE
-        |--------------------------------------------------------------------------
-        */
 
-        $cartText = '';
-
-        foreach ($orderDetails as $detail) {
-            $price = number_format(
-                $detail['price'],
-                0,
-                ',',
-                '.'
-            );
-
-            $cartText .= "- {$detail['product_name']} ({$detail['variant_name']}) x{$detail['qty']} (Rp {$price})\n";
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
         }
 
-        $message =
-            "FORMAT PEMESANAN 'Kelana Grill'\n\n" .
+        $data = Order::find($order->id)->generateData();
+        $url = $this->generateWaUrl($data);
 
-            "Nama : {$request->firstname} {$request->lastname}\n" .
-
-            "No Tlpn : {$request->phone}\n" .
-
-            "Alamat : {$request->address}\n\n" .
-
-            "Pesanan :\n{$cartText}\n" .
-
-            "Hari/Tanggal/Jam Pengambilan : {$request->pickupdate}\n" .
-
-            "Hari/Tanggal/Jam Pengembalian : {$request->returndate}\n" .
-
-            "Lokasi Pengambilan : {$request->pickuplocation}\n" .
-
-            "Jaminan : {$request->guarantee}\n" .
-
-            "Pembayaran : {$request->payment}\n\n" .
-
-            "Catatan : {$request->note}";
-
-        $whatsappNumber = config('app.landing.contact.whatsapp_number');
-
-        $url = 'https://wa.me/' . $whatsappNumber . '?text=' . urlencode($message);
         return redirect()->back()->with([
             'booking' => [
                 'result' => 'success',
@@ -300,5 +263,62 @@ class LandingPageController extends Controller
                 'message' => 'Booking berhasil, silakan lanjutkan ke WhatsApp untuk mengirimkan pesan pemesanan',
             ]
         ]);
+    }
+
+    function generateWaUrl(Collection $data): string
+    {
+        $cartText = '';
+        foreach ($data['details'] as $item) {
+            $subText = $item["variant"]["name"] ?? $item['description'];
+            $cartText .= "- {$item['name']} x{$item['qty']} ({$subText})\n";
+
+            if (!empty($item['packages'])) {
+                foreach ($item['packages'] as $package) {
+                    if (!empty($package['items'])) {
+                        foreach ($package['items'] as $pItem) {
+                            $cartText .= "       • {$pItem['name']} x{$pItem['qty']}\n";
+
+                            // FIX: handle Collection / array safely
+                            $options = collect($pItem['options'] ?? [])
+                                ->pluck('name')
+                                ->toArray();
+
+                            if (!empty($options)) {
+                                $cartText .= "             ↳ *_" . implode(', ', $options) . "_*\n";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $line = fn($label, $value) => str_pad($label, 11, ' ', STR_PAD_RIGHT) . " : " . $value;
+
+        $message =
+            "FORMAT PEMESANAN KELANA GRILL\n\n" .
+
+            $line('Nama', "{$data['firstName']} {$data['lastName']}") . "\n" .
+            $line('No HP', $data['phone']) . "\n" .
+            $line('Email', $data['email']) . "\n" .
+            $line('Alamat', $data['address']) . "\n\n" .
+
+            "Pesanan : ({$data['bookingId']})\n{$cartText}\n\n" .
+
+            $line('Pickup', $data['pickupDate']) . "\n" .
+            $line('Return', $data['returnDate']) . "\n" .
+            $line('Lokasi', $data['pickupLocation']) . "\n" .
+            $line('Jaminan', $data['guarantee']) . "\n" .
+            $line('Pembayaran', $data['payment']) . "\n\n" .
+
+            $line('Subtotal', 'IDR ' . number_format($data['subTotal'], 0, ',', '.')) . "\n" .
+            $line('Total', 'IDR ' . number_format($data['total'], 0, ',', '.')) . "\n\n" .
+
+            $line('Catatan', $data['note'] ?: '-') . "\n";
+
+        $whatsappNumber = config('app.landing.contact.whatsapp_number');
+
+        $url = 'https://wa.me/' . $whatsappNumber . '?text=' . urlencode($message);
+
+        return $url;
     }
 }
