@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 
 #[Fillable([
     "booking_id",
+    "type",
     "first_name",
     "last_name",
     "phone",
@@ -29,6 +30,9 @@ use Illuminate\Support\Str;
 class Order extends Model
 {
     use HasUuids;
+
+    public const TYPE_WEBSITE = "WEBSITE";
+    public const TRANSACTION = "TRANSACTION";
 
     protected static function booted(): void
     {
@@ -67,6 +71,7 @@ class Order extends Model
         return collect([
             "id" => $this->id,
             "bookingId" => $this->booking_id,
+            "type" => $this->type,
             "firstName" => $this->first_name,
             "lastName" => $this->last_name,
             "phone" => maskPhone($this->phone, ($request['hide'] ?? true)),

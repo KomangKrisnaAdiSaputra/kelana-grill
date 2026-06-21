@@ -28,6 +28,8 @@ Route::prefix('{locale?}')->middleware(Locale::class)->where(['locale' => 'id|en
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 
+    require __DIR__ . '/orderpayment.php';
+
     Route::prefix('product')->name('product')->group(function () {
         require __DIR__ . '/product/manageproduct.php';
     });

@@ -4,6 +4,7 @@ import {
     Folder,
     FolderTree,
     LayoutGrid,
+    Receipt,
     Tag,
     Warehouse,
 } from 'lucide-react';
@@ -20,7 +21,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { dashboard, orderPayment } from '@/routes';
 import { badge, category, type, warehouse } from '@/routes/master';
 import { manageProduct } from '@/routes/product';
 import type { NavItem } from '@/types';
@@ -30,6 +31,11 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Order Payment',
+        href: orderPayment(),
+        icon: Receipt,
     },
     {
         title: 'Products',

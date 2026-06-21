@@ -1,6 +1,7 @@
 export type Order = {
     id: string;
     bookingId: string;
+    type: string;
 
     firstName: string;
     lastName: string;
@@ -72,15 +73,6 @@ export type PackageItemOption = {
     type: string; // MARINADE | CHOICE | dll
 };
 
-export type Payment =
-    | {
-          id?: string;
-          method?: string;
-          amount?: number;
-          status?: string;
-      }
-    | Record<string, any>;
-
 export type OrderStatus =
     | 'UNPAID'
     | 'PAID'
@@ -88,3 +80,19 @@ export type OrderStatus =
     | 'READY'
     | 'COMPLETED'
     | 'CANCELLED';
+
+interface PaymentImage {
+    id: string;
+    url: string;
+}
+
+interface Payment {
+    id: string;
+    paymentMethod: string;
+    paymentChannel: string | null;
+    amount: number;
+    paidAt: string | null;
+    status: string;
+    note: string | null;
+    image?: PaymentImage;
+}

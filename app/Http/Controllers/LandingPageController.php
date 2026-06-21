@@ -140,6 +140,7 @@ class LandingPageController extends Controller
             $products = Product::with('variants')->whereIn('id', $productIds)->get();
 
             $order = Order::create([
+                'type' => Order::TYPE_WEBSITE,
                 'first_name' => $request->firstname,
                 'last_name' => $request->lastname,
                 'phone' => $request->phone,

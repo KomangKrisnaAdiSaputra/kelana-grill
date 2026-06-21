@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
 
             $table->string('booking_id')->unique();
+            $table->string('type')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
 
