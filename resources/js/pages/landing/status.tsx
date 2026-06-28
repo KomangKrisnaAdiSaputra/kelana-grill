@@ -18,9 +18,9 @@ function getStatusConfig(status: OrderStatus) {
         color: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-500',
       };
 
-    case 'UNPAID':
+    case 'DOWN PAYMENT':
       return {
-        label: 'Preparing',
+        label: 'Down Payment',
         color: 'border-blue-500/20 bg-blue-500/10 text-blue-500',
       };
 
@@ -72,7 +72,13 @@ function StatusPageContent() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  console.log(payments);
+  const calculatePaid = (order: Order) => {
+    return (order?.payments ?? [])
+      .filter((payment) => payment.status === "PAID")
+      .reduce((total, payment) => total + Number(payment.amount), 0);
+  };
+
+  const totalPay = Number(order?.total ?? 0) - calculatePaid(order!);
 
 
   return (
@@ -125,7 +131,7 @@ function StatusPageContent() {
                   </div>
 
                   <h2 className="mt-8 bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-300 bg-clip-text text-4xl font-black text-transparent sm:text-5xl md:text-6xl lg:text-7xl">
-                    {formatPrice(order.total)}
+                    {formatPrice(totalPay)}
                   </h2>
 
                   <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -285,8 +291,8 @@ function StatusPageContent() {
           <section className="mx-auto mt-10 max-w-7xl px-4 md:px-6">
             <div
               className={`rounded-3xl border p-6 backdrop-blur-xl md:p-8 ${theme === "dark"
-                  ? "border-blue-500/20 bg-blue-500/5"
-                  : "border-blue-200 bg-blue-50"
+                ? "border-blue-500/20 bg-blue-500/5"
+                : "border-blue-200 bg-blue-50"
                 }`}
             >
               {/* Header */}
@@ -306,8 +312,8 @@ function StatusPageContent() {
 
                 <span
                   className={`rounded-full border px-3 py-1 text-xs ${theme === "dark"
-                      ? "border-blue-500/20 bg-blue-500/10 text-blue-300"
-                      : "border-blue-200 bg-blue-100 text-blue-600"
+                    ? "border-blue-500/20 bg-blue-500/10 text-blue-300"
+                    : "border-blue-200 bg-blue-100 text-blue-600"
                     }`}
                 >
                   {payments.length} {payments.length > 1 ? "Payments" : "Payment"}
@@ -336,18 +342,18 @@ function StatusPageContent() {
                         <div className="flex flex-col items-center">
                           <div
                             className={`mt-3 h-3 w-3 rounded-full ${p.status === "PAID"
-                                ? "bg-green-500"
-                                : p.status === "CANCEL"
-                                  ? "bg-red-500"
-                                  : "bg-yellow-500"
+                              ? "bg-green-500"
+                              : p.status === "CANCEL"
+                                ? "bg-red-500"
+                                : "bg-yellow-500"
                               }`}
                           />
 
                           {index < payments.length - 1 && (
                             <div
                               className={`mt-2 flex-1 w-px ${theme === "dark"
-                                  ? "bg-blue-500/20"
-                                  : "bg-blue-200"
+                                ? "bg-blue-500/20"
+                                : "bg-blue-200"
                                 }`}
                             />
                           )}
@@ -357,8 +363,8 @@ function StatusPageContent() {
                       {/* Card */}
                       <div
                         className={`flex-1 rounded-2xl border p-5 ${theme === "dark"
-                            ? "border-white/10 bg-white/5"
-                            : "border-zinc-200 bg-white"
+                          ? "border-white/10 bg-white/5"
+                          : "border-zinc-200 bg-white"
                           }`}
                       >
                         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -366,8 +372,8 @@ function StatusPageContent() {
                             <div>
                               <p
                                 className={`text-lg font-semibold ${theme === "dark"
-                                    ? "text-white"
-                                    : "text-zinc-900"
+                                  ? "text-white"
+                                  : "text-zinc-900"
                                   }`}
                               >
                                 Payment #{p.paymentNo}
@@ -375,8 +381,8 @@ function StatusPageContent() {
 
                               <p
                                 className={`text-sm ${theme === "dark"
-                                    ? "text-zinc-400"
-                                    : "text-zinc-500"
+                                  ? "text-zinc-400"
+                                  : "text-zinc-500"
                                   }`}
                               >
                                 {p.paymentMethod}
@@ -388,8 +394,8 @@ function StatusPageContent() {
 
                             <div
                               className={`text-sm ${theme === "dark"
-                                  ? "text-zinc-300"
-                                  : "text-zinc-600"
+                                ? "text-zinc-300"
+                                : "text-zinc-600"
                                 }`}
                             >
                               <p>
@@ -422,8 +428,8 @@ function StatusPageContent() {
                           <div className="text-left md:text-right">
                             <p
                               className={`text-xl font-bold ${theme === "dark"
-                                  ? "text-white"
-                                  : "text-zinc-900"
+                                ? "text-white"
+                                : "text-zinc-900"
                                 }`}
                             >
                               {formatPrice(p.amount)}

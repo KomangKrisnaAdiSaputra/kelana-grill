@@ -41,7 +41,7 @@ class OrderPaymentController extends Controller
             'orderId' => ['required', 'exists:orders,id'],
             'paymentMethod' => ['required'],
             'paymentChannel' => ['nullable'],
-            'amount' => ['required', 'numeric', 'min:1', 'max:' . $remainingAmount,],
+            'amount' => ['required', 'numeric', 'min:1'],
             'paidAt' => ['required'],
             'status' => ['required'],
             'note' => ['nullable'],
@@ -55,7 +55,7 @@ class OrderPaymentController extends Controller
             'amount.required' => 'Amount is required.',
             'amount.numeric' => 'Amount must be a number.',
             'amount.min' => 'Amount must be at least 1.',
-            'amount.max' => 'Payment amount cannot exceed the remaining balance of IDR ' . number_format($remainingAmount, 0, ',', '.') . '.',
+            // 'amount.max' => 'Payment amount cannot exceed the remaining balance of IDR ' . number_format($remainingAmount, 0, ',', '.') . '.',
 
             'paidAt.required' => 'Paid date is required.',
 
