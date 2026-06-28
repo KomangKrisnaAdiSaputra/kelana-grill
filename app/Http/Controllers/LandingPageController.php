@@ -150,9 +150,9 @@ class LandingPageController extends Controller
                 'return_date' => $request->returndate,
                 'pickup_location' => $request->pickuplocation,
                 'guarantee' => $request->guarantee,
-                'payment_method' => $request->payment,
+                'payment_method' => strtoupper($request->payment),
                 'note' => $request->note,
-                'status' => 'UNPAID',
+                'status' => Order::STATUS_UNPAID,
                 'sub_total' => 0,
                 'total' => 0,
             ]);
@@ -248,20 +248,21 @@ class LandingPageController extends Controller
                 'total' => $total,
             ]);
 
+            $data = Order::find($order->id)->generateData(['hide' => false]);
+            $url = $this->generateWaUrl($data);
+
+            // $attachmentData = [[
+            //     'attach' => Pdf::loadView('pdf.invoice.index', ["order" => $data])->setOption(['isRemoteEnabled' => true])->output(),
+            //     'name' => 'Invoice #' . $order['bookingId'] . '.pdf',
+            //     'option' => ['mime' => 'application/pdf']
+            // ]];
+            // Mail::to($data['email'])->send(new NewOrderMail($data, $attachmentData));
+
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
         }
 
-        $data = Order::find($order->id)->generateData(['hide' => false]);
-        $url = $this->generateWaUrl($data);
-
-        $attachmentData = [[
-            'attach' => Pdf::loadView('pdf.invoice.index', ["order" => $data])->setOption(['isRemoteEnabled' => true])->output(),
-            'name' => 'Invoice #' . $order['bookingId'] . '.pdf',
-            'option' => ['mime' => 'application/pdf']
-        ]];
-        Mail::to($data['email'])->send(new NewOrderMail($data, $attachmentData));
 
         return redirect()->back()->with([
             'booking' => [
@@ -269,7 +270,7 @@ class LandingPageController extends Controller
                 'success' => true,
                 'code' => 200,
                 'data' => [
-                    'url' => $url,
+                    'url' => $url ?? null,
                 ],
                 'message' => 'Booking berhasil, silakan lanjutkan ke WhatsApp untuk mengirimkan pesan pemesanan',
             ]

@@ -1,31 +1,12 @@
+import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { formatPrice } from "@/helpers/global";
+import type { Order } from "@/types/order";
 
-type Payment = {
-  id: string;
-  payment_method: string;
-  payment_channel: string | null;
-  amount: number;
-  paid_at: string | null;
-  status: string;
-  note: string | null;
-};
-
-type Order = {
-  id: string;
-  bookingId: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string;
-  pickupDate: string;
-  returnDate: string;
-  total: number;
-  payments?: Payment[];
-};
 
 type Props = {
   open: boolean;
@@ -35,13 +16,11 @@ type Props = {
 
   calculatePaid: (order: Order) => number;
   getRemaining: (order: Order) => number;
-  formatCurrency: (val: number) => string;
 
   setMode: (mode: "create" | "edit") => void;
-  setSelectedPayment: (payment: Payment | null) => void;
   setOpenPaymentForm: (val: boolean) => void;
-  setData: (data: any) => void;
-  data: any;
+  setData: (key: string, value: any) => void;
+  reset: () => void
 };
 
 function Info({ label, value }: { label: string; value: any }) {
@@ -59,13 +38,24 @@ export default function ModalListPayment({
   selectedOrder,
   calculatePaid,
   getRemaining,
-  formatCurrency,
   setMode,
-  setSelectedPayment,
   setOpenPaymentForm,
   setData,
-  data,
+  reset
 }: Props) {
+
+  const totalPay = Number(selectedOrder?.total ?? 0) - calculatePaid(selectedOrder!);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    setData('orderId', selectedOrder?.id ?? "");
+
+  }, [open, selectedOrder?.id, setData]);
+
+  // console.log(selectedOrder, totalPay);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -128,15 +118,19 @@ export default function ModalListPayment({
                     </p>
                   </div>
 
-                  <Button
-                    onClick={() => {
-                      setMode('create');
-                      setSelectedPayment(null);
-                      setOpenPaymentForm(true);
-                    }}
-                  >
-                    Add Payment
-                  </Button>
+                  {totalPay > 0 && (
+                    <Button
+                      onClick={() => {
+                        reset();
+                        setMode('create');
+                        setData('orderId', selectedOrder?.id ?? "");
+                        setData('amount', totalPay);
+                        setOpenPaymentForm(true);
+                      }}
+                    >
+                      Add Payment
+                    </Button>
+                  )}
                 </div>
 
                 {/* EMPTY STATE */}
@@ -158,14 +152,14 @@ export default function ModalListPayment({
                         <div>
                           <div className="font-medium">
                             {
-                              payment.payment_method
+                              payment.paymentMethod
                             }
-                            {payment.payment_channel &&
-                              ` - ${payment.payment_channel}`}
+                            {payment.paymentChannel &&
+                              ` - ${payment.paymentChannel}`}
                           </div>
 
                           <div className="text-sm text-muted-foreground">
-                            {payment.paid_at}
+                            {payment.paidAt}
                           </div>
 
                           {payment.note && (
@@ -178,11 +172,7 @@ export default function ModalListPayment({
                         {/* RIGHT */}
                         <div className="text-right">
                           <div className="font-bold">
-                            {formatCurrency(
-                              Number(
-                                payment.amount,
-                              ),
-                            )}
+                            {formatPrice(payment.amount)}
                           </div>
 
                           <Badge className="mt-2">
@@ -194,35 +184,15 @@ export default function ModalListPayment({
                               size="sm"
                               variant="outline"
                               onClick={() => {
-                                setMode(
-                                  'edit',
-                                );
-                                setSelectedPayment(
-                                  payment,
-                                );
-
-                                // auto fill form
-                                setData({
-                                  ...data,
-                                  paymentMethod:
-                                    payment.payment_method,
-                                  paymentChannel:
-                                    payment.payment_channel ||
-                                    '',
-                                  amount: String(
-                                    payment.amount,
-                                  ),
-                                  paidAt:
-                                    payment.paid_at ||
-                                    '',
-                                  note:
-                                    payment.note ||
-                                    '',
-                                });
-
-                                setOpenPaymentForm(
-                                  true,
-                                );
+                                setMode('edit');
+                                setData("id", payment.id);
+                                setData("paymentMethod", payment.paymentMethod);
+                                setData("paymentChannel", payment.paymentChannel || "");
+                                setData("amount", payment.amount);
+                                setData("paidAt", payment.paidAt || "");
+                                setData("note", payment.note || "");
+                                setData("status", payment.status || "");
+                                setOpenPaymentForm(true);
                               }}
                             >
                               Edit
@@ -251,34 +221,21 @@ export default function ModalListPayment({
                     <div className="flex justify-between">
                       <span>Total</span>
                       <span>
-                        {formatCurrency(
-                          Number(
-                            selectedOrder?.total ||
-                            0,
-                          ),
-                        )}
+                        {formatPrice(selectedOrder?.total)}
                       </span>
                     </div>
 
                     <div className="flex justify-between">
                       <span>Paid</span>
                       <span>
-                        {formatCurrency(
-                          calculatePaid(
-                            selectedOrder!,
-                          ),
-                        )}
+                        {formatPrice(calculatePaid(selectedOrder!))}
                       </span>
                     </div>
 
                     <div className="flex justify-between font-bold">
                       <span>Remaining</span>
                       <span>
-                        {formatCurrency(
-                          getRemaining(
-                            selectedOrder!,
-                          ),
-                        )}
+                        {formatPrice(getRemaining(selectedOrder!))}
                       </span>
                     </div>
                   </div>

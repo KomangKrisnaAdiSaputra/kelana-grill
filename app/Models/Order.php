@@ -34,6 +34,10 @@ class Order extends Model
     public const TYPE_WEBSITE = "WEBSITE";
     public const TRANSACTION = "TRANSACTION";
 
+    public const STATUS_PAID = "PAID";
+    public const STATUS_UNPAID = "UNPAID";
+    public const STATUS_DOWN_PAYMENT = "DOWN PAYMENT";
+
     protected static function booted(): void
     {
         static::creating(function (Order $order) {
@@ -66,6 +70,11 @@ class Order extends Model
         return $this->hasMany(OrderDetail::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     function generateData(?array $request = []): Collection
     {
         return collect([
@@ -88,7 +97,7 @@ class Order extends Model
             "total" => $this->total,
 
             "details" => $this->details->map->generateData(),
-            "payments" => []
+            "payments" => $this->payments->map->generateData()
         ]);
     }
 }

@@ -73,16 +73,11 @@ export type PackageItemOption = {
     type: string; // MARINADE | CHOICE | dll
 };
 
-export type OrderStatus =
-    | 'UNPAID'
-    | 'PAID'
-    | 'PROCESS'
-    | 'READY'
-    | 'COMPLETED'
-    | 'CANCELLED';
+export type OrderStatus = 'UNPAID' | 'PAID' | 'DOWN PAYMENT';
 
 interface PaymentImage {
     id: string;
+    name: string;
     url: string;
 }
 

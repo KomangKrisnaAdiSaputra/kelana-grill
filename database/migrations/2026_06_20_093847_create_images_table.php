@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('conect_id')->index();
+            $table->uuid('connect_id')->index();
             $table->integer('default')->default(0);
             $table->string('name');
             $table->string('folder');
+            $table->string('type');
             $table->string('disk');
             $table->string('url');
             $table->timestamps();

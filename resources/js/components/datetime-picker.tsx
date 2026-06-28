@@ -1,3 +1,12 @@
+
+import {
+    autoUpdate,
+    flip,
+    offset,
+    shift,
+    size,
+    useFloating,
+} from '@floating-ui/react';
 import {
     ChevronDown,
     ChevronLeft,
@@ -8,6 +17,7 @@ import {
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from '@/helpers/global';
+
 
 type DateTimePickerProps = {
     value: string;
@@ -47,10 +57,38 @@ export default function DateTimePicker({
     error,
 }: DateTimePickerProps) {
     const wrapperRef = useRef<HTMLDivElement>(null);
+    const floatingRef = useRef<HTMLDivElement>(null);
+    const [open, setOpen] = useState(false);
 
+    const {
+        refs,
+        floatingStyles,
+    } = useFloating({
+        open,
+        placement: 'bottom-start',
+        strategy: "fixed",
+        whileElementsMounted: autoUpdate,
+
+        middleware: [
+            offset(12),
+
+            flip(),
+
+            shift({
+                padding: 12,
+            }),
+
+            size({
+                apply({ availableWidth, elements }) {
+                    Object.assign(elements.floating.style, {
+                        maxWidth: `${availableWidth}px`,
+                    });
+                },
+            }),
+        ],
+    });
     const today = new Date();
 
-    const [open, setOpen] = useState(false);
 
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
 
@@ -59,6 +97,14 @@ export default function DateTimePicker({
     const [selectedHour, setSelectedHour] = useState('10');
 
     const [selectedMinute, setSelectedMinute] = useState('00');
+
+    useEffect(() => {
+        refs.setReference(wrapperRef.current);
+    }, [refs]);
+
+    useEffect(() => {
+        refs.setFloating(floatingRef.current);
+    }, [refs, open]);
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -180,12 +226,17 @@ export default function DateTimePicker({
     );
 
     return (
-        <div ref={wrapperRef} className="relative">
+        <div
+            ref={(node) => {
+                wrapperRef.current = node;
+                refs.setReference(node);
+            }}
+            className="relative"
+        >
             {label && (
                 <label
-                    className={`mb-2 block text-sm font-medium ${
-                        theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'
-                    } `}
+                    className={`mb-2 block text-sm font-medium ${theme === 'dark' ? 'text-zinc-300' : 'text-zinc-700'
+                        } `}
                 >
                     {label}
                 </label>
@@ -196,19 +247,17 @@ export default function DateTimePicker({
             <button
                 type="button"
                 onClick={() => setOpen(!open)}
-                className={`flex w-full items-center justify-between rounded-3xl border px-5 py-4 text-left transition-all duration-300 ${
-                    error
-                        ? 'border-red-400 ring-2 ring-red-400/20'
-                        : theme === 'dark'
-                          ? 'theme-card-dark'
-                          : 'theme-card-light'
-                }`}
+                className={`flex w-full items-center justify-between rounded-3xl border px-5 py-4 text-left transition-all duration-300 ${error
+                    ? 'border-red-400 ring-2 ring-red-400/20'
+                    : theme === 'dark'
+                        ? 'theme-card-dark'
+                        : 'theme-card-light'
+                    }`}
             >
                 <div>
                     <p
-                        className={`text-xs ${
-                            theme === 'dark' ? 'text-zinc-200' : 'text-zinc-500'
-                        }`}
+                        className={`text-xs ${theme === 'dark' ? 'text-zinc-200' : 'text-zinc-500'
+                            }`}
                     >
                         {__('Jadwal Booking')}
                     </p>
@@ -223,11 +272,10 @@ export default function DateTimePicker({
                 </div>
 
                 <div
-                    className={`flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-lg ${
-                        error
-                            ? 'bg-red-500 shadow-red-500/30'
-                            : 'bg-orange-500 shadow-orange-500/30'
-                    }`}
+                    className={`flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-lg ${error
+                        ? 'bg-red-500 shadow-red-500/30'
+                        : 'bg-orange-500 shadow-orange-500/30'
+                        }`}
                 >
                     <Clock3 size={20} />
                 </div>
@@ -237,9 +285,10 @@ export default function DateTimePicker({
 
             {open && (
                 <div
-                    className={`absolute top-full left-0 z-[99999] mt-3 w-full rounded-[28px] border p-3 shadow-2xl backdrop-blur-2xl max-lg:max-h-[70dvh] max-lg:touch-pan-y max-lg:overflow-y-auto max-lg:overscroll-contain max-lg:[-webkit-overflow-scrolling:touch] max-md:max-h-[75dvh] sm:p-4 lg:max-h-none lg:min-w-[min(720px,calc(100vw-48px))] lg:overflow-visible lg:p-5 ${
-                        theme === 'dark' ? 'bg-theme-dark' : 'bg-theme-light'
-                    } `}
+                    className={`z-[99999] mt-3 w-full rounded-[28px] border p-3 shadow-2xl backdrop-blur-2xl max-lg:max-h-[70dvh] max-lg:touch-pan-y max-lg:overflow-y-auto max-lg:overscroll-contain max-lg:[-webkit-overflow-scrolling:touch] max-md:max-h-[75dvh] sm:p-4 lg:max-h-none lg:min-w-[min(720px,calc(100vw-48px))] lg:overflow-visible lg:p-5 ${theme === 'dark' ? 'bg-theme-dark' : 'bg-theme-light'
+                        } `}
+                    ref={floatingRef}
+                    style={floatingStyles}
                 >
                     <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[1fr_240px]">
                         {/* CALENDAR */}
@@ -251,11 +300,10 @@ export default function DateTimePicker({
                                 <button
                                     type="button"
                                     onClick={previousMonth}
-                                    className={`flex h-9 w-9 items-center justify-center rounded-2xl transition-all sm:h-10 sm:w-10 lg:h-11 lg:w-11 ${
-                                        theme === 'dark'
-                                            ? `bg-white/[0.05] hover:bg-white/[0.08]`
-                                            : `bg-orange-50 hover:bg-orange-100`
-                                    } `}
+                                    className={`flex h-9 w-9 items-center justify-center rounded-2xl transition-all sm:h-10 sm:w-10 lg:h-11 lg:w-11 ${theme === 'dark'
+                                        ? `bg-white/[0.05] hover:bg-white/[0.08]`
+                                        : `bg-orange-50 hover:bg-orange-100`
+                                        } `}
                                 >
                                     <ChevronLeft size={18} />
                                 </button>
@@ -267,11 +315,10 @@ export default function DateTimePicker({
                                 <button
                                     type="button"
                                     onClick={nextMonth}
-                                    className={`flex h-11 w-11 items-center justify-center rounded-2xl transition-all ${
-                                        theme === 'dark'
-                                            ? `bg-white/[0.05] hover:bg-white/[0.08]`
-                                            : `bg-orange-50 hover:bg-orange-100`
-                                    } `}
+                                    className={`flex h-11 w-11 items-center justify-center rounded-2xl transition-all ${theme === 'dark'
+                                        ? `bg-white/[0.05] hover:bg-white/[0.08]`
+                                        : `bg-orange-50 hover:bg-orange-100`
+                                        } `}
                                 >
                                     <ChevronRight size={18} />
                                 </button>
@@ -283,11 +330,10 @@ export default function DateTimePicker({
                                 {days.map((day) => (
                                     <div
                                         key={day}
-                                        className={`py-2 text-center text-xs font-semibold ${
-                                            theme === 'dark'
-                                                ? 'text-zinc-200'
-                                                : 'text-zinc-400'
-                                        } `}
+                                        className={`py-2 text-center text-xs font-semibold ${theme === 'dark'
+                                            ? 'text-zinc-200'
+                                            : 'text-zinc-400'
+                                            } `}
                                     >
                                         {__(day)}
                                     </div>
@@ -330,15 +376,14 @@ export default function DateTimePicker({
                                                     buildDateTime(currentDate),
                                                 );
                                             }}
-                                            className={`relative flex h-9 items-center justify-center rounded-xl text-xs font-semibold transition-all duration-200 sm:h-10 sm:rounded-2xl sm:text-sm lg:h-12 ${
-                                                blocked
-                                                    ? `cursor-not-allowed bg-zinc-500/10 text-zinc-400 line-through opacity-50`
-                                                    : selected
-                                                      ? `bg-orange-500 text-white shadow-lg shadow-orange-500/30`
-                                                      : theme === 'dark'
+                                            className={`relative flex h-9 items-center justify-center rounded-xl text-xs font-semibold transition-all duration-200 sm:h-10 sm:rounded-2xl sm:text-sm lg:h-12 ${blocked
+                                                ? `cursor-not-allowed bg-zinc-500/10 text-zinc-400 line-through opacity-50`
+                                                : selected
+                                                    ? `bg-orange-500 text-white shadow-lg shadow-orange-500/30`
+                                                    : theme === 'dark'
                                                         ? `bg-white/[0.08] text-white hover:bg-white/[0.15]`
                                                         : `bg-orange-50/70 text-zinc-700 hover:bg-orange-100`
-                                            } `}
+                                                } `}
                                         >
                                             {day}
 
@@ -354,11 +399,10 @@ export default function DateTimePicker({
                         {/* TIME PANEL */}
 
                         <div
-                            className={`rounded-[24px] border p-3 sm:p-4 ${
-                                theme === 'dark'
-                                    ? `border-white/10 bg-white/[0.03]`
-                                    : `border-orange-100 bg-orange-50/40`
-                            } `}
+                            className={`rounded-[24px] border p-3 sm:p-4 ${theme === 'dark'
+                                ? `border-white/10 bg-white/[0.03]`
+                                : `border-orange-100 bg-orange-50/40`
+                                } `}
                         >
                             <div className="mb-4 flex items-center gap-3">
                                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-500 text-white">
@@ -367,21 +411,19 @@ export default function DateTimePicker({
 
                                 <div>
                                     <h4
-                                        className={`text-sm font-semibold ${
-                                            theme === 'dark'
-                                                ? 'text-white'
-                                                : 'text-zinc-800'
-                                        } `}
+                                        className={`text-sm font-semibold ${theme === 'dark'
+                                            ? 'text-white'
+                                            : 'text-zinc-800'
+                                            } `}
                                     >
                                         {__('Pilih Jam')}
                                     </h4>
 
                                     <p
-                                        className={`text-xs ${
-                                            theme === 'dark'
-                                                ? 'text-zinc-200'
-                                                : 'text-zinc-500'
-                                        } `}
+                                        className={`text-xs ${theme === 'dark'
+                                            ? 'text-zinc-200'
+                                            : 'text-zinc-500'
+                                            } `}
                                     >
                                         {__('Atur waktu booking')}
                                     </p>
@@ -393,11 +435,10 @@ export default function DateTimePicker({
                             <div className="space-y-4">
                                 <div>
                                     <p
-                                        className={`mb-2 text-xs font-medium ${
-                                            theme === 'dark'
-                                                ? 'text-zinc-200'
-                                                : 'text-zinc-500'
-                                        } `}
+                                        className={`mb-2 text-xs font-medium ${theme === 'dark'
+                                            ? 'text-zinc-200'
+                                            : 'text-zinc-500'
+                                            } `}
                                     >
                                         {__('Jam')}
                                     </p>
@@ -405,11 +446,10 @@ export default function DateTimePicker({
                                     <div className="relative">
                                         <Clock3
                                             size={18}
-                                            className={`pointer-events-none absolute top-1/2 left-4 z-10 -translate-y-1/2 ${
-                                                theme === 'dark'
-                                                    ? 'text-zinc-300'
-                                                    : 'text-zinc-500'
-                                            }`}
+                                            className={`pointer-events-none absolute top-1/2 left-4 z-10 -translate-y-1/2 ${theme === 'dark'
+                                                ? 'text-zinc-300'
+                                                : 'text-zinc-500'
+                                                }`}
                                         />
 
                                         <select
@@ -429,11 +469,10 @@ export default function DateTimePicker({
                                                     );
                                                 }
                                             }}
-                                            className={`h-12 w-full appearance-none rounded-2xl border pr-12 pl-12 text-sm font-medium transition-all outline-none sm:h-13 lg:h-14 ${
-                                                theme === 'dark'
-                                                    ? 'border-white/10 bg-[#1a1a1b] text-white focus:border-orange-500'
-                                                    : 'border-orange-100 bg-white text-zinc-700 focus:border-orange-400'
-                                            }`}
+                                            className={`h-12 w-full appearance-none rounded-2xl border pr-12 pl-12 text-sm font-medium transition-all outline-none sm:h-13 lg:h-14 ${theme === 'dark'
+                                                ? 'border-white/10 bg-[#1a1a1b] text-white focus:border-orange-500'
+                                                : 'border-orange-100 bg-white text-zinc-700 focus:border-orange-400'
+                                                }`}
                                             style={{
                                                 colorScheme:
                                                     theme === 'dark'
@@ -469,11 +508,10 @@ export default function DateTimePicker({
 
                                         <ChevronDown
                                             size={18}
-                                            className={`pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 ${
-                                                theme === 'dark'
-                                                    ? 'text-zinc-400'
-                                                    : 'text-zinc-500'
-                                            }`}
+                                            className={`pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 ${theme === 'dark'
+                                                ? 'text-zinc-400'
+                                                : 'text-zinc-500'
+                                                }`}
                                         />
                                     </div>
                                 </div>
@@ -482,11 +520,10 @@ export default function DateTimePicker({
 
                                 <div>
                                     <p
-                                        className={`mb-2 text-xs font-medium ${
-                                            theme === 'dark'
-                                                ? 'text-zinc-200'
-                                                : 'text-zinc-500'
-                                        } `}
+                                        className={`mb-2 text-xs font-medium ${theme === 'dark'
+                                            ? 'text-zinc-200'
+                                            : 'text-zinc-500'
+                                            } `}
                                     >
                                         {__('Menit')}
                                     </p>
@@ -494,11 +531,10 @@ export default function DateTimePicker({
                                     <div className="relative">
                                         <Timer
                                             size={18}
-                                            className={`pointer-events-none absolute top-1/2 left-4 z-10 -translate-y-1/2 ${
-                                                theme === 'dark'
-                                                    ? 'text-zinc-300'
-                                                    : 'text-zinc-500'
-                                            }`}
+                                            className={`pointer-events-none absolute top-1/2 left-4 z-10 -translate-y-1/2 ${theme === 'dark'
+                                                ? 'text-zinc-300'
+                                                : 'text-zinc-500'
+                                                }`}
                                         />
 
                                         <select
@@ -518,11 +554,10 @@ export default function DateTimePicker({
                                                     );
                                                 }
                                             }}
-                                            className={`h-14 w-full appearance-none rounded-2xl border pr-12 pl-12 text-sm font-medium transition-all outline-none ${
-                                                theme === 'dark'
-                                                    ? 'border-white/10 bg-[#1a1a1b] text-white focus:border-orange-500'
-                                                    : 'border-orange-100 bg-white text-zinc-700 focus:border-orange-400'
-                                            }`}
+                                            className={`h-14 w-full appearance-none rounded-2xl border pr-12 pl-12 text-sm font-medium transition-all outline-none ${theme === 'dark'
+                                                ? 'border-white/10 bg-[#1a1a1b] text-white focus:border-orange-500'
+                                                : 'border-orange-100 bg-white text-zinc-700 focus:border-orange-400'
+                                                }`}
                                             style={{
                                                 colorScheme:
                                                     theme === 'dark'
@@ -547,11 +582,10 @@ export default function DateTimePicker({
 
                                         <ChevronDown
                                             size={18}
-                                            className={`pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 ${
-                                                theme === 'dark'
-                                                    ? 'text-zinc-400'
-                                                    : 'text-zinc-500'
-                                            }`}
+                                            className={`pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 ${theme === 'dark'
+                                                ? 'text-zinc-400'
+                                                : 'text-zinc-500'
+                                                }`}
                                         />
                                     </div>
                                 </div>
@@ -560,28 +594,25 @@ export default function DateTimePicker({
                             {/* PREVIEW */}
 
                             <div
-                                className={`mt-5 rounded-2xl p-4 ${
-                                    theme === 'dark'
-                                        ? 'bg-theme-dark'
-                                        : 'bg-theme-light'
-                                } `}
+                                className={`mt-5 rounded-2xl p-4 ${theme === 'dark'
+                                    ? 'bg-theme-dark'
+                                    : 'bg-theme-light'
+                                    } `}
                             >
                                 <p
-                                    className={`text-xs ${
-                                        theme === 'dark'
-                                            ? 'text-zinc-200'
-                                            : 'text-zinc-500'
-                                    } `}
+                                    className={`text-xs ${theme === 'dark'
+                                        ? 'text-zinc-200'
+                                        : 'text-zinc-500'
+                                        } `}
                                 >
                                     {__('Waktu Dipilih')}
                                 </p>
 
                                 <h3
-                                    className={`mt-1 text-xl font-bold tracking-wide sm:text-2xl ${
-                                        theme === 'dark'
-                                            ? 'text-white'
-                                            : 'text-zinc-800'
-                                    } `}
+                                    className={`mt-1 text-xl font-bold tracking-wide sm:text-2xl ${theme === 'dark'
+                                        ? 'text-white'
+                                        : 'text-zinc-800'
+                                        } `}
                                 >
                                     {selectedHour}:{selectedMinute}
                                 </h3>
@@ -590,11 +621,10 @@ export default function DateTimePicker({
                             {/* INFO */}
 
                             <div
-                                className={`mt-4 rounded-2xl p-4 text-sm ${
-                                    theme === 'dark'
-                                        ? `bg-white/[0.04] text-zinc-200`
-                                        : `bg-orange-100/50 text-zinc-600`
-                                } `}
+                                className={`mt-4 rounded-2xl p-4 text-sm ${theme === 'dark'
+                                    ? `bg-white/[0.04] text-zinc-200`
+                                    : `bg-orange-100/50 text-zinc-600`
+                                    } `}
                             >
                                 <div className="flex items-start gap-3">
                                     <div className="mt-1 h-3 w-3 rounded-full bg-red-400" />

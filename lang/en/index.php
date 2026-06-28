@@ -246,7 +246,7 @@ return [
   "Jadwal Booking" => "Booking Schedule",
   "Pilih Jam" => "Select Time",
   "Pilih tanggal & jam" => "Select date & time",
-  "Atur waktu booking" => "Set booking time",
+  "Atur waktu" => "Set time",
   "Jam" => "Time",
   "Menit" => "Minute",
   "Waktu Dipilih" => "Selected Time",
