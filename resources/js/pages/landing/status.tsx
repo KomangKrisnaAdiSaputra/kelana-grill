@@ -18,28 +18,10 @@ function getStatusConfig(status: OrderStatus) {
         color: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-500',
       };
 
-    case 'PROCESS':
+    case 'UNPAID':
       return {
         label: 'Preparing',
         color: 'border-blue-500/20 bg-blue-500/10 text-blue-500',
-      };
-
-    case 'READY':
-      return {
-        label: 'Ready Pickup',
-        color: 'border-purple-500/20 bg-purple-500/10 text-purple-500',
-      };
-
-    case 'COMPLETED':
-      return {
-        label: 'Completed',
-        color: 'border-green-500/20 bg-green-500/10 text-green-500',
-      };
-
-    case 'CANCELLED':
-      return {
-        label: 'Cancelled',
-        color: 'border-red-500/20 bg-red-500/10 text-red-500',
       };
 
     default:
@@ -89,6 +71,9 @@ function StatusPageContent() {
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  console.log(payments);
+
 
   return (
     <div
@@ -299,104 +284,162 @@ function StatusPageContent() {
         {payments.length > 0 && (
           <section className="mx-auto mt-10 max-w-7xl px-4 md:px-6">
             <div
-              className={`rounded-3xl border p-6 backdrop-blur-xl md:p-8 ${theme === 'dark'
-                ? 'border-blue-500/20 bg-blue-500/5'
-                : 'border-blue-200 bg-blue-50'
-                } `}
+              className={`rounded-3xl border p-6 backdrop-blur-xl md:p-8 ${theme === "dark"
+                  ? "border-blue-500/20 bg-blue-500/5"
+                  : "border-blue-200 bg-blue-50"
+                }`}
             >
-              {/* HEADER */}
-              <div className="flex items-start justify-between">
+              {/* Header */}
+              <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs tracking-[0.3em] text-blue-500 uppercase">
-                    {__("Waktu Pemabayaran")}
+                  <p className="text-xs uppercase tracking-[0.3em] text-blue-500">
+                    {__("Payment History")}
                   </p>
 
                   <h3
-                    className={`mt-2 text-xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-zinc-900'} `}
+                    className={`mt-2 text-xl font-semibold ${theme === "dark" ? "text-white" : "text-zinc-900"
+                      }`}
                   >
-                    {__("Pembayaran")}
+                    {__("Payments")}
                   </h3>
                 </div>
 
                 <span
-                  className={`rounded-full border px-3 py-1 text-xs ${theme === 'dark'
-                    ? 'border-blue-500/20 bg-blue-500/10 text-blue-300'
-                    : 'border-blue-200 bg-blue-100 text-blue-600'
-                    } `}
+                  className={`rounded-full border px-3 py-1 text-xs ${theme === "dark"
+                      ? "border-blue-500/20 bg-blue-500/10 text-blue-300"
+                      : "border-blue-200 bg-blue-100 text-blue-600"
+                    }`}
                 >
-                  {payments.length} items
+                  {payments.length} {payments.length > 1 ? "Payments" : "Payment"}
                 </span>
               </div>
 
-              {/* LIST */}
-              <div className="mt-8 space-y-6">
-                {payments.map((p: any) => (
-                  <div key={p.id} className="flex gap-4">
-                    {/* DOT */}
-                    <div className="flex flex-col items-center">
-                      <div
-                        className={`mt-2 h-3 w-3 rounded-full ${p.status === 'PAID'
-                          ? 'bg-blue-500'
-                          : theme === 'dark'
-                            ? 'bg-blue-500/30'
-                            : 'bg-blue-300'
-                          } `}
-                      />
+              <div className="mt-8 space-y-5">
+                {payments.map((p: any, index: number) => {
+                  const statusClass =
+                    p.status === "PAID"
+                      ? theme === "dark"
+                        ? "bg-green-500/10 text-green-300"
+                        : "bg-green-100 text-green-700"
+                      : p.status === "CANCEL"
+                        ? theme === "dark"
+                          ? "bg-red-500/10 text-red-300"
+                          : "bg-red-100 text-red-700"
+                        : theme === "dark"
+                          ? "bg-yellow-500/10 text-yellow-300"
+                          : "bg-yellow-100 text-yellow-700";
 
-                      <div
-                        className={`mt-2 w-px flex-1 ${theme === 'dark' ? 'bg-blue-500/20' : 'bg-blue-200'} `}
-                      />
-                    </div>
+                  return (
+                    <div key={p.id} className="flex gap-4">
+                      {/* Timeline hanya jika payment > 1 */}
+                      {payments.length > 1 && (
+                        <div className="flex flex-col items-center">
+                          <div
+                            className={`mt-3 h-3 w-3 rounded-full ${p.status === "PAID"
+                                ? "bg-green-500"
+                                : p.status === "CANCEL"
+                                  ? "bg-red-500"
+                                  : "bg-yellow-500"
+                              }`}
+                          />
 
-                    {/* CONTENT */}
-                    <div className="flex-1 pb-6">
-                      <div className="flex justify-between">
-                        <div>
-                          <p
-                            className={
-                              theme === 'dark'
-                                ? 'font-medium text-blue-100'
-                                : 'font-medium text-zinc-900'
-                            }
-                          >
-                            {p.title}
-                          </p>
-
-                          <p
-                            className={`mt-1 text-sm ${theme === 'dark' ? 'text-blue-200/60' : 'text-zinc-500'} `}
-                          >
-                            {p.paidAt ?? 'Waiting payment'}
-                          </p>
+                          {index < payments.length - 1 && (
+                            <div
+                              className={`mt-2 flex-1 w-px ${theme === "dark"
+                                  ? "bg-blue-500/20"
+                                  : "bg-blue-200"
+                                }`}
+                            />
+                          )}
                         </div>
+                      )}
 
-                        <div className="text-right">
-                          <p
-                            className={
-                              theme === 'dark'
-                                ? 'font-semibold text-blue-100'
-                                : 'font-semibold text-zinc-900'
-                            }
-                          >
-                            {formatPrice(p.amount)}
-                          </p>
+                      {/* Card */}
+                      <div
+                        className={`flex-1 rounded-2xl border p-5 ${theme === "dark"
+                            ? "border-white/10 bg-white/5"
+                            : "border-zinc-200 bg-white"
+                          }`}
+                      >
+                        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                          <div className="space-y-2">
+                            <div>
+                              <p
+                                className={`text-lg font-semibold ${theme === "dark"
+                                    ? "text-white"
+                                    : "text-zinc-900"
+                                  }`}
+                              >
+                                Payment #{p.paymentNo}
+                              </p>
 
-                          <span
-                            className={`mt-1 inline-block rounded-full px-2 py-1 text-xs ${p.status === 'PAID'
-                              ? theme === 'dark'
-                                ? 'bg-blue-500/10 text-blue-300'
-                                : 'bg-blue-100 text-blue-600'
-                              : theme === 'dark'
-                                ? 'bg-blue-500/5 text-blue-400'
-                                : 'bg-blue-50 text-blue-500'
-                              } `}
-                          >
-                            {p.status}
-                          </span>
+                              <p
+                                className={`text-sm ${theme === "dark"
+                                    ? "text-zinc-400"
+                                    : "text-zinc-500"
+                                  }`}
+                              >
+                                {p.paymentMethod}
+                                {p.paymentChannel
+                                  ? ` • ${p.paymentChannel}`
+                                  : ""}
+                              </p>
+                            </div>
+
+                            <div
+                              className={`text-sm ${theme === "dark"
+                                  ? "text-zinc-300"
+                                  : "text-zinc-600"
+                                }`}
+                            >
+                              <p>
+                                <span className="font-medium">
+                                  {__("Paid At")}:
+                                </span>{" "}
+                                {p.paidAt ?? __("Waiting payment")}
+                              </p>
+
+                              {p.note && (
+                                <p className="mt-1">
+                                  <span className="font-medium">
+                                    {__("Note")}:
+                                  </span>{" "}
+                                  {p.note}
+                                </p>
+                              )}
+
+                              {p.createBy && (
+                                <p className="mt-1">
+                                  <span className="font-medium">
+                                    {__("Created By")}:
+                                  </span>{" "}
+                                  {p.createBy}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="text-left md:text-right">
+                            <p
+                              className={`text-xl font-bold ${theme === "dark"
+                                  ? "text-white"
+                                  : "text-zinc-900"
+                                }`}
+                            >
+                              {formatPrice(p.amount)}
+                            </p>
+
+                            <span
+                              className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-medium ${statusClass}`}
+                            >
+                              {__(p.status)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </section>
