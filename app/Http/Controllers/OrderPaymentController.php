@@ -40,7 +40,7 @@ class OrderPaymentController extends Controller
         $request->validate([
             'orderId' => ['required', 'exists:orders,id'],
             'paymentMethod' => ['required'],
-            'paymentChannel' => ['nullable'],
+            'paymentChannel' => ['required_if:paymentMethod,TRANSFER'],
             'amount' => ['required', 'numeric', 'min:1'],
             'paidAt' => ['required'],
             'status' => ['required'],
@@ -51,6 +51,9 @@ class OrderPaymentController extends Controller
             'orderId.exists' => 'Order not found.',
 
             'paymentMethod.required' => 'Payment method is required.',
+
+            'paymentChannel.required_if' => 'Payment channel is required when payment method is Transfer.',
+
 
             'amount.required' => 'Amount is required.',
             'amount.numeric' => 'Amount must be a number.',

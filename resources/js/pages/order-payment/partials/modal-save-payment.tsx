@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -19,6 +20,8 @@ import { useAppearance } from '@/hooks/use-appearance';
 
 import payments from '@/src/data/payments';
 import type { dataType } from './types';
+
+type ErrorKey = keyof dataType | 'message' | 'image.file';
 
 type Props = {
   open: boolean;
@@ -33,7 +36,7 @@ type Props = {
   setData: (key: string, value: any) => void;
 
   onSubmit: () => void;
-  errors: Partial<Record<keyof dataType | "message", string>>;
+  errors: Partial<Record<ErrorKey, string>>;
   totalPay: number;
 };
 
@@ -50,6 +53,7 @@ export default function ModalSavePayment({
 }: Props) {
   const { appearance } = useAppearance();
   const [amountError, setAmountError] = useState("");
+  console.log(errors);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -69,6 +73,8 @@ export default function ModalSavePayment({
           <DialogTitle>
             {mode === 'create' ? 'Add Payment' : 'Edit Payment'}
           </DialogTitle>
+          <DialogDescription></DialogDescription>
+
         </DialogHeader>
 
         {/* BODY */}
@@ -85,6 +91,7 @@ export default function ModalSavePayment({
                 onChange={(files) =>
                   setData('image', files)
                 }
+                error={errors['image.file']}
               />
             </div>
 
@@ -133,20 +140,22 @@ export default function ModalSavePayment({
               {/* Baris 2: Payment Channel & Amount */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {/* Payment Channel */}
-                <div className="flex flex-col">
-                  <Label className="mb-2 block text-sm font-medium">
-                    Payment Channel
-                  </Label>
-                  <DynamicSelect
-                    options={payments}
-                    value={data.paymentChannel ?? ''}
-                    onChange={(value) => setData('paymentChannel', value)}
-                    getValue={(item) => item.name}
-                    getLabel={(item) => item.name}
-                    placeholder="Select payment channel"
-                    error={errors?.paymentChannel}
-                  />
-                </div>
+                {data.paymentMethod === "TRANSFER" && (
+                  <div className="flex flex-col">
+                    <Label className="mb-2 block text-sm font-medium">
+                      Payment Channel
+                    </Label>
+                    <DynamicSelect
+                      options={payments}
+                      value={data.paymentChannel ?? ''}
+                      onChange={(value) => setData('paymentChannel', value)}
+                      getValue={(item) => item.name}
+                      getLabel={(item) => item.name}
+                      placeholder="Select payment channel"
+                      error={errors?.paymentChannel}
+                    />
+                  </div>
+                )}
 
                 {/* Amount */}
                 <div className="flex flex-col">
@@ -187,6 +196,10 @@ export default function ModalSavePayment({
                   setData('paidAt', value)
                 }
                 error={errors?.paidAt}
+                texts={{
+                  bookingTitle: 'Date Payment',
+                  timeDescription: 'Set Time Payment',
+                }}
               />
             </div>
 

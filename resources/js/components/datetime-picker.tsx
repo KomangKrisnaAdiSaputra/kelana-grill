@@ -41,6 +41,13 @@ type DateTimePickerProps = {
     maxDate?: string;
 
     error?: string;
+
+    texts?: {
+        bookingTitle?: string;
+        bookingDescription?: string;
+        timeTitle?: string;
+        timeDescription?: string;
+    };
 };
 
 export default function DateTimePicker({
@@ -55,6 +62,7 @@ export default function DateTimePicker({
     minDate,
     maxDate,
     error,
+    texts = {},
 }: DateTimePickerProps) {
     const wrapperRef = useRef<HTMLDivElement>(null);
     const floatingRef = useRef<HTMLDivElement>(null);
@@ -225,6 +233,14 @@ export default function DateTimePicker({
         (_, i) => String(i * minuteStep).padStart(2, '0'),
     );
 
+
+    const {
+        bookingTitle = __('Jadwal Booking'),
+        bookingDescription = __('Pilih tanggal & jam'),
+        timeTitle = __('Pilih Jam'),
+        timeDescription = __('Atur waktu booking'),
+    } = texts;
+
     return (
         <div
             ref={(node) => {
@@ -259,11 +275,11 @@ export default function DateTimePicker({
                         className={`text-xs ${theme === 'dark' ? 'text-zinc-200' : 'text-zinc-500'
                             }`}
                     >
-                        {__('Jadwal Booking')}
+                        {bookingTitle}
                     </p>
 
                     <p className="mt-1 text-sm font-semibold">
-                        {value || __('Pilih tanggal & jam')}
+                        {value || bookingDescription}
                     </p>
 
                     {error && (
@@ -416,7 +432,7 @@ export default function DateTimePicker({
                                             : 'text-zinc-800'
                                             } `}
                                     >
-                                        {__('Pilih Jam')}
+                                        {timeTitle}
                                     </h4>
 
                                     <p
@@ -425,7 +441,7 @@ export default function DateTimePicker({
                                             : 'text-zinc-500'
                                             } `}
                                     >
-                                        {__('Atur waktu booking')}
+                                        {timeDescription}
                                     </p>
                                 </div>
                             </div>

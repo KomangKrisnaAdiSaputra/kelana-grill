@@ -251,12 +251,12 @@ class LandingPageController extends Controller
             $data = Order::find($order->id)->generateData(['hide' => false]);
             $url = $this->generateWaUrl($data);
 
-            // $attachmentData = [[
-            //     'attach' => Pdf::loadView('pdf.invoice.index', ["order" => $data])->setOption(['isRemoteEnabled' => true])->output(),
-            //     'name' => 'Invoice #' . $order['bookingId'] . '.pdf',
-            //     'option' => ['mime' => 'application/pdf']
-            // ]];
-            // Mail::to($data['email'])->send(new NewOrderMail($data, $attachmentData));
+            $attachmentData = [[
+                'attach' => Pdf::loadView('pdf.invoice.index', ["order" => $data])->setOption(['isRemoteEnabled' => true])->output(),
+                'name' => 'Invoice #' . $order['bookingId'] . '.pdf',
+                'option' => ['mime' => 'application/pdf']
+            ]];
+            Mail::to($data['email'])->send(new NewOrderMail($data, $attachmentData));
 
             DB::commit();
         } catch (\Throwable $th) {

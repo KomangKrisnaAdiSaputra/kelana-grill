@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription } from "@/components/ui/dialog";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatPrice } from "@/helpers/global";
 import type { Order } from "@/types/order";
@@ -63,6 +63,7 @@ export default function ModalListPayment({
         {/* HEADER */}
         <DialogHeader className="shrink-0 border-b px-6 py-4">
           <DialogTitle>Manage Payment</DialogTitle>
+          <DialogDescription />
         </DialogHeader>
 
         {/* BODY GRID */}

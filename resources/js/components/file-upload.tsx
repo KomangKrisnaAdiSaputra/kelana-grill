@@ -36,6 +36,7 @@ interface FileUploadProps {
   disabled?: boolean;
   className?: string;
   maxSize?: number;
+  error?: string;
   onChange?: (files: UploadedFile[]) => void;
 }
 
@@ -78,6 +79,7 @@ export default function FileUpload({
   disabled = false,
   className,
   maxSize = DEFAULT_MAX_SIZE,
+  error,
   onChange,
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -503,9 +505,10 @@ export default function FileUpload({
             inputRef.current?.click();
           }}
           className={cn(
-            `cursor-pointer rounded-xl border-2 border-dashed bg-background p-8 text-center transition-all`,
-            dragging && `border-primary bg-primary/5`,
-            disabled && `pointer-events-none opacity-50`,
+            "cursor-pointer rounded-xl border-2 border-dashed bg-background p-8 text-center transition-all",
+            dragging && "border-primary bg-primary/5",
+            disabled && "pointer-events-none opacity-50",
+            error && "border-destructive",
           )}
         >
           <Upload className="mx-auto mb-3 h-10 w-10" />
@@ -527,6 +530,12 @@ export default function FileUpload({
             onChange={handleSelect}
           />
         </div>
+
+        {error && (
+          <p className="mt-2 text-sm text-destructive">
+            {error}
+          </p>
+        )}
 
         {items.length > 0 && (
           <div className="rounded-xl border p-3">
