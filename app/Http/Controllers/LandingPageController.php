@@ -18,26 +18,31 @@ use Inertia\Inertia;
 
 class LandingPageController extends Controller
 {
+    function __construct()
+    {
+        $marinades = Product::active()->whereHas("type", fn($q) => $q->where("name", Type::MARINADE))->get()->map->generateDataMarinade();
+
+        return Inertia::share([
+            'marinades' => $marinades
+        ]);
+    }
+
     public function index()
     {
         $featuredProduct = Product::notShow()->active()->featured()->inRandomOrder()->first()->generateDataLanding();
         $products = Product::notShow()->active()->whereHas("type", fn($q) => $q->where("name", Type::PACKAGE))->whereNot("id", $featuredProduct["id"])->inRandomOrder()->limit(3)->get()->map->generateDataLanding();
-        $marinades = Product::active()->whereHas("type", fn($q) => $q->where("name", Type::MARINADE))->get()->map->generateDataMarinade();
         return Inertia::render('landing/index', [
             'featuredProduct' => $featuredProduct,
             'products' => $products,
-            'marinades' => $marinades
         ]);
     }
 
     public function indexProduct()
     {
         $products = Product::notShow()->active()->get()->map->generateDataLanding();
-        $marinades = Product::active()->whereHas("type", fn($q) => $q->where("name", Type::MARINADE))->get()->map->generateDataMarinade();
 
         return Inertia::render('landing/product', [
             'products' => $products,
-            'marinades' => $marinades
         ]);
     }
 
@@ -169,6 +174,7 @@ class LandingPageController extends Controller
                 if (!$product) {
                     continue;
                 }
+                $productType = $product->type->name;
 
                 $variant = null;
 
@@ -187,13 +193,14 @@ class LandingPageController extends Controller
                 $orderDetail = $order->details()->create([
                     'product_id' => $product->id,
                     'product_variant_id' => $variant?->id,
+                    'type' => $productType,
 
                     'name' => $cart['name'],
                     'description' => $cart['description'],
                     'variant_name' => $cart["variant"]["name"] ?? null,
                     'variant_description' => $cart["variant"]["description"] ?? null,
 
-                    'marinade' => ($cart['variant']['marinade'] ?? $cart['marinade'] ?? false),
+                    'marinade' => ($cart['marinade'] ?? false),
                     'qty' => $qty,
 
                     'rate' => $rate,
@@ -203,41 +210,48 @@ class LandingPageController extends Controller
 
                 $packageInstances = collect($cart['packageInstances'] ?? [])->filter();
                 foreach ($packageInstances as $index => $packageInstance) {
-
                     $package = $orderDetail->packages()->create([
                         'instance_no' => $index + 1,
-                        'product_marinade_name' => $packageInstance['productMarinade']['name'] ?? null,
+                        'name' => ($cart['name'] ?? null) . " #" . ($index + 1),
                     ]);
 
-                    $items = collect($packageInstance['items'] ?? []);
-
-                    foreach ($items as $item) {
-
-                        $packageItem = $package->items()->create([
-                            'name' => $item['name'],
-                            'description' => $item['description'],
-
-                            'qty' => $item['qty'],
-                            'unit' => $item['unit'],
-
-                            'marinade' =>  $item['marinade'] ?? false,
-                            'type' => $item['type'] ?? null,
+                    if ($productType == Type::ALA_CARTE && $packageInstance['productMarinade']['name'] ?? null) {
+                        $package->options()->create([
+                            'type' => $productType,
+                            'name' => $packageInstance['productMarinade']['name'] ?? null,
                         ]);
+                    }
 
-                        foreach ($item['marinadeItems']  ?? [] as $marinade) {
+                    $items = collect($packageInstance['items'] ?? []);
+                    if ($productType == Type::PACKAGE && $items->isNotEmpty()) {
+                        foreach ($items as $item) {
 
-                            $packageItem->options()->create([
-                                'type' => 'MARINADE',
-                                'name' =>  $marinade['name'],
+                            $packageItem = $package->items()->create([
+                                'product_id' => $item['id'],
+                                'name' => $item['name'],
+                                'description' => $item['description'],
+
+                                'qty' => $item['qty'],
+                                'unit' => $item['unit'],
+
+                                'marinade' =>  $item['marinade'] ?? false,
                             ]);
-                        }
 
-                        foreach ($item['choiceItems'] ?? [] as $choice) {
+                            foreach ($item['marinadeItems']  ?? [] as $marinade) {
+                                $packageItem->options()->create([
+                                    'product_id' =>  $marinade['id'] ?? null,
+                                    'type' => $item['type'],
+                                    'name' =>  $marinade['name'],
+                                ]);
+                            }
 
-                            $packageItem->options()->create([
-                                'type' => 'CHOICE',
-                                'name' => $choice['name'],
-                            ]);
+                            foreach ($item['choiceItems'] ?? [] as $choice) {
+                                $packageItem->options()->create([
+                                    'product_id' =>  $choice['id'] ?? null,
+                                    'type' => $item['type'],
+                                    'name' => $choice['name'],
+                                ]);
+                            }
                         }
                     }
                 }
@@ -261,6 +275,7 @@ class LandingPageController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
+            dd($th->getMessage(), $th->getFile(), $th->getLine(), $th->getTraceAsString());
         }
 
 
@@ -299,6 +314,11 @@ class LandingPageController extends Controller
                                 $cartText .= "             ↳ *_" . implode(', ', $options) . "_*\n";
                             }
                         }
+                    }
+
+                    if (collect($package['options'])->count() > 0) {
+                        $options = collect($package['options'] ?? [])->pluck('name')->toArray();
+                        $cartText .= "             ↳ *_" . implode(', ', $options) . "_*\n";
                     }
                 }
             }

@@ -205,7 +205,7 @@ export default function QuestionDialog({
       return;
     }
 
-    const allMarinadesSelected = product.items?.filter((item) => item.marinade).every((item) => {
+    const allMarinadesSelected = product.items?.filter((item) => item.marinade && item.type === "ALA CARTE").every((item) => {
       const selected = selectedMarinades[item.name] ?? [];
 
       return (selected.length === item.qty && selected.every(Boolean));
@@ -295,7 +295,7 @@ export default function QuestionDialog({
                 ) && (
                   <MarinadeSection
                     items={(product?.items ?? []).filter(
-                      (item) => item.marinade,
+                      (item) => item.marinade && item.type === "ALA CARTE",
                     )}
                     marinades={marinades}
                     selectedMarinades={

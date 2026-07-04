@@ -486,7 +486,7 @@ function StatusPageContent() {
                 className={`divide-y ${theme === 'dark' ? 'divide-orange-500/10' : 'divide-orange-200'} `}
               >
                 {order.details.map((item: any) => {
-                  const hasDetail = item.packages?.length > 0 && item.packages.some((pkg: any) => pkg.items?.length > 0);
+                  const hasDetail = item.packages?.length > 0 && item.packages.some((pkg: any) => pkg.items?.length > 0 || pkg.options?.length > 0);
                   const isOpen = openedItems[item.id] ?? false;
                   const includedItems = item.packages?.reduce((t: number, pkg: any) => t + (pkg.items?.length || 0), 0);
 
@@ -530,7 +530,7 @@ function StatusPageContent() {
                             {item.description}
                           </p>
 
-                          {hasDetail && (
+                          {(hasDetail && includedItems > 0) && (
                             <p
                               className={`mt-2 text-xs ${theme === 'dark' ? 'text-orange-300' : 'text-orange-600'} `}
                             >
@@ -579,49 +579,98 @@ function StatusPageContent() {
                                 ? 'border-orange-500/10 bg-orange-500/5'
                                 : 'border-orange-200 bg-white'
                                 } `} >
-                              <div className="space-y-3">
-                                {item.packages.flatMap((pkg: any) => pkg.items || []).map((
-                                  detail: any,
-                                  index: number,
-                                ) => (
+                              <div className="space-y-4">
+                                {item.packages.map((pkg: any, pkgIndex: number) => (
                                   <div
-                                    key={detail.id}
-                                    className="relative"
+                                    key={pkg.id ?? pkgIndex}
+                                    className={`rounded-xl border p-3 ${theme === "dark"
+                                      ? "border-orange-500/10 bg-orange-500/5"
+                                      : "border-orange-100 bg-orange-50"
+                                      }`}
                                   >
-                                    {/* LINE (horizontal separator) */}
-                                    {index !== 0 && (
-                                      <div
-                                        className={`absolute -top-1 right-0 left-0 h-px ${theme === 'dark' ? 'bg-orange-500/10' : 'bg-orange-200'} `}
-                                      />
+                                    {/* Package Name */}
+                                    <p
+                                      className={`font-medium ${theme === "dark" ? "text-orange-300" : "text-orange-700"
+                                        }`}
+                                    >
+                                      {pkg.name}
+                                    </p>
+
+                                    {/* Package Options */}
+                                    {pkg.options?.length > 0 && (
+                                      <div className="mt-2 flex flex-wrap gap-2">
+                                        {pkg.options.map((opt: any) => (
+                                          <span
+                                            key={opt.id}
+                                            className={`rounded-full px-2 py-0.5 text-[10px] ${theme === "dark"
+                                              ? "bg-orange-500/10 text-orange-300"
+                                              : "bg-orange-100 text-orange-600"
+                                              }`}
+                                          >
+                                            {opt.name}
+                                          </span>
+                                        ))}
+                                      </div>
                                     )}
 
-                                    <div className="flex items-start justify-between py-3">
-                                      {/* LEFT */}
-                                      <div>
-                                        <p
-                                          className={theme === 'dark' ? 'text-sm text-white' : 'text-sm text-zinc-900'} >
-                                          {detail.name}
-                                        </p>
-
-                                        {detail.options?.length > 0 && (
-                                          <div className="mt-1 flex flex-wrap gap-2">
-                                            {detail.options.map((opt: any) => (
-                                              <span
-                                                key={opt.id}
-                                                className={`rounded-full px-2 py-0.5 text-[10px] ${theme === 'dark' ? 'bg-orange-500/10 text-orange-300' : 'bg-orange-100 text-orange-600'} `} >
-                                                {opt.name}
-                                              </span>
-                                            ),
+                                    {/* Package Items */}
+                                    {pkg.items?.length > 0 && (
+                                      <div className="mt-3 space-y-2">
+                                        {pkg.items.map((detail: any, index: number) => (
+                                          <div key={detail.id ?? index}>
+                                            {index !== 0 && (
+                                              <div
+                                                className={`mb-2 h-px ${theme === "dark"
+                                                  ? "bg-orange-500/10"
+                                                  : "bg-orange-200"
+                                                  }`}
+                                              />
                                             )}
-                                          </div>
-                                        )}
-                                      </div>
 
-                                      {/* RIGHT */}
-                                      <span className={theme === 'dark' ? 'text-zinc-300' : 'text-zinc-500'} >
-                                        × {detail.qty}
-                                      </span>
-                                    </div>
+                                            <div className="flex items-start justify-between">
+                                              <div>
+                                                <p
+                                                  className={
+                                                    theme === "dark"
+                                                      ? "text-sm text-white"
+                                                      : "text-sm text-zinc-900"
+                                                  }
+                                                >
+                                                  {detail.name}
+                                                </p>
+
+                                                {/* Jika item juga punya options */}
+                                                {detail.options?.length > 0 && (
+                                                  <div className="mt-1 flex flex-wrap gap-2">
+                                                    {detail.options.map((opt: any) => (
+                                                      <span
+                                                        key={opt.id}
+                                                        className={`rounded-full px-2 py-0.5 text-[10px] ${theme === "dark"
+                                                          ? "bg-orange-500/10 text-orange-300"
+                                                          : "bg-orange-100 text-orange-600"
+                                                          }`}
+                                                      >
+                                                        {opt.name}
+                                                      </span>
+                                                    ))}
+                                                  </div>
+                                                )}
+                                              </div>
+
+                                              <span
+                                                className={
+                                                  theme === "dark"
+                                                    ? "text-zinc-300"
+                                                    : "text-zinc-500"
+                                                }
+                                              >
+                                                × {detail.qty}
+                                              </span>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
                                   </div>
                                 ))}
                               </div>

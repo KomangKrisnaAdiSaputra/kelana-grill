@@ -9,12 +9,12 @@ use Illuminate\Support\Collection;
 
 #[Fillable([
     "package_id",
+    "product_id",
     "name",
     "description",
     "qty",
     "unit",
     "marinade",
-    "type"
 ])]
 class OrderDetailPackageItem extends Model
 {
@@ -31,7 +31,7 @@ class OrderDetailPackageItem extends Model
 
     public function options()
     {
-        return $this->hasMany(OrderDetailItemOption::class);
+        return $this->hasMany(OrderDetailOption::class, "general_id", "id");
     }
 
     function generateData(): Collection

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-#[Fillable(["order_detail_id", "instance_no", "product_marinade_name"])]
+#[Fillable(["order_detail_id", "instance_no", "name"])]
 class OrderDetailPackage extends Model
 {
     use HasUuids;
@@ -22,14 +22,20 @@ class OrderDetailPackage extends Model
         return $this->hasMany(OrderDetailPackageItem::class, 'package_id');
     }
 
+    public function options()
+    {
+        return $this->hasMany(OrderDetailOption::class, "general_id", "id");
+    }
+
     function generateData(): Collection
     {
         return collect([
             "id" => $this->id,
-            "nameMarinade" => $this->product_marinade_name,
+            "name" => $this->name,
             "packageNumber" => $this->instance_no,
 
-            "items" => $this->items->map->generateData()
+            "items" => $this->items->map->generateData(),
+            "options" => $this->options->map->generateData()
         ]);
     }
 }

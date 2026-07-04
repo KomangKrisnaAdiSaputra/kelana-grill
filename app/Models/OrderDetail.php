@@ -9,6 +9,9 @@ use Illuminate\Support\Collection;
 
 #[Fillable([
     "order_id",
+    "product_id",
+    "product_variant_id",
+    "type",
     "name",
     "description",
     "variant_name",

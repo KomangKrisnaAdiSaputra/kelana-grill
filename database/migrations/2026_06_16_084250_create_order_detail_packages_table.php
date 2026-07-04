@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->foreignUuid('order_detail_id')->constrained()->cascadeOnDelete();
             $table->integer('instance_no');
-            $table->string('product_marinade_name')->nullable();
+            $table->string('name')->nullable();
 
             $table->timestamps();
         });

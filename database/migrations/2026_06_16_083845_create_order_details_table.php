@@ -15,6 +15,11 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('order_id')->constrained()->cascadeOnDelete();
 
+            $table->uuid('product_id')->nullable();
+            $table->uuid('product_variant_id')->nullable();
+
+            $table->string('type')->nullable();
+
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('variant_name')->nullable();

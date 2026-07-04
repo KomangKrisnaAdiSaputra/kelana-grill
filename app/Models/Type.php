@@ -13,6 +13,7 @@ class Type extends Model
     use HasUuids;
     public const PACKAGE = "PACKAGE";
     public const MARINADE = "MARINADE";
+    public const ALA_CARTE = "ALA CARTE";
 
     protected $casts = [
         'active' => 'boolean',

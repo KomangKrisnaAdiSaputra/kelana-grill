@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('order_detail_package_items', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('package_id')->constrained('order_detail_packages')->cascadeOnDelete();
+            $table->uuid('product_id')->nullable();
 
             $table->string('name');
             $table->text('description')->nullable();
@@ -23,8 +24,6 @@ return new class extends Migration
             $table->string('unit')->nullable();
 
             $table->boolean('marinade')->default(false);
-
-            $table->string('type')->nullable();
 
             $table->timestamps();
         });

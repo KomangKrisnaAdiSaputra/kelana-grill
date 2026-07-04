@@ -7,14 +7,19 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-#[Fillable(["order_detail_package_item_id", "type", "name"])]
-class OrderDetailItemOption extends Model
+#[Fillable(["general_id", "product_id", "type", "name"])]
+class OrderDetailOption extends Model
 {
     use HasUuids;
 
     public function item()
     {
         return $this->belongsTo(OrderDetailPackageItem::class);
+    }
+
+    public function detail()
+    {
+        return $this->belongsTo(OrderDetail::class);
     }
 
     function generateData(): Collection

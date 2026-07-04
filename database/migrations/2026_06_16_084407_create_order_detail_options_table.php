@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_detail_item_options', function (Blueprint $table) {
+        Schema::create('order_detail_options', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('order_detail_package_item_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('general_id');
 
+            $table->string('product_id')->nullable();
             $table->string('type');
             $table->string('name');
 
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_detail_item_options');
+        Schema::dropIfExists('order_detail_options');
     }
 };
