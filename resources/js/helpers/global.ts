@@ -47,3 +47,24 @@ export function groupMarinades(
 
     return grouped;
 }
+
+export function getStockStatus(stock: number) {
+    if (stock <= 0) {
+        return {
+            label: 'Out of Stock',
+            variant: 'destructive',
+        };
+    }
+
+    if (stock <= 10) {
+        return {
+            label: 'Low Stock',
+            variant: 'secondary',
+        };
+    }
+
+    return {
+        label: 'In Stock',
+        variant: 'default',
+    };
+}

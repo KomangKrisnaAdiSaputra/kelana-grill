@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('product')->name('product')->group(function () {
         require __DIR__ . '/product/manageproduct.php';
+        require __DIR__ . '/product/inventory.php';
     });
 
     Route::prefix('master')->name('master')->group(function () {

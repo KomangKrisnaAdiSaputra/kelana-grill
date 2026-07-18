@@ -2,18 +2,18 @@ import * as React from 'react';
 import { Input } from '@/components/ui/input';
 import { formatPrice } from '@/helpers/global';
 
-interface InputNumberProps extends Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    'value' | 'onChange'
-> {
+interface InputNumberProps
+    extends Omit<
+        React.InputHTMLAttributes<HTMLInputElement>,
+        'value' | 'onChange' | 'prefix' | 'suffix'
+    > {
     value?: number | null;
     onChange: (value: number) => void;
 
     currency?: boolean;
 
-    prefix?: string;
-
-    suffix?: string;
+    prefix?: React.ReactNode;
+    suffix?: React.ReactNode;
 
     error?: string | null;
 }
@@ -38,15 +38,17 @@ export function InputNumber({
             : new Intl.NumberFormat('id-ID').format(value);
     }, [value, currency]);
 
+    const hasPrefix = !!prefix;
+    const hasSuffix = !!suffix;
+
     return (
         <div className="space-y-1">
             <div
-                className={`flex overflow-hidden rounded-md border bg-background ${
-                    error ? 'border-destructive' : ''
-                }`}
+                className={`flex overflow-hidden rounded-md border bg-background ${error ? 'border-destructive' : 'border-input'
+                    }`}
             >
-                {prefix && (
-                    <div className="flex items-center border-r bg-muted px-3 text-sm text-muted-foreground">
+                {hasPrefix && (
+                    <div className="flex shrink-0 items-center border-r bg-muted px-3 text-sm text-muted-foreground">
                         {prefix}
                     </div>
                 )}
@@ -55,22 +57,25 @@ export function InputNumber({
                     {...props}
                     inputMode="numeric"
                     value={displayValue}
-                    className={`border-0 text-right shadow-none focus-visible:ring-0 ${className ?? ''} `}
+                    className={`flex-1 border-0 text-right shadow-none focus-visible:ring-0 ${className ?? ''}`}
                     onChange={(e) => {
                         const raw = e.target.value.replace(/[^\d]/g, '');
-
                         onChange(raw ? Number(raw) : 0);
                     }}
                 />
 
-                {suffix && (
-                    <div className="flex items-center border-l bg-muted px-3 text-sm text-muted-foreground">
+                {hasSuffix && (
+                    <div className="flex shrink-0 items-center border-l bg-muted px-3 text-sm text-muted-foreground">
                         {suffix}
                     </div>
                 )}
             </div>
 
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && (
+                <p className="text-sm text-destructive">
+                    {error}
+                </p>
+            )}
         </div>
     );
 }

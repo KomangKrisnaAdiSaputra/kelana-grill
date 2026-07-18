@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type {
@@ -21,6 +22,7 @@ import type {
   ProductBadge,
   ProductCategory,
   ProductType,
+  Unit,
 } from './types';
 
 interface ProductModalSaveProps {
@@ -47,6 +49,8 @@ interface ProductModalSaveProps {
   countLanguageErrors: (lang: 'id' | 'en') => number;
 
   handleSubmit: () => void;
+  units: Unit[]
+
 }
 export default function ProductModalSave({
   open,
@@ -64,13 +68,14 @@ export default function ProductModalSave({
   alaCarteProducts,
   countLanguageErrors,
   handleSubmit,
+  units
 }: ProductModalSaveProps) {
   const typePackage = Boolean(types.filter((t) => t.id === data.typeId && t.name === 'PACKAGE').length > 0);
   const withVariant = Boolean((data.variants ?? []).length <= 0);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] sm:max-w-4xl p-0">
+    <Dialog open={open} onOpenChange={onOpenChange} >
+      <DialogContent className="max-h-[90vh] sm:max-w-4xl p-0" onInteractOutside={(e) => e.preventDefault()}>
         <div className="flex h-[90vh] max-h-[90vh] flex-col">
 
           <DialogHeader className="border-b px-6 py-4">
@@ -192,7 +197,7 @@ export default function ProductModalSave({
                 )}
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-3">
                 <div className="space-y-2">
                   <Label>Category</Label>
 
@@ -224,6 +229,30 @@ export default function ProductModalSave({
                     getLabel={(item) => item.label}
                     placeholder="Select Badges"
                     error={errors.badges}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Qty</Label>
+
+                  <InputNumber
+                    suffix={
+                      <Select value={data?.unitId ?? ''} onValueChange={(value) => setData('unitId', value)}>
+                        <SelectTrigger className="h-8 w-15 border-0 bg-transparent px-2 shadow-none focus:ring-0">
+                          <SelectValue />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                          {units.map((item, idx) =>
+                            <SelectItem key={idx} value={item.value}>{item.label}</SelectItem>
+                          )}
+                        </SelectContent>
+                      </Select>
+                    }
+                    value={data.qty}
+                    onChange={(value) => setData('qty', value)}
+                    error={errors.qty}
+                    placeholder="500"
                   />
                 </div>
               </div>

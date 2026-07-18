@@ -10,6 +10,7 @@ use App\Models\ProductTranslation;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantTranslation;
 use App\Models\Type;
+use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -52,6 +53,8 @@ class ManageProductController extends Controller
                 'description' => $product->translations->firstWhere('language', 'id')?->description  ?? $product->translations->firstWhere('language', 'en')?->description ?? '-',
             ])->values();
 
+        $units = Unit::select(['id as value', 'code as label'])->get();
+
         return Inertia::render('product/manage-product/index', [
             'products' => $products,
             'types' => $types,
@@ -70,6 +73,7 @@ class ManageProductController extends Controller
             'categories' => $categories,
             'badges' => $badges,
             'alaCarteProducts' => $alaCarteProducts,
+            'units' => $units,
         ]);
     }
 
@@ -80,11 +84,8 @@ class ManageProductController extends Controller
 
         $request->validate([
             'id' => ['nullable', 'uuid'],
-
             'typeId' => ['required', 'exists:types,id'],
-
             'rate' => [Rule::requiredIf(fn() => count($request->input('variants', [])) <= 0), 'numeric', 'min:0'],
-
             'featured' => ['required', 'boolean'],
             'new' => ['required', 'boolean'],
             'active' => ['required', 'boolean'],
@@ -96,6 +97,9 @@ class ManageProductController extends Controller
 
             'badges' => ['nullable', 'array'],
             'badges.*' => ['exists:badges,id'],
+
+            'unitId' => ['required', 'exists:units,id'],
+            'qty' => ['required', 'numeric'],
 
             'translations.id.name' => ['required', 'string', 'max:255'],
             'translations.en.name' => ['required', 'string', 'max:255'],
@@ -114,61 +118,17 @@ class ManageProductController extends Controller
                 'max:255',
             ],
             'variants' => ['nullable', 'array'],
-
             'variants.*.id' => ['nullable', 'uuid'],
+            'variants.*.rate' => ['required', 'numeric', 'min:0',],
+            'variants.*.minPerson' => ['nullable', 'integer', 'min:1',],
+            'variants.*.maxPerson' => ['nullable', 'integer', 'min:1',],
+            'variants.*.active' => ['required', 'boolean',],
+            'variants.*.translations.id.name' => ['required', 'string', 'max:255',],
+            'variants.*.translations.en.name' => ['required', 'string', 'max:255',],
 
-            'variants.*.rate' => [
-                'required',
-                'numeric',
-                'min:0',
-            ],
-
-            'variants.*.minPerson' => [
-                'nullable',
-                'integer',
-                'min:1',
-            ],
-
-            'variants.*.maxPerson' => [
-                'nullable',
-                'integer',
-                'min:1',
-            ],
-
-            'variants.*.active' => [
-                'required',
-                'boolean',
-            ],
-
-            'variants.*.translations.id.name' => [
-                'required',
-                'string',
-                'max:255',
-            ],
-
-            'variants.*.translations.en.name' => [
-                'required',
-                'string',
-                'max:255',
-            ],
-
-            'items' => [
-                Rule::requiredIf($isPackage),
-                'array',
-                'min:1',
-            ],
-
-            'items.*.itemProductId' => [
-                'required',
-                'exists:products,id',
-                'different:id',
-            ],
-
-            'items.*.qty' => [
-                'required',
-                'numeric',
-                'min:0.01',
-            ],
+            'items' => [Rule::requiredIf($isPackage), 'array', 'min:1',],
+            'items.*.itemProductId' => ['required', 'exists:products,id',  'different:id',],
+            'items.*.qty' => ['required', 'numeric',  'min:0.01',],
 
             // 'items.*.unit' => [
             //     'required',
@@ -209,6 +169,8 @@ class ManageProductController extends Controller
             }
 
             $product->type_id = $request->typeId;
+            $product->unit_id = $request->unitId;
+            $product->qty = $request->qty;
             $product->rate = $request->rate;
             $product->featured = $request->featured;
             $product->new = $request->new;
@@ -350,6 +312,9 @@ class ManageProductController extends Controller
                 'id' => $product->type?->id,
                 'name' => $product->type?->name,
             ],
+            'unitId' => $product->unit_id,
+            'unit' => $product?->unit?->code,
+            'qty' => $product?->qty,
             'rate' => $product->rate,
             'image' => $product->image,
             'featured' => $product->featured,

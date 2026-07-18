@@ -11,16 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ware_houses', function (Blueprint $table) {
+        Schema::create('units', function (Blueprint $table) {
             $table->uuid('id')->primary();
-
+            $table->string('code')->unique();
             $table->string('name');
-            $table->string('preview_address')->nullable();
-
-            $table->text('address')->nullable();
-
-            $table->boolean('active')->default(true);
-
             $table->timestamps();
         });
     }
@@ -30,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ware_houses');
+        Schema::dropIfExists('units');
     }
 };

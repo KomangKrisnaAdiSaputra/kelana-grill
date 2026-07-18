@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Support\Collection;
 
-#[Fillable(["type_id", "rate", "featured", "new", "active", "marinade", "image"])]
+#[Fillable(["type_id", "unit_id", "qty", "rate", "featured", "new", "active", "marinade"])]
 class Product extends Model
 {
     use HasUuids;
@@ -24,6 +24,11 @@ class Product extends Model
     public function type()
     {
         return $this->belongsTo(Type::class);
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 
     public function translations()
@@ -95,8 +100,8 @@ class Product extends Model
             "id" => $this->id,
             "name" => $translation->name,
             "description" => $translation->description,
-            "qty" => $productItem->qty,
-            "unit" => $productItem->unit,
+            "qty" => $this->qty,
+            "unit" => $this->unit,
             "marinade" => $this->marinade,
             "type" => $this->type->name,
             ...($this->type->name == "CHOICE" ? [

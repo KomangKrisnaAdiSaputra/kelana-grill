@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard, orderPayment } from '@/routes';
 import { badge, category, type, warehouse } from '@/routes/master';
-import { manageProduct } from '@/routes/product';
+import { inventory, manageProduct } from '@/routes/product';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -48,7 +48,7 @@ const mainNavItems: NavItem[] = [
             },
             {
                 title: 'Inventory',
-                href: warehouse(),
+                href: inventory(),
                 icon: Warehouse,
             },
         ],

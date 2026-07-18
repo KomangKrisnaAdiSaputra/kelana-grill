@@ -7,23 +7,17 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-#[Fillable(['name', 'preview_address', 'address', 'active',])]
-class WareHouse extends Model
+#[Fillable(['code', 'name'])]
+class Unit extends Model
 {
     use HasUuids;
-
-    protected $casts = [
-        'active' => 'boolean',
-    ];
 
     function generateData(): Collection
     {
         return collect([
             "id" => $this->id,
             "name" => $this->name,
-            "previewAddress" => $this->preview_address,
-            "address" => $this->address,
-            "active" => $this->active,
+            "code" => $this->code,
         ]);
     }
 }

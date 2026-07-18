@@ -15,6 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
 
             $table->string('booking_id')->unique();
+            $table->string('warehouse_id')->unique();
+
             $table->string('type')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
@@ -27,7 +29,6 @@ return new class extends Migration
             $table->dateTime('pickup_date')->nullable();
             $table->dateTime('return_date')->nullable();
 
-            $table->string('pickup_location')->nullable();
 
             $table->string('guarantee')->nullable();
 

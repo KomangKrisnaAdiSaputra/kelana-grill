@@ -16,7 +16,7 @@ import { deleteMethod, save } from '@/routes/product/manage-product';
 import ProductModalSave from './partials/product-modal-save';
 import ProductStats from './partials/product-stats';
 import ProductTable from './partials/product-table';
-import type { AlaCarteProduct, PaginatedProducts, Product, ProductBadge, ProductCategory, ProductType } from './partials/types';
+import type { AlaCarteProduct, PaginatedProducts, Product, ProductBadge, ProductCategory, ProductType, Unit } from './partials/types';
 
 interface Props {
     products: PaginatedProducts;
@@ -40,6 +40,8 @@ interface Props {
         featured: number;
         newest: number;
     };
+
+    units: Unit[]
 }
 
 export default function Index({
@@ -50,6 +52,7 @@ export default function Index({
     categories,
     badges,
     alaCarteProducts,
+    units,
 }: Props) {
     const [openForm, setOpenForm] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
@@ -83,6 +86,9 @@ export default function Index({
         badges: [],
         variants: [],
         items: [],
+        unitId: null,
+        unit: null,
+        qty: null
     });
 
     const handleSubmit = () => {
@@ -177,6 +183,7 @@ export default function Index({
                             badges: [],
                             variants: [],
                             items: [],
+                            unitId: null
                         });
 
                         setLanguage('id');
@@ -215,6 +222,7 @@ export default function Index({
                 types={types}
                 categories={categories}
                 badges={badges}
+                units={units}
                 alaCarteProducts={alaCarteProducts}
                 countLanguageErrors={countLanguageErrors}
                 handleSubmit={handleSubmit}

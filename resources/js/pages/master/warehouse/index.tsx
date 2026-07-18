@@ -189,7 +189,7 @@ export default function Index({ warehouses, filters, stats }: Props) {
                     }}
                 >
                     <Plus className="mr-2 h-4 w-4" />
-                    Add Type
+                    Add Warehouse
                 </Button>
             </div>
 
@@ -199,7 +199,7 @@ export default function Index({ warehouses, filters, stats }: Props) {
                     <CardContent className="flex items-center justify-between p-5">
                         <div>
                             <p className="text-sm text-muted-foreground">
-                                Total Types
+                                Total Warehouse
                             </p>
 
                             <h2 className="mt-2 text-3xl font-bold">
@@ -543,8 +543,8 @@ export default function Index({ warehouses, filters, stats }: Props) {
                             {processing
                                 ? 'Saving...'
                                 : isEdit
-                                  ? 'Update Warehouse'
-                                  : 'Create Warehouse'}
+                                    ? 'Update Warehouse'
+                                    : 'Create Warehouse'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

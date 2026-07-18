@@ -7,6 +7,9 @@ export type Product = {
         id: string;
         name: string;
     };
+    unitId: string | null;
+    unit: string | null;
+    qty: number | null;
 
     rate: number | null;
 
@@ -92,6 +95,11 @@ export type ProductCategory = {
 };
 
 export type ProductBadge = {
+    label: string;
+    value: string;
+};
+
+export type Unit = {
     label: string;
     value: string;
 };

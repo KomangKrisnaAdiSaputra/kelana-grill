@@ -214,13 +214,14 @@ export default function ProductTable({
                         )}
                       </div>
 
-                      <div>
-                        <div className="font-medium">
-                          {
-                            product.translations.id
-                              .name
-                          }
-                        </div>
+                      <div className="flex flex-col">
+                        <span className="font-medium text-foreground">
+                          {product.translations.id.name}
+                        </span>
+
+                        <span className="text-sm text-muted-foreground">
+                          {product.qty} {product.unit}
+                        </span>
                       </div>
                     </div>
                   </TableCell>
