@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Support\Collection;
 
-#[Fillable(["type_id", "unit_id", "qty", "rate", "featured", "new", "active", "marinade"])]
+#[Fillable(["type_id", "code", "unit_id", "qty", "rate", "featured", "new", "active", "marinade"])]
 class Product extends Model
 {
     use HasUuids;
@@ -20,6 +20,25 @@ class Product extends Model
         "active" => "boolean",
         "marinade" => "boolean"
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Product $product) {
+            if (! empty($product->code)) {
+                return;
+            }
+
+            $lastProduct = Product::orderByDesc('id')->first();
+
+            $nextNumber = 1;
+
+            if ($lastProduct && $lastProduct->code) {
+                $nextNumber = ((int) substr($lastProduct->code, 1)) + 1;
+            }
+
+            $product->code = 'P' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+        });
+    }
 
     public function type()
     {
@@ -39,6 +58,16 @@ class Product extends Model
     public function translation()
     {
         return $this->hasOne(ProductTranslation::class)->where("language", app()->getLocale());
+    }
+
+    public function image()
+    {
+        return $this->hasOne(Image::class, "connect_id", "id")->where("default", 1);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class, "connect_id", "id")->where("default", 0);
     }
 
     public function categories()
@@ -94,7 +123,6 @@ class Product extends Model
     function generateDataItem(): Collection
     {
         $translation = $this->translation;
-        $productItem = $this->pivot;
 
         return collect([
             "id" => $this->id,
@@ -120,7 +148,10 @@ class Product extends Model
             "featured" => $this->featured,
             "new" => $this->new,
             "marinade" => $this->marinade,
-            "image" => $this->image,
+            "image" => $this->image?->url,
+
+            "qty" => $this->qty,
+            "unit" => $this->unit->generateData(),
 
             "name" => $translation->name,
             "description" => $translation->description,

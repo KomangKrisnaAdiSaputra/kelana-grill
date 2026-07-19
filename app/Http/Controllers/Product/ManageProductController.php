@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Product;
 
+use App\Helpers\FileHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Badge;
+use App\Models\Image;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductTranslation;
@@ -177,18 +179,30 @@ class ManageProductController extends Controller
             $product->active = $request->active;
             $product->marinade = $request->marinade;
 
-            if ($request->hasFile('image')) {
-
-                // if ($product->image) {
-                //     Storage::disk('public')->delete($product->image);
-                // }
-
-                // $product->image = $request
-                //     ->file('image')
-                //     ->store('products', 'public');
-            }
-
             $product->save();
+
+            if (isset($request->image['file'])) {
+
+                if ($product?->image) {
+                    $image = FileHelper::replace($product->image, $request->image['file'], 'kelana-products');
+                } else {
+                    $image = FileHelper::upload($request->image['file'], 'kelana-products');
+                }
+
+                Image::updateOrCreate(
+                    [
+                        'id' => $product->image?->id,
+                    ],
+                    [
+                        'connect_id' => $product->id,
+                        'default'    => 1,
+                        ...$image,
+                    ]
+                );
+            } elseif ($product->image && !$request->image) {
+                FileHelper::delete($product->image);
+                Image::find($product->image->id)->delete();
+            }
 
             foreach (['id', 'en'] as $language) {
 
@@ -263,6 +277,7 @@ class ManageProductController extends Controller
         } catch (\Throwable $e) {
 
             DB::rollBack();
+            dd($e->getMessage());
             return back()->withErrors([
                 'error' => $e->getMessage(),
             ]);
@@ -316,7 +331,10 @@ class ManageProductController extends Controller
             'unit' => $product?->unit?->code,
             'qty' => $product?->qty,
             'rate' => $product->rate,
-            'image' => $product->image,
+            'image' => $product->image ? [
+                'url' => $product->image?->url,
+                'name' => $product->image?->name
+            ] : null,
             'featured' => $product->featured,
             'new' => $product->new,
             'active' => $product->active,

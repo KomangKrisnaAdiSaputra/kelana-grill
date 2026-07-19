@@ -11,6 +11,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import AmbientBackground from '@/components/landing/ambient-background';
 
+import Breadcrumb from '@/components/landing/Breadcrumb';
 import Footer from '@/components/landing/footer';
 
 import MobileNavbar from '@/components/landing/mobile-navbar';
@@ -33,6 +34,10 @@ import type { Product, ProductVariant } from '@/types/product';
 
 type ProductCatalogPageProps = {
     products: Product[];
+    breadcrumbs: {
+        label: string;
+        url: string;
+    }[];
 };
 
 type SelectedDetail = {
@@ -71,7 +76,7 @@ function ProductCatalogContent() {
 
     const { __ } = useTranslation();
 
-    const { products = [] } = usePage<ProductCatalogPageProps>().props;
+    const { products = [], breadcrumbs = [] } = usePage<ProductCatalogPageProps>().props;
 
     const { addToCart, getItemQty, getItemQtyVariant } = useCart();
 
@@ -89,9 +94,7 @@ function ProductCatalogContent() {
 
     const [showFilters, setShowFilters] = useState(false);
 
-    const [selectedDetail, setSelectedDetail] = useState<SelectedDetail | null>(
-        null,
-    );
+    const [selectedDetail, setSelectedDetail] = useState<SelectedDetail | null>(null);
 
     const [selectedButton, setSelectedButton] =
         useState<HTMLButtonElement | null>(null);
@@ -256,6 +259,8 @@ function ProductCatalogContent() {
                 {/* HERO */}
 
                 <section>
+                    <Breadcrumb items={breadcrumbs} className="mb-6 md:ml-2" />
+
                     <div
                         className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm backdrop-blur-xl ${theme === 'dark'
                             ? 'border-orange-400/20 bg-orange-500/10 text-orange-200'

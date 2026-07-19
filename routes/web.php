@@ -5,8 +5,10 @@ use App\Http\Middleware\Locale;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
+Route::get('sitemap.xml', [LandingPageController::class, 'siteMapXml'])->name('sitemap.xml');
+
 Route::prefix('{locale?}')->middleware(Locale::class)->where(['locale' => 'id|en'])->group(function () {
-    Route::prefix('produk')->get('/{a1?}/{a2?}/{a3?}/{a4?}/{a5?}/{a6?}/{a7?}/{a8?}/{a9?}/{a10?}', function () {
+    Route::prefix('product')->get('/{a1?}/{a2?}/{a3?}/{a4?}/{a5?}/{a6?}/{a7?}/{a8?}/{a9?}/{a10?}', function () {
         return;
     });
 

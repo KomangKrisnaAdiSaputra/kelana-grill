@@ -56,6 +56,7 @@ export default function ProductTable({
   const [search, setSearch] = useState(filters?.search ?? '');
   const [status, setStatus] = useState(filters?.status ?? '');
   const [typeId, setTypeId] = useState(filters?.typeId ?? '');
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -196,15 +197,15 @@ export default function ProductTable({
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <div className="h-12 w-12 overflow-hidden rounded-lg border">
-                        {product.image ? (
+                        {product.image?.url && !imageError ? (
                           <img
                             src={
-                              product.image as string
+                              product.image?.url as string
                             }
                             alt={
-                              product.translations
-                                .id.name
+                              product.translations.id.name
                             }
+                            onError={() => setImageError(true)}
                             className="h-full w-full object-cover"
                           />
                         ) : (

@@ -1,4 +1,4 @@
-import { router, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 
 import { Languages, Menu, Moon, ShoppingBag, Sun, X } from 'lucide-react';
 
@@ -51,48 +51,44 @@ export default function Navbar({ theme, scrolled, onToggleTheme }: Props) {
     };
 
     const toggleLanguage = () => {
-        return router.visit(switchUrl);
+        return window.location.href = switchUrl;
     };
 
     const buttonClass = `
     flex h-10 w-10 items-center justify-center rounded-full border
     transition-all duration-300 hover:scale-105 md:h-11 md:w-11
-    ${
-        theme === 'dark'
+    ${theme === 'dark'
             ? 'border-white/10 bg-white/5 text-white hover:bg-white/10'
             : 'border-orange-200 bg-white/80 text-zinc-800 hover:bg-orange-50'
-    }
+        }
   `;
 
     const pillButtonClass = `
     flex h-10 items-center justify-center gap-2 rounded-full border px-4
     text-xs font-semibold transition-all duration-300 hover:scale-105 md:h-11
-    ${
-        theme === 'dark'
+    ${theme === 'dark'
             ? 'border-white/10 bg-white/5 text-white hover:bg-white/10'
             : 'border-orange-200 bg-white/80 text-zinc-800 hover:bg-orange-50'
-    }
+        }
   `;
 
     const mobileActionClass = `
     flex items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-sm font-semibold transition
-    ${
-        theme === 'dark'
+    ${theme === 'dark'
             ? 'border-white/10 bg-white/5 text-zinc-200 hover:bg-white/10'
             : 'border-orange-100 bg-orange-50 text-zinc-700 hover:bg-orange-100'
-    }
+        }
   `;
 
     return (
         <>
             <header
-                className={`fixed top-0 left-0 z-50 w-full transition-all duration-500 ${
-                    scrolled || mobileMenuOpen
-                        ? theme === 'dark'
-                            ? 'border-b border-white/10 bg-black/40 py-3 shadow-2xl shadow-black/10 backdrop-blur-2xl'
-                            : 'border-b border-orange-100 bg-white/70 py-3 shadow-lg backdrop-blur-2xl'
-                        : 'bg-transparent py-4 md:py-5'
-                } `}
+                className={`fixed top-0 left-0 z-50 w-full transition-all duration-500 ${scrolled || mobileMenuOpen
+                    ? theme === 'dark'
+                        ? 'border-b border-white/10 bg-black/40 py-3 shadow-2xl shadow-black/10 backdrop-blur-2xl'
+                        : 'border-b border-orange-100 bg-white/70 py-3 shadow-lg backdrop-blur-2xl'
+                    : 'bg-transparent py-4 md:py-5'
+                    } `}
             >
                 <div className="mx-auto flex max-w-7xl items-center justify-between px-4 md:px-6">
                     <a
@@ -130,11 +126,10 @@ export default function Navbar({ theme, scrolled, onToggleTheme }: Props) {
                             <a
                                 key={item.href}
                                 href={item.href}
-                                className={`relative text-sm font-medium transition duration-300 ${
-                                    theme === 'dark'
-                                        ? 'text-zinc-300 hover:text-white'
-                                        : 'text-zinc-700 hover:text-orange-500'
-                                } `}
+                                className={`relative text-sm font-medium transition duration-300 ${theme === 'dark'
+                                    ? 'text-zinc-300 hover:text-white'
+                                    : 'text-zinc-700 hover:text-orange-500'
+                                    } `}
                             >
                                 {item.name}
                             </a>
@@ -219,11 +214,10 @@ export default function Navbar({ theme, scrolled, onToggleTheme }: Props) {
                 {mobileMenuOpen && (
                     <div className="mx-auto mt-3 max-w-7xl px-4 md:px-6 xl:hidden">
                         <div
-                            className={`overflow-hidden rounded-[28px] border p-3 shadow-2xl backdrop-blur-2xl ${
-                                theme === 'dark'
-                                    ? 'border-white/10 bg-[#111111]/95 shadow-black/30'
-                                    : 'border-orange-100 bg-white/95 shadow-orange-100/60'
-                            } `}
+                            className={`overflow-hidden rounded-[28px] border p-3 shadow-2xl backdrop-blur-2xl ${theme === 'dark'
+                                ? 'border-white/10 bg-[#111111]/95 shadow-black/30'
+                                : 'border-orange-100 bg-white/95 shadow-orange-100/60'
+                                } `}
                         >
                             <div className="grid grid-cols-2 gap-2">
                                 <button

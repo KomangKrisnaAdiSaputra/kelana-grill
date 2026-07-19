@@ -65,6 +65,13 @@ export type Product = {
 
     rate?: number;
 
+    qty?: number | null;
+    unit?: {
+        id: string | null;
+        name: string | null;
+        code: string | null;
+    } | null;
+
     price?: number;
     originalPrice?: number | null;
 

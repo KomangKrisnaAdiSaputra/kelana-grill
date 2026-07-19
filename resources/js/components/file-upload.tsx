@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
 export interface UploadedFile {
@@ -90,7 +90,7 @@ export default function FileUpload({
     y: 0,
   });
 
-  const [items, setItems] = useState<UploadedFile[]>(normalizeValue(value));
+  const [items, setItems] = useState<UploadedFile[]>(() => normalizeValue(value));
   const [loading, setLoading] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [preview, setPreview] = useState<UploadedFile | null>(null);
@@ -103,10 +103,16 @@ export default function FileUpload({
 
 
   useEffect(() => {
+    const incoming = normalizeValue(value);
+
+    if (JSON.stringify(items) === JSON.stringify(incoming)) {
+      return;
+    }
+
     queueMicrotask(() => {
-      setItems(normalizeValue(value));
+      setItems(incoming);
     });
-  }, [value]);
+  }, [value, items]);
 
   useEffect(() => {
     if (!preview) {
@@ -665,6 +671,8 @@ export default function FileUpload({
       <Dialog open={!!preview} onOpenChange={() => setPreview(null)}>
         <DialogContent className="h-screen w-screen max-w-none border-0 bg-black p-0">
           <div className="absolute top-4 right-4 z-50 flex gap-2">
+            <DialogTitle />
+            <DialogDescription />
             <Button size="icon" type="button" onClick={zoomOut}>
               <ZoomOut className="h-4 w-4" />
             </Button>
@@ -694,8 +702,6 @@ export default function FileUpload({
           <div
             className="flex h-full w-full touch-none items-center justify-center overflow-hidden"
             onWheel={(e) => {
-              e.preventDefault();
-
               setScale((prev) =>
                 Math.min(
                   5,

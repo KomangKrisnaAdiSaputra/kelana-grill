@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 
 import AmbientBackground from '@/components/landing/ambient-background';
 
+import Breadcrumb from '@/components/landing/Breadcrumb';
 import Footer from '@/components/landing/footer';
 
 import MobileNavbar from '@/components/landing/mobile-navbar';
@@ -45,6 +46,7 @@ function AboutMeContent() {
     const viteInstagram = import.meta.env.VITE_INSTAGRAM || '-';
 
     const locale = usePage<any>().props.params.locale;
+    const breadcrumbs = usePage<any>().props.breadcrumbs;
 
     const { __ } = useTranslation();
 
@@ -108,14 +110,12 @@ function AboutMeContent() {
 
             <main className="relative mx-auto max-w-7xl px-4 pt-20 sm:px-6 md:px-8 md:pt-28 lg:px-6 lg:pt-32">
                 {/* HERO */}
-
                 <section className="relative -mx-5 overflow-hidden rounded-none md:-mx-10 lg:mx-0 lg:rounded-[48px]">
                     <div
-                        className={`absolute inset-0 ${
-                            theme === 'dark'
-                                ? 'theme-card-dark'
-                                : 'theme-card-light'
-                        }`}
+                        className={`absolute inset-0 ${theme === 'dark'
+                            ? 'theme-card-dark'
+                            : 'theme-card-light'
+                            }`}
                     />
 
                     <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-orange-500/20 blur-3xl" />
@@ -126,12 +126,13 @@ function AboutMeContent() {
                         {/* LEFT */}
 
                         <div className="relative z-10">
+                            <Breadcrumb items={breadcrumbs} className="mb-6 md:ml-2" />
+
                             <div
-                                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs backdrop-blur-xl md:text-sm ${
-                                    theme === 'dark'
-                                        ? 'border-orange-400/20 bg-orange-500/10 text-orange-200'
-                                        : 'border-orange-200 bg-white/70 text-orange-700'
-                                }`}
+                                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs backdrop-blur-xl md:text-sm ${theme === 'dark'
+                                    ? 'border-orange-400/20 bg-orange-500/10 text-orange-200'
+                                    : 'border-orange-200 bg-white/70 text-orange-700'
+                                    }`}
                             >
                                 <Sparkles size={16} />
                                 {__('Premium BBQ Experience')}
@@ -150,11 +151,10 @@ function AboutMeContent() {
                             </div>
 
                             <p
-                                className={`mt-5 max-w-2xl text-sm leading-7 md:text-base md:leading-8 ${
-                                    theme === 'dark'
-                                        ? 'text-zinc-400'
-                                        : 'text-zinc-600'
-                                }`}
+                                className={`mt-5 max-w-2xl text-sm leading-7 md:text-base md:leading-8 ${theme === 'dark'
+                                    ? 'text-zinc-400'
+                                    : 'text-zinc-600'
+                                    }`}
                             >
                                 {__(
                                     'Kelana Grill hadir untuk menghadirkan pengalaman BBQ yang lebih modern, praktis, dan berkesan untuk gathering santai, camping, private party, hingga acara spesial bersama keluarga dan teman.',
@@ -180,11 +180,10 @@ function AboutMeContent() {
                                     onClick={() =>
                                         router.visit(produk({ locale }).url)
                                     }
-                                    className={`inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold transition-all duration-300 hover:-translate-y-1 sm:px-6 sm:py-4 ${
-                                        theme === 'dark'
-                                            ? 'border border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.07]'
-                                            : 'border border-orange-100 bg-white/80 text-zinc-800 hover:bg-orange-50'
-                                    }`}
+                                    className={`inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold transition-all duration-300 hover:-translate-y-1 sm:px-6 sm:py-4 ${theme === 'dark'
+                                        ? 'border border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.07]'
+                                        : 'border border-orange-100 bg-white/80 text-zinc-800 hover:bg-orange-50'
+                                        }`}
                                 >
                                     {__('Lihat Paket')}
                                 </button>
@@ -209,22 +208,20 @@ function AboutMeContent() {
                                 ].map((item) => (
                                     <div
                                         key={item.label}
-                                        className={`rounded-2xl p-4 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 md:p-6 ${
-                                            theme === 'dark'
-                                                ? 'bg-white/[0.04] ring-1 ring-white/10'
-                                                : 'bg-white/80 ring-1 ring-orange-100'
-                                        }`}
+                                        className={`rounded-2xl p-4 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 md:p-6 ${theme === 'dark'
+                                            ? 'bg-white/[0.04] ring-1 ring-white/10'
+                                            : 'bg-white/80 ring-1 ring-orange-100'
+                                            }`}
                                     >
                                         <h3 className="text-2xl font-bold md:text-4xl">
                                             {item.value}
                                         </h3>
 
                                         <p
-                                            className={`mt-2 text-[11px] sm:text-xs md:text-sm ${
-                                                theme === 'dark'
-                                                    ? 'text-zinc-400'
-                                                    : 'text-zinc-500'
-                                            }`}
+                                            className={`mt-2 text-[11px] sm:text-xs md:text-sm ${theme === 'dark'
+                                                ? 'text-zinc-400'
+                                                : 'text-zinc-500'
+                                                }`}
                                         >
                                             {__(item.label)}
                                         </p>
@@ -246,11 +243,10 @@ function AboutMeContent() {
                 <section className="mt-24 md:mt-20">
                     <div className="mx-auto max-w-3xl text-center">
                         <div
-                            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm ${
-                                theme === 'dark'
-                                    ? 'bg-orange-500/10 text-orange-200'
-                                    : 'bg-orange-100 text-orange-700'
-                            }`}
+                            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm ${theme === 'dark'
+                                ? 'bg-orange-500/10 text-orange-200'
+                                : 'bg-orange-100 text-orange-700'
+                                }`}
                         >
                             <Sparkles size={14} />
                             {__('Kenapa Kelana Grill?')}
@@ -261,11 +257,10 @@ function AboutMeContent() {
                         </h2>
 
                         <p
-                            className={`mx-auto mt-5 max-w-2xl text-sm leading-7 md:text-base md:leading-8 ${
-                                theme === 'dark'
-                                    ? 'text-zinc-400'
-                                    : 'text-zinc-600'
-                            }`}
+                            className={`mx-auto mt-5 max-w-2xl text-sm leading-7 md:text-base md:leading-8 ${theme === 'dark'
+                                ? 'text-zinc-400'
+                                : 'text-zinc-600'
+                                }`}
                         >
                             {__(
                                 'Kami menghadirkan alat grill premium untuk membuat momen BBQ bersama keluarga dan teman jadi lebih seru tanpa repot.',
@@ -280,11 +275,10 @@ function AboutMeContent() {
                             return (
                                 <div
                                     key={index}
-                                    className={`group relative overflow-hidden rounded-[28px] p-4 transition-all duration-500 hover:-translate-y-1 md:p-6 ${
-                                        theme === 'dark'
-                                            ? 'bg-white/[0.04] ring-1 ring-white/10 hover:bg-white/[0.06]'
-                                            : 'bg-white/90 ring-1 ring-orange-100 hover:bg-white'
-                                    }`}
+                                    className={`group relative overflow-hidden rounded-[28px] p-4 transition-all duration-500 hover:-translate-y-1 md:p-6 ${theme === 'dark'
+                                        ? 'bg-white/[0.04] ring-1 ring-white/10 hover:bg-white/[0.06]'
+                                        : 'bg-white/90 ring-1 ring-orange-100 hover:bg-white'
+                                        }`}
                                 >
                                     <div className="absolute top-0 right-0 h-24 w-24 rounded-full bg-orange-500/10 blur-3xl" />
 
@@ -298,11 +292,10 @@ function AboutMeContent() {
                                         </h3>
 
                                         <p
-                                            className={`mt-3 text-xs leading-6 md:text-sm ${
-                                                theme === 'dark'
-                                                    ? 'text-zinc-400'
-                                                    : 'text-zinc-600'
-                                            }`}
+                                            className={`mt-3 text-xs leading-6 md:text-sm ${theme === 'dark'
+                                                ? 'text-zinc-400'
+                                                : 'text-zinc-600'
+                                                }`}
                                         >
                                             {__(item.desc)}
                                         </p>
@@ -316,11 +309,10 @@ function AboutMeContent() {
                 {/* BBQ EXPERIENCE */}
                 <section className="relative -mx-5 overflow-hidden rounded-none md:-mx-10 lg:mx-0 lg:rounded-[48px]">
                     <div
-                        className={`mt-8 overflow-hidden rounded-none md:mt-10 lg:rounded-[42px] ${
-                            theme === 'dark'
-                                ? 'bg-gradient-to-br from-orange-500/10 via-white/[0.03] to-red-500/10 ring-1 ring-white/10'
-                                : 'bg-gradient-to-br from-orange-50 via-white to-orange-100 ring-1 ring-orange-100'
-                        }`}
+                        className={`mt-8 overflow-hidden rounded-none md:mt-10 lg:rounded-[42px] ${theme === 'dark'
+                            ? 'bg-gradient-to-br from-orange-500/10 via-white/[0.03] to-red-500/10 ring-1 ring-white/10'
+                            : 'bg-gradient-to-br from-orange-50 via-white to-orange-100 ring-1 ring-orange-100'
+                            }`}
                     >
                         <div className="relative">
                             {/* SOFT GLOW */}
@@ -335,11 +327,10 @@ function AboutMeContent() {
 
                                     <div className="flex flex-col justify-center p-5 md:p-8 lg:p-14">
                                         <div
-                                            className={`inline-flex w-fit items-center gap-2 rounded-full px-4 py-2 text-xs md:text-sm ${
-                                                theme === 'dark'
-                                                    ? 'bg-orange-500/10 text-orange-200'
-                                                    : 'bg-orange-200/70 text-orange-700'
-                                            }`}
+                                            className={`inline-flex w-fit items-center gap-2 rounded-full px-4 py-2 text-xs md:text-sm ${theme === 'dark'
+                                                ? 'bg-orange-500/10 text-orange-200'
+                                                : 'bg-orange-200/70 text-orange-700'
+                                                }`}
                                         >
                                             <Flame size={14} />
                                             {__('BBQ Experience')}
@@ -350,11 +341,10 @@ function AboutMeContent() {
                                         </h3>
 
                                         <p
-                                            className={`mt-6 max-w-2xl text-sm leading-8 md:text-base ${
-                                                theme === 'dark'
-                                                    ? 'text-zinc-400'
-                                                    : 'text-zinc-600'
-                                            }`}
+                                            className={`mt-6 max-w-2xl text-sm leading-8 md:text-base ${theme === 'dark'
+                                                ? 'text-zinc-400'
+                                                : 'text-zinc-600'
+                                                }`}
                                         >
                                             {__(
                                                 'Kelana Grill fokus menyediakan alat grill premium berkualitas untuk kebutuhan BBQ pribadi, gathering santai, camping, dan acara spesial bersama keluarga maupun teman.',
@@ -371,11 +361,10 @@ function AboutMeContent() {
                                             ].map((item) => (
                                                 <div
                                                     key={item}
-                                                    className={`rounded-full px-4 py-2 text-xs md:text-sm ${
-                                                        theme === 'dark'
-                                                            ? 'bg-white/[0.05] text-zinc-200 ring-1 ring-white/10'
-                                                            : 'bg-white/80 text-zinc-700 ring-1 ring-orange-100'
-                                                    }`}
+                                                    className={`rounded-full px-4 py-2 text-xs md:text-sm ${theme === 'dark'
+                                                        ? 'bg-white/[0.05] text-zinc-200 ring-1 ring-white/10'
+                                                        : 'bg-white/80 text-zinc-700 ring-1 ring-orange-100'
+                                                        }`}
                                                 >
                                                     {__(item)}
                                                 </div>
@@ -416,11 +405,10 @@ function AboutMeContent() {
                             {/* BOTTOM INFO */}
 
                             <div
-                                className={`grid grid-cols-2 gap-3 border-t p-5 md:p-8 lg:grid-cols-2 lg:px-10 ${
-                                    theme === 'dark'
-                                        ? 'border-white/10'
-                                        : 'border-orange-100'
-                                }`}
+                                className={`grid grid-cols-2 gap-3 border-t p-5 md:p-8 lg:grid-cols-2 lg:px-10 ${theme === 'dark'
+                                    ? 'border-white/10'
+                                    : 'border-orange-100'
+                                    }`}
                             >
                                 {[
                                     {
@@ -434,18 +422,16 @@ function AboutMeContent() {
                                 ].map((item) => (
                                     <div
                                         key={item.label}
-                                        className={`rounded-[24px] p-4 transition-all duration-300 ${
-                                            theme === 'dark'
-                                                ? 'bg-white/[0.04] ring-1 ring-white/10 hover:bg-white/[0.06]'
-                                                : 'bg-white/70 ring-1 ring-orange-100 hover:bg-white'
-                                        }`}
+                                        className={`rounded-[24px] p-4 transition-all duration-300 ${theme === 'dark'
+                                            ? 'bg-white/[0.04] ring-1 ring-white/10 hover:bg-white/[0.06]'
+                                            : 'bg-white/70 ring-1 ring-orange-100 hover:bg-white'
+                                            }`}
                                     >
                                         <p
-                                            className={`text-[10px] tracking-[0.2em] uppercase ${
-                                                theme === 'dark'
-                                                    ? 'text-zinc-500'
-                                                    : 'text-zinc-400'
-                                            }`}
+                                            className={`text-[10px] tracking-[0.2em] uppercase ${theme === 'dark'
+                                                ? 'text-zinc-500'
+                                                : 'text-zinc-400'
+                                                }`}
                                         >
                                             {__(item.label)}
                                         </p>
@@ -456,11 +442,10 @@ function AboutMeContent() {
                                             </h4>
 
                                             <div
-                                                className={`h-2 w-2 rounded-full ${
-                                                    theme === 'dark'
-                                                        ? 'bg-orange-400'
-                                                        : 'bg-orange-500'
-                                                }`}
+                                                className={`h-2 w-2 rounded-full ${theme === 'dark'
+                                                    ? 'bg-orange-400'
+                                                    : 'bg-orange-500'
+                                                    }`}
                                             />
                                         </div>
                                     </div>
@@ -479,11 +464,10 @@ function AboutMeContent() {
                         </h2>
 
                         <p
-                            className={`mx-auto mt-5 max-w-2xl text-sm leading-7 md:text-base md:leading-8 ${
-                                theme === 'dark'
-                                    ? 'text-zinc-400'
-                                    : 'text-zinc-600'
-                            }`}
+                            className={`mx-auto mt-5 max-w-2xl text-sm leading-7 md:text-base md:leading-8 ${theme === 'dark'
+                                ? 'text-zinc-400'
+                                : 'text-zinc-600'
+                                }`}
                         >
                             {__(
                                 'Proses rental dibuat mudah dan cepat agar kamu bisa fokus menikmati acara BBQ.',
@@ -548,22 +532,20 @@ function AboutMeContent() {
 
                 <section className="relative -mx-5 mt-24 overflow-hidden rounded-none md:-mx-10 md:mt-32 lg:mx-0 lg:rounded-[48px]">
                     <div
-                        className={`overflow-hidden rounded-none lg:rounded-[32px] ${
-                            theme === 'dark'
-                                ? 'bg-white/[0.03] ring-1 ring-white/10'
-                                : 'bg-white/80 ring-1 ring-orange-100'
-                        }`}
+                        className={`overflow-hidden rounded-none lg:rounded-[32px] ${theme === 'dark'
+                            ? 'bg-white/[0.03] ring-1 ring-white/10'
+                            : 'bg-white/80 ring-1 ring-orange-100'
+                            }`}
                     >
                         <div className="grid gap-8 p-5 sm:p-7 md:gap-10 md:p-10 lg:grid-cols-[1.05fr_380px]">
                             {/* LEFT */}
 
                             <div className="flex flex-col justify-center text-center lg:text-left">
                                 <div
-                                    className={`inline-flex w-fit items-center gap-2 self-center rounded-full px-4 py-2 text-xs md:text-sm lg:self-start ${
-                                        theme === 'dark'
-                                            ? 'bg-orange-500/10 text-orange-200'
-                                            : 'bg-orange-100 text-orange-700'
-                                    }`}
+                                    className={`inline-flex w-fit items-center gap-2 self-center rounded-full px-4 py-2 text-xs md:text-sm lg:self-start ${theme === 'dark'
+                                        ? 'bg-orange-500/10 text-orange-200'
+                                        : 'bg-orange-100 text-orange-700'
+                                        }`}
                                 >
                                     <Sparkles size={14} />
                                     {__('Kontak')}
@@ -574,11 +556,10 @@ function AboutMeContent() {
                                 </h2>
 
                                 <p
-                                    className={`mx-auto mt-5 max-w-xl text-sm leading-7 md:text-base md:leading-8 lg:mx-0 ${
-                                        theme === 'dark'
-                                            ? 'text-zinc-400'
-                                            : 'text-zinc-600'
-                                    }`}
+                                    className={`mx-auto mt-5 max-w-xl text-sm leading-7 md:text-base md:leading-8 lg:mx-0 ${theme === 'dark'
+                                        ? 'text-zinc-400'
+                                        : 'text-zinc-600'
+                                        }`}
                                 >
                                     {__(
                                         'Booking sekarang dan nikmati pengalaman grill tanpa ribet bersama',
@@ -617,11 +598,10 @@ function AboutMeContent() {
                                     return (
                                         <div
                                             key={index}
-                                            className={`group flex items-center gap-4 rounded-[28px] p-4 transition-all duration-500 hover:-translate-y-1 md:p-5 ${
-                                                theme === 'dark'
-                                                    ? 'bg-white/[0.03] ring-1 ring-white/10 hover:bg-white/[0.05] hover:ring-orange-500/20'
-                                                    : 'bg-orange-50/70 ring-1 ring-orange-100 hover:bg-orange-50 hover:ring-orange-200'
-                                            }`}
+                                            className={`group flex items-center gap-4 rounded-[28px] p-4 transition-all duration-500 hover:-translate-y-1 md:p-5 ${theme === 'dark'
+                                                ? 'bg-white/[0.03] ring-1 ring-white/10 hover:bg-white/[0.05] hover:ring-orange-500/20'
+                                                : 'bg-orange-50/70 ring-1 ring-orange-100 hover:bg-orange-50 hover:ring-orange-200'
+                                                }`}
                                         >
                                             {/* Icon */}
                                             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white transition-all duration-500 group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-orange-500/20 md:h-14 md:w-14">
@@ -631,22 +611,20 @@ function AboutMeContent() {
                                             {/* Content */}
                                             <div className="min-w-0 flex-1">
                                                 <p
-                                                    className={`text-[11px] tracking-[0.18em] uppercase ${
-                                                        theme === 'dark'
-                                                            ? 'text-orange-400'
-                                                            : 'text-orange-600'
-                                                    } `}
+                                                    className={`text-[11px] tracking-[0.18em] uppercase ${theme === 'dark'
+                                                        ? 'text-orange-400'
+                                                        : 'text-orange-600'
+                                                        } `}
                                                 >
                                                     {item.title}
                                                 </p>
 
                                                 <h3
-                                                    className={`mt-1 leading-snug font-semibold ${
-                                                        item.title ===
+                                                    className={`mt-1 leading-snug font-semibold ${item.title ===
                                                         'Location'
-                                                            ? 'text-sm md:text-[15px]'
-                                                            : 'text-sm md:text-base'
-                                                    } `}
+                                                        ? 'text-sm md:text-[15px]'
+                                                        : 'text-sm md:text-base'
+                                                        } `}
                                                 >
                                                     {item.value}
                                                 </h3>
@@ -681,11 +659,10 @@ function HeroImage({ theme }: { theme: string }) {
             {/* CONTAINER */}
 
             <div
-                className={`group relative overflow-hidden rounded-[32px] p-[6px] transition-all duration-500 md:rounded-[40px] ${
-                    theme === 'dark'
-                        ? 'bg-white/[0.03] ring-1 ring-white/8'
-                        : 'bg-gradient-to-br from-white via-orange-50 to-white ring-1 ring-orange-100/80'
-                }`}
+                className={`group relative overflow-hidden rounded-[32px] p-[6px] transition-all duration-500 md:rounded-[40px] ${theme === 'dark'
+                    ? 'bg-white/[0.03] ring-1 ring-white/8'
+                    : 'bg-gradient-to-br from-white via-orange-50 to-white ring-1 ring-orange-100/80'
+                    }`}
             >
                 <div className="relative overflow-hidden rounded-[28px] md:rounded-[34px]">
                     {/* IMAGE */}

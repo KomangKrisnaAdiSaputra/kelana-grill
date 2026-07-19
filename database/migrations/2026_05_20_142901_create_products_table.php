@@ -13,6 +13,7 @@ return new class extends Migration
             $table->foreignUuid('type_id')->constrained('types')->cascadeOnUpdate()->restrictOnDelete();
             $table->foreignUuid('unit_id')->constrained('units')->cascadeOnUpdate()->restrictOnDelete();
 
+            $table->string('code');
             $table->bigInteger('qty')->default(0);
             $table->double('rate')->default(0);
 

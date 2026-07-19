@@ -1,5 +1,6 @@
 import { Plus, Trash2 } from 'lucide-react';
 import DynamicSelect from '@/components/dynamic-select';
+import FileUpload from '@/components/file-upload';
 import { InputNumber } from '@/components/input-number';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -88,6 +89,21 @@ export default function ProductModalSave({
 
           <div className="flex-1 overflow-y-auto px-6 py-4">
             <div className="space-y-4">
+
+              <div>
+                <Label className="mb-2 block">
+                  Image
+                </Label>
+
+                <FileUpload
+                  accept="image/*"
+                  value={data?.image ?? null}
+                  onChange={(files) =>
+                    setData('image', files)
+                  }
+                  error={errors['image.file']}
+                />
+              </div>
 
               {/* FLAGS */}
               <div className={`grid gap-3 md:${withVariant ? "grid-cols-4" : "grid-cols-3"}`}>
@@ -255,32 +271,6 @@ export default function ProductModalSave({
                     placeholder="500"
                   />
                 </div>
-              </div>
-
-              {/* IMAGE */}
-              <div className="space-y-2">
-                <Label>Image</Label>
-
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-
-                    if (!file) {
-                      return;
-                    }
-
-                    setData('image', file);
-                  }}
-                />
-
-                {typeof data.image === 'string' && data.image && (
-                  <img
-                    src={data.image}
-                    className="mt-2 h-32 rounded-xl border object-cover"
-                  />
-                )}
               </div>
 
               {/* LANGUAGE TAB */}

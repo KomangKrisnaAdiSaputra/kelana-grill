@@ -244,7 +244,8 @@ export default function ProductCard({
                             </p>
 
                             <p className="mt-1 text-xs text-zinc-500">
-                                {__('per paket')}
+                                {product.qty} {" "} {product.unit.code}
+                                {/* {__('per paket')} */}
                             </p>
                         </div>
 

@@ -1,2 +1,10 @@
 User-agent: *
-Disallow:
+
+Allow: /
+
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://kelanagrill.com/sitemap.xml

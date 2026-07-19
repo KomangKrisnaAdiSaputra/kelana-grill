@@ -5,6 +5,7 @@ import { formatPrice } from '@/helpers/global';
 import type { ThemeMode } from '@/types';
 
 import type { Product, ProductVariant } from '@/types/product';
+import ProductImagePlaceholder from '../product-image-placeholder';
 
 type ProductDetailModalText = {
     modalTitle: string;
@@ -44,10 +45,13 @@ export default function ProductDetailModal({
 }: ProductDetailModalProps) {
     const isDark = theme === 'dark';
     const modalRef = useRef<HTMLDivElement>(null);
-    const productImage = product?.image ?? 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?q=80&w=1600&auto=format&fit=crop';
+    const productImage = product?.image;
     const addButtonRef = useRef<HTMLButtonElement>(null);
 
     const [showContent, setShowContent] = useState(false);
+    const [imageError, setImageError] = useState(false);
+
+    const hasVariantOrItem = (product?.variants?.length ?? 0) > 0 || (product?.items?.length ?? 0) > 0;
 
     const getButtonRect = useCallback(() => {
         if (!buttonEl) {
@@ -143,6 +147,7 @@ export default function ProductDetailModal({
         }, 450);
     }
 
+
     return (
         <div
             className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md"
@@ -164,12 +169,21 @@ export default function ProductDetailModal({
                 >
                     {/* IMAGE */}
 
-                    <div className="relative h-[34dvh] min-h-[260px] overflow-hidden md:h-80">
-                        <img
-                            src={productImage}
-                            alt={product.name ?? 'Product Image'}
-                            className="h-full w-full object-cover"
-                        />
+                    <div className={`relative overflow-hidden ${hasVariantOrItem
+                        ? 'h-[34dvh] md:h-[34dvh] min-h-[260px]'
+                        : 'h-[75dvh] md:h-[75dvh]'
+                        }`}>
+
+
+                        {imageError || !productImage ? (<ProductImagePlaceholder theme={theme} />) : (
+                            <img
+                                src={productImage}
+                                alt={product.name ?? 'Product Image'}
+                                onError={() => setImageError(true)}
+
+                                className="h-full w-full object-cover"
+                            />
+                        )}
 
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/10" />
 

@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import DateTimePicker from '@/components/datetime-picker';
 import AmbientBackground from '@/components/landing/ambient-background';
 
+import Breadcrumb from '@/components/landing/Breadcrumb';
 import Footer from '@/components/landing/footer';
 
 import MobileNavbar from '@/components/landing/mobile-navbar';
@@ -49,6 +50,7 @@ function ContactContent() {
     const cartName = 'kelana-grill-cart';
     const props = usePage<PageProps>().props;
     const locale = props.params.locale;
+    const breadcrumbs = usePage<any>().props.breadcrumbs;
 
     const { theme, toggleTheme } = useTheme();
     const { cartItems } = useCart();
@@ -160,6 +162,8 @@ function ContactContent() {
                 {/* HERO */}
 
                 <section className="max-w-3xl">
+                    <Breadcrumb items={breadcrumbs} className="mb-6 md:ml-2" />
+
                     <div
                         className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm backdrop-blur-xl ${theme === 'dark'
                             ? 'border-orange-400/20 bg-orange-500/10 text-orange-200'

@@ -13,7 +13,10 @@ export type Product = {
 
     rate: number | null;
 
-    image: string | File | null;
+    image: {
+        url: string;
+        name: string;
+    } | null;
 
     featured: boolean;
     new: boolean;

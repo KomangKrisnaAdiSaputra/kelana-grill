@@ -126,6 +126,8 @@ return [
     'landing' => [
         'contact' => [
             'whatsapp_number' => env('WHATSAPP_NUMBER', ''),
+            'email' => env('EMAIL', ''),
         ]
-    ]
+    ],
+    'logo' => env("LOGO_URL")
 ];
