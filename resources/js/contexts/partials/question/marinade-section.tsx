@@ -24,6 +24,7 @@ export default function MarinadeSection({
   setSelectedMarinades,
 }: Props) {
   const { __ } = useTranslation();
+  console.log(items);
 
   return (
     <section className="space-y-4">
@@ -43,26 +44,32 @@ export default function MarinadeSection({
             key={item.name}
             className="rounded-xl border bg-card p-4"
           >
-            <div className="mb-4 flex items-start justify-between">
-              <div>
-                <p className="font-medium">
+            <div className="mb-5 flex items-start gap-4">
+              <div className="min-w-0 flex-1">
+                <h4 className="text-base font-semibold text-foreground">
                   {item.name}
-                </p>
+                </h4>
 
                 {item.description && (
-                  <p className="mt-1 text-sm text-muted-foreground">
+                  <p className="mt-1 line-clamp-2 text-sm leading-6 text-muted-foreground">
                     {item.description}
                   </p>
                 )}
               </div>
 
-              <div className="rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
-                Qty {item.qty}
+              <div className="flex min-w-[74px] flex-col items-center rounded-2xl border border-primary/15 bg-primary/5 px-3 py-2">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Qty
+                </span>
+
+                <span className="mt-0.5 text-sm font-bold text-primary">
+                  {Number(item?.qty ?? 0) * Number(item?.qtyItem ?? 0)} {item.unit?.code}
+                </span>
               </div>
             </div>
 
             <div className="grid gap-3 md:grid-cols-2">
-              {Array.from({ length: Number(item.qty ?? 0) }).map((_, idx) => (
+              {Array.from({ length: Number(item.qtyItem ?? 0) }).map((_, idx) => (
                 <div
                   key={idx}
                   className="space-y-2"

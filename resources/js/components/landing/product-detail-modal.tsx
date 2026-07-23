@@ -69,6 +69,28 @@ export default function ProductDetailModal({
     }, [buttonEl]);
 
     useEffect(() => {
+        const scrollY = window.scrollY;
+
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.body.style.width = '100%';
+        document.body.style.overflow = 'hidden';
+
+        return () => {
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
+            document.body.style.width = '';
+            document.body.style.overflow = '';
+
+            window.scrollTo(0, scrollY);
+        };
+    }, []);
+
+    useEffect(() => {
         const modal = modalRef.current;
 
         if (!modal) {
@@ -103,15 +125,13 @@ export default function ProductDetailModal({
         requestAnimationFrame(() => {
             const modalWidth = Math.min(window.innerWidth - 32, 1100);
 
-            const modalHeight = window.innerHeight - 40;
-
-            modal.style.top = `20px`;
-
-            modal.style.left = `${window.innerWidth / 2 - modalWidth / 2}px`;
+            modal.style.top = `16px`;
+            modal.style.left = `${(window.innerWidth - modalWidth) / 2}px`;
 
             modal.style.width = `${modalWidth}px`;
+            modal.style.height = `calc(100dvh - 32px)`;
 
-            modal.style.height = `${modalHeight}px`;
+            modal.style.maxHeight = `calc(100dvh - 32px)`;
 
             modal.style.borderRadius = `34px`;
 
@@ -156,7 +176,7 @@ export default function ProductDetailModal({
             <div
                 ref={modalRef}
                 onClick={(event) => event.stopPropagation()}
-                className={`fixed z-[60] flex flex-col overflow-hidden border shadow-2xl will-change-[top,left,width,height] ${isDark
+                className={`fixed z-[60] flex flex-col overflow-hidden border shadow-2xl will-change-[top,left,width,height] h-[calc(100dvh-32px)] max-h-[calc(100dvh-32px)] ${isDark
                     ? 'border-white/10 bg-zinc-950 text-white'
                     : 'border-orange-100 bg-white text-zinc-950'
                     } `}
@@ -297,7 +317,6 @@ export default function ProductDetailModal({
                                         </div>
                                     </div>
 
-                                    {/* OTHER VARIANTS */}
 
                                     {(product?.variants ?? []).length > 1 && (
                                         <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -411,7 +430,7 @@ export default function ProductDetailModal({
                                                         : 'text-zinc-500'
                                                         }`}
                                                 >
-                                                    {item.qty} {item.unit}
+                                                    {Number(item.qty) * Number(item.qtyItem)} {item.unit?.code}
                                                 </span>
                                             </div>
                                         ))}

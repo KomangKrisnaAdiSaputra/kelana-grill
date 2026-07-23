@@ -130,6 +130,7 @@ class Product extends Model
             "description" => $translation->description,
             "qty" => $this->qty,
             "unit" => $this->unit,
+            "qtyItem" => $this->pivot->qty,
             "marinade" => $this->marinade,
             "type" => $this->type->name,
             ...($this->type->name == "CHOICE" ? [
@@ -144,16 +145,19 @@ class Product extends Model
 
         return collect([
             "id" => $this->id,
+            "code" => $this->code,
             "rate" => $this->rate,
             "featured" => $this->featured,
             "new" => $this->new,
             "marinade" => $this->marinade,
             "image" => $this->image?->url,
+            "images" => ($this->images ?? [])->map(fn($item) => $item->url),
 
             "qty" => $this->qty,
             "unit" => $this->unit->generateData(),
 
             "name" => $translation->name,
+            "slug" => $translation->slug,
             "description" => $translation->description,
             "featuredLabel" => $translation->featured_label,
 

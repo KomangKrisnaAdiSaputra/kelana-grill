@@ -1,13 +1,16 @@
+import { router } from '@inertiajs/react';
 import { TooltipArrow } from '@radix-ui/react-tooltip';
 import { ShoppingBag } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 import { formatPrice, useTranslation } from '@/helpers/global';
+import { detail } from '@/routes/landing/produk';
 
 import type { ThemeMode } from '@/types';
 import type { Product, ProductVariant } from '@/types/product';
 import ProductImagePlaceholder from '../product-image-placeholder';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+
 
 type ProductCardProps = {
     theme: ThemeMode;
@@ -62,7 +65,9 @@ export default function ProductCard({
         >
             {/* IMAGE */}
 
-            <div className="relative h-48 overflow-hidden sm:h-56">
+            <div
+                onClick={() => router.visit(detail({ locale: 'id', slug: String(product.slug) }).url)}
+                className="relative h-48 overflow-hidden sm:h-56 cursor-pointer">
                 {product.new && (
                     <div className="absolute top-3 right-3 z-20">
                         <div
@@ -244,7 +249,7 @@ export default function ProductCard({
                             </p>
 
                             <p className="mt-1 text-xs text-zinc-500">
-                                {product.qty} {" "} {product.unit.code}
+                                {product.qty} {" "} {product.unit?.code}
                                 {/* {__('per paket')} */}
                             </p>
                         </div>

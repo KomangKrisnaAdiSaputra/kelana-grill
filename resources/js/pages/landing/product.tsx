@@ -11,7 +11,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import AmbientBackground from '@/components/landing/ambient-background';
 
-import Breadcrumb from '@/components/landing/Breadcrumb';
+import Breadcrumb from '@/components/landing/breadcrumb';
 import Footer from '@/components/landing/footer';
 
 import MobileNavbar from '@/components/landing/mobile-navbar';

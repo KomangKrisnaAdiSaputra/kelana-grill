@@ -350,6 +350,23 @@ class LandingPageController extends Controller
         ]);
     }
 
+    public function indexDetailProduct(Request $request)
+    {
+        $slug = $request->slug;
+
+        $product = Product::notShow()->active()->whereHas("translation", fn($q) => $q->where("slug", $slug))->first()->generateDataLanding();
+        if (!$product) return abort(404);
+
+        $products = Product::notShow()->active()->whereNot("id", $product['id'])->get()->map->generateDataLanding();
+
+        return Inertia::render('landing/product/detail', [
+            'products' => $products,
+            'product' => $product
+        ]);
+    }
+
+
+
     public function indexContact()
     {
         return Inertia::render('landing/contact', [

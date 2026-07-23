@@ -43,7 +43,10 @@ export type ProductItem = {
     name: string;
     description?: string | null;
     qty: string | number | null;
-    unit?: string | null;
+    qtyItem: string | number | null;
+    unit?: {
+        code: string | null;
+    };
     marinade: boolean;
     type: string;
     choices?: ProductItem[];
@@ -51,6 +54,7 @@ export type ProductItem = {
 
 export type Product = {
     id?: string | number;
+    code?: string;
 
     type?: ProductType;
 
@@ -62,6 +66,7 @@ export type Product = {
     featuredLabel?: string | null;
 
     image?: string | null;
+    images?: string[];
 
     rate?: number;
 
