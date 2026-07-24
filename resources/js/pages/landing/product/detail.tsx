@@ -3,6 +3,7 @@ import { CheckCircle2, MessageCircle, ShieldCheck, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import AmbientBackground from "@/components/landing/ambient-background";
+import Breadcrumb from "@/components/landing/breadcrumb";
 import Footer from "@/components/landing/footer";
 import MobileNavbar from "@/components/landing/mobile-navbar";
 import Navbar from "@/components/landing/navbar";
@@ -13,7 +14,6 @@ import { useTheme } from "@/contexts/theme-context";
 
 import { formatPrice, useTranslation } from "@/helpers/global";
 import type { Product, ProductVariant } from "@/types/product";
-import Breadcrumb from "@/components/landing/breadcrumb";
 
 type ProductDetailPageProps = {
   products: Product[];
@@ -31,22 +31,25 @@ function DetailContent() {
   const { theme, toggleTheme } = useTheme();
 
   const [scrolled, setScrolled] = useState(false);
-  const [activeImage, setActiveImage] = useState<string | null>(null);
-  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
-  const [imageError, setImageError] = useState(false);
-
-  useEffect(() => {
-    if (product) {
-      if (product.variants && product.variants.length > 0) {
-        setSelectedVariant(product.variants[0]);
-      }
-      if (product.image) {
-        setActiveImage(product.image);
-      } else if (product.images && product.images.length > 0) {
-        setActiveImage(product.images[0]);
-      }
+  const [activeImage, setActiveImage] = useState<string | null>(() => {
+    if (product?.image) {
+      return product.image;
     }
-  }, [product]);
+
+    if (product?.images && product.images.length > 0) {
+      return product.images[0];
+    }
+
+    return null;
+  });
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(() => {
+    if (product?.variants && product.variants.length > 0) {
+      return product.variants[0];
+    }
+
+    return null;
+  });
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -126,6 +129,7 @@ function DetailContent() {
                     <div className="mt-4 flex gap-3 overflow-x-auto pb-1 scrollbar-thin">
                       {galleryImages.map((imgUrl, index) => {
                         const isActive = currentDisplayImage === imgUrl;
+
                         return (
                           <button
                             key={index}
