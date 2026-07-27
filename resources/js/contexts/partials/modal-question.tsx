@@ -208,7 +208,7 @@ export default function QuestionDialog({
     const allMarinadesSelected = product.items?.filter((item) => item.marinade && item.type === "ALA CARTE").every((item) => {
       const selected = selectedMarinades[item.name] ?? [];
 
-      return (selected.length === item.qty && selected.every(Boolean));
+      return (selected.length === item.qtyItem && selected.every(Boolean));
     });
 
     if (!allMarinadesSelected) {

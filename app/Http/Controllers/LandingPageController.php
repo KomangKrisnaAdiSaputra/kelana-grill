@@ -8,6 +8,7 @@ use App\Mail\NewOrder\NewOrderMail;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Type;
+use App\Models\WareHouse;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -29,8 +30,8 @@ class LandingPageController extends Controller
         $urlHome = ($urlArr[0] ?? "") . "//" . ($urlArr[2] ?? "") . "/" . ($urlArr[3] ?? "");
         $breadcrumbs = collect([
             [
-                "label" => "Home",
-                "url" => $urlHome
+                "title" => "Home",
+                "href" => $urlHome
             ]
         ]);
         if (isset($urlArr[0])) unset($urlArr[0]);
@@ -41,8 +42,8 @@ class LandingPageController extends Controller
         foreach ($urlArr as $url) {
             $urlHome .= "/" . $url;
             $breadcrumbs->push([
-                "label" => Str::title(str_replace("-", " ", $url)),
-                "url" => $urlHome
+                "title" => Str::title(str_replace("-", " ", $url)),
+                "href" => $urlHome
             ]);
         }
         $this->breadcrumbs = $breadcrumbs;
@@ -354,7 +355,7 @@ class LandingPageController extends Controller
     {
         $slug = $request->slug;
 
-        $product = Product::notShow()->active()->whereHas("translation", fn($q) => $q->where("slug", $slug))->first()->generateDataLanding();
+        $product = Product::notShow()->active()->whereHas("translations", fn($q) => $q->where("slug", $slug))->first()->generateDataLanding();
         if (!$product) return abort(404);
 
         $products = Product::notShow()->active()->whereNot("id", $product['id'])->get()->map->generateDataLanding();
@@ -365,12 +366,12 @@ class LandingPageController extends Controller
         ]);
     }
 
-
-
     public function indexContact()
     {
         return Inertia::render('landing/contact', [
             'booking' => session('booking'),
+            'warehouses' => WareHouse::select(['id as value', 'preview_address as label'])->whereActive(true)->get(),
+            'guarantees' => ['KTP', 'SIM', 'PASPORT', 'OTHERS']
         ]);
     }
 
@@ -461,7 +462,7 @@ class LandingPageController extends Controller
         DB::beginTransaction();
         try {
             $carts = collect($request->carts);
-
+            dd($request->all());
             $productIds = $carts->flatMap(fn($cart) => explode(';', $cart['id']))->filter()->unique()->values();
             $products = Product::with('variants')->whereIn('id', $productIds)->get();
 
@@ -591,7 +592,8 @@ class LandingPageController extends Controller
                 'name' => 'Invoice #' . $order['bookingId'] . '.pdf',
                 'option' => ['mime' => 'application/pdf']
             ]];
-            Mail::to($data['email'])->send(new NewOrderMail($data, $attachmentData));
+
+            Mail::to($data['email'])->bcc(config('app.landing.contact.email'))->send(new NewOrderMail($data, $attachmentData));
 
             DB::commit();
         } catch (\Throwable $th) {

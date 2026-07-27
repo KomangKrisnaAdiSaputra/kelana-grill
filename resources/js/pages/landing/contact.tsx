@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { toast } from 'sonner';
 import DateTimePicker from '@/components/datetime-picker';
+import DynamicSelect from '@/components/dynamic-select';
 import AmbientBackground from '@/components/landing/ambient-background';
 
 import Breadcrumb from '@/components/landing/breadcrumb';
@@ -33,6 +34,8 @@ import { useTheme } from '@/contexts/theme-context';
 import { formatPrice, useTranslation } from '@/helpers/global';
 import { produk } from '@/routes/landing';
 import { booking } from '@/routes/landing/contact';
+import type { LandingGuarantee, LandingWarehouse } from '@/types';
+import type { BreadcrumbItem } from '@/types/navigation';
 
 export default function ContactPage() {
     return (
@@ -44,13 +47,24 @@ export default function ContactPage() {
 
 type PageProps = {
     params: any;
+    warehouse: {
+        value: string;
+        label: string;
+    }[];
+    guarantee: string[];
+    breadcrumbs: BreadcrumbItem[];
+    warehouses: LandingWarehouse[];
+    guarantees: LandingGuarantee[];
 };
 
 function ContactContent() {
     const cartName = 'kelana-grill-cart';
     const props = usePage<PageProps>().props;
+
     const locale = props.params.locale;
-    const breadcrumbs = usePage<any>().props.breadcrumbs;
+    const breadcrumbs = props.breadcrumbs;
+    const warehouses = props.warehouses;
+    const guarantees = props.guarantees;
 
     const { theme, toggleTheme } = useTheme();
     const { cartItems } = useCart();
@@ -73,6 +87,7 @@ function ContactContent() {
     }, []);
 
     const { data, setData, post, processing, errors, clearErrors } = useForm({
+        warehouseId: '',
         firstname: '',
         lastname: '',
         phone: '',
@@ -80,7 +95,6 @@ function ContactContent() {
         address: '',
         pickupdate: '',
         returndate: '',
-        pickuplocation: '',
         guarantee: '',
         payment: 'Cash',
         note: '',
@@ -715,101 +729,69 @@ function ContactContent() {
                                         {__('Lokasi Pengambilan')}
                                     </h3>
 
-                                    <div className="relative">
-                                        <MapPin
-                                            size={18}
-                                            className={`pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 ${theme === 'dark'
-                                                ? 'text-zinc-200'
-                                                : 'text-zinc-500'
-                                                }`}
-                                        />
+                                    <div className='relative'>
+                                        <DynamicSelect
+                                            prefix={<MapPin size={18} />}
+                                            options={warehouses}
+                                            value={data.warehouseId}
+                                            onChange={(value) => {
+                                                setData('warehouseId', String(value));
 
-                                        <select
-                                            value={data.pickuplocation}
-                                            onChange={(e) => {
-                                                setData(
-                                                    'pickuplocation',
-                                                    e.target.value,
-                                                );
-
-                                                clearErrors('pickuplocation');
+                                                clearErrors('warehouseId');
                                             }}
-                                            className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none ${theme === 'dark'
+                                            className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none h-15 ${theme === 'dark'
                                                 ? 'border-white/10 bg-white/[0.04] text-zinc-200'
                                                 : 'border-orange-100 bg-orange-50/50 text-zinc-800'
-                                                } ${errors.pickuplocation
+                                                } ${errors.warehouseId
                                                     ? 'border-red-500 focus:border-red-500'
                                                     : ''
                                                 }`}
-                                            style={{
-                                                colorScheme:
-                                                    theme === 'dark'
-                                                        ? 'dark'
-                                                        : 'light',
-                                            }}
-                                        >
-                                            <option
-                                                value=""
-                                                className={
-                                                    theme === 'dark'
-                                                        ? 'bg-[#1a1a1a] text-white'
-                                                        : 'bg-white text-zinc-800'
-                                                }
-                                            >
-                                                {__('Pilih Lokasi Pengambilan')}
-                                            </option>
-
-                                            {[
-                                                'Jl. Siulan, Batubulan, Bali',
-                                                'Jl. Antasura, Denpasar, Bali',
-                                            ].map((location) => (
-                                                <option
-                                                    key={location}
-                                                    value={location}
-                                                    className={
-                                                        theme === 'dark'
-                                                            ? 'bg-[#1a1a1a] text-white'
-                                                            : 'bg-white text-zinc-800'
-                                                    }
-                                                >
-                                                    {location}
-                                                </option>
-                                            ))}
-                                        </select>
-
-                                        <ChevronDown
-                                            size={18}
-                                            className={`pointer-events-none absolute top-1/2 right-5 -translate-y-1/2 ${theme === 'dark'
-                                                ? 'text-zinc-400'
-                                                : 'text-zinc-500'
-                                                }`}
+                                            getValue={(item) => item.value}
+                                            getLabel={(item) => item.label}
+                                            placeholder={__('Pilih Lokasi Pengambilan')}
                                         />
                                     </div>
 
-                                    {errors.pickuplocation && (
+                                    {errors.warehouseId && (
                                         <p className="mt-2 text-sm text-red-500">
-                                            {__(errors.pickuplocation)}
+                                            {__(errors.warehouseId)}
                                         </p>
                                     )}
                                 </div>
 
                                 <div className="mt-5">
-                                    <InputField
-                                        theme={theme}
-                                        icon={<Shield size={18} />}
-                                        label={__('Jaminan')}
-                                        placeholder="KTP / SIM / Paspor / Other ID"
-                                        value={data.guarantee}
-                                        error={errors.guarantee}
-                                        onChange={(e) => {
-                                            setData(
-                                                'guarantee',
-                                                e.target.value,
-                                            );
+                                    <h3 className="mb-5 text-lg font-semibold">
+                                        {__('Jaminan')}
+                                    </h3>
 
-                                            clearErrors('guarantee');
-                                        }}
-                                    />
+                                    <div className='relative'>
+                                        <DynamicSelect
+                                            prefix={<Shield size={18} />}
+                                            options={guarantees}
+                                            value={data.guarantee}
+                                            onChange={(value) => {
+                                                setData('guarantee', String(value));
+
+                                                clearErrors('guarantee');
+                                            }}
+                                            className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none h-15 ${theme === 'dark'
+                                                ? 'border-white/10 bg-white/[0.04] text-zinc-200'
+                                                : 'border-orange-100 bg-orange-50/50 text-zinc-800'
+                                                } ${errors.guarantee
+                                                    ? 'border-red-500 focus:border-red-500'
+                                                    : ''
+                                                }`}
+                                            getValue={(item) => String(item)}
+                                            getLabel={(item) => String(item)}
+                                            placeholder={__('Pilih Jaminan')}
+                                        />
+                                    </div>
+
+                                    {errors.guarantee && (
+                                        <p className="mt-2 text-sm text-red-500">
+                                            {__(errors.guarantee)}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 

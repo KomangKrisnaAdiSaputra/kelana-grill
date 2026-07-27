@@ -66,7 +66,7 @@ export default function ProductCard({
             {/* IMAGE */}
 
             <div
-                onClick={() => router.visit(detail({ locale: 'id', slug: String(product.slug) }).url)}
+                onClick={() => router.visit(detail({ locale: 'id', slug: String(product.slug) }, { query: { pv: selectedVariant?.slug } }).url)}
                 className="relative h-48 overflow-hidden sm:h-56 cursor-pointer">
                 {product.new && (
                     <div className="absolute top-3 right-3 z-20">
@@ -303,6 +303,6 @@ export default function ProductCard({
                     </div>
                 </div>
             </div>
-        </article>
+        </article >
     );
 }

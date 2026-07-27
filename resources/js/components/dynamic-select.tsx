@@ -1,4 +1,10 @@
-import { Check, ChevronDown, ChevronUp, ChevronsUpDown, X } from 'lucide-react';
+import {
+    Check,
+    ChevronDown,
+    ChevronUp,
+    ChevronsUpDown,
+    X,
+} from 'lucide-react';
 import * as React from 'react';
 
 import { Badge } from '@/components/ui/badge';
@@ -34,6 +40,9 @@ interface DynamicSelectProps<T> {
 
     error?: string;
     className?: string;
+
+    prefix?: React.ReactNode;
+    suffix?: React.ReactNode;
 }
 
 export default function DynamicSelect<T>({
@@ -48,6 +57,8 @@ export default function DynamicSelect<T>({
     disabled = false,
     error,
     className,
+    prefix,
+    suffix,
 }: DynamicSelectProps<T>) {
     const [open, setOpen] = React.useState(false);
     const [showSelected, setShowSelected] = React.useState(false);
@@ -117,12 +128,24 @@ export default function DynamicSelect<T>({
                         variant="outline"
                         disabled={disabled}
                         className={cn(
-                            'min-h-10 w-full justify-between rounded-xl',
-                            error && 'border-destructive',
+                            "relative min-h-10 w-full justify-between rounded-xl",
+                            error && "border-destructive",
                             className,
                         )}
                     >
-                        <div className="flex flex-1 items-center gap-1 overflow-hidden">
+                        {prefix && (
+                            <div className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground">
+                                {prefix}
+                            </div>
+                        )}
+
+                        <div
+                            className={cn(
+                                "flex flex-1 items-center gap-1 overflow-hidden text-left",
+                                prefix && "pl-8",
+                                suffix && "pr-8",
+                            )}
+                        >
                             {selectedItems.length > 0 ? (
                                 multiple ? (
                                     <>
@@ -132,10 +155,7 @@ export default function DynamicSelect<T>({
                                                 variant="secondary"
                                                 className="gap-1"
                                                 onClick={(e) =>
-                                                    removeBadge(
-                                                        e,
-                                                        getValue(item),
-                                                    )
+                                                    removeBadge(e, getValue(item))
                                                 }
                                             >
                                                 {getLabel(item)}
@@ -158,13 +178,19 @@ export default function DynamicSelect<T>({
                                     </span>
                                 )
                             ) : (
-                                <span className="text-muted-foreground">
+                                <span className="truncate text-muted-foreground">
                                     {placeholder}
                                 </span>
                             )}
                         </div>
 
-                        <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+                        {suffix && (
+                            <div className="pointer-events-none absolute top-1/2 right-10 -translate-y-1/2 text-muted-foreground">
+                                {suffix}
+                            </div>
+                        )}
+
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>
 
@@ -176,7 +202,10 @@ export default function DynamicSelect<T>({
                     <Command>
                         <CommandInput placeholder={searchPlaceholder} />
 
-                        <CommandList className="max-h-64 overflow-y-auto" onWheel={(e) => e.stopPropagation()}>
+                        <CommandList
+                            className="max-h-64 overflow-y-auto"
+                            onWheel={(e) => e.stopPropagation()}
+                        >
                             <CommandEmpty>No data found.</CommandEmpty>
 
                             {multiple && selectedItems.length > 0 && (
@@ -217,7 +246,6 @@ export default function DynamicSelect<T>({
                                                         className="text-primary"
                                                     >
                                                         <Check className="h-4 w-4" />
-
                                                         {getLabel(item)}
                                                     </CommandItem>
                                                 );
@@ -271,7 +299,9 @@ export default function DynamicSelect<T>({
                 </PopoverContent>
             </Popover>
 
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && (
+                <p className="text-sm text-destructive">{error}</p>
+            )}
         </div>
     );
 }

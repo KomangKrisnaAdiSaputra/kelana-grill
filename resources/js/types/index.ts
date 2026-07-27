@@ -32,3 +32,13 @@ export type LandingNavItem = {
     label?: string;
     href: string;
 };
+
+export type LandingWarehouse = {
+    value: string;
+    label: string;
+};
+
+export type LandingGuarantee = {
+    value: string;
+    label: string;
+};

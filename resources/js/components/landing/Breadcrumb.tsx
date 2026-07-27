@@ -1,23 +1,21 @@
 import { Link } from "@inertiajs/react";
 import { ChevronRight } from "lucide-react";
-
-interface BreadcrumbItem {
-  label: string;
-  url: string;
-}
+import type { BreadcrumbItem } from "@/types";
 
 interface BreadcrumbProps {
   items: BreadcrumbItem[];
   className?: string;
+  isDark?: boolean;
 }
 
 export default function Breadcrumb({
   items,
   className = "",
+  isDark = false,
 }: BreadcrumbProps) {
   return (
     <nav
-      className={`w-full overflow-hidden text-sm text-gray-600 ${className}`}
+      className={`w-full overflow-hidden text-sm ${className}`}
       aria-label="Breadcrumb"
     >
       <ol className="flex w-full items-center whitespace-nowrap">
@@ -26,31 +24,40 @@ export default function Breadcrumb({
 
           return (
             <li
-              key={`${item.url}-${index}`}
+              key={`${item.href}-${index}`}
               className={`flex items-center ${isLast ? "min-w-0 flex-1" : "shrink-0"
                 }`}
             >
               {index !== 0 && (
                 <ChevronRight
-                  className="mx-1 h-4 w-4 text-gray-400 shrink-0"
+                  className={`mx-2 h-4 w-4 shrink-0 ${isDark
+                    ? "text-zinc-600"
+                    : "text-zinc-400"
+                    }`}
                   strokeWidth={2}
                 />
               )}
 
               {isLast ? (
                 <span
-                  className="block truncate font-medium text-gray-900"
-                  title={item.label}
+                  title={item.title}
                   aria-current="page"
+                  className={`block truncate font-semibold ${isDark
+                    ? "text-white"
+                    : "text-zinc-900"
+                    }`}
                 >
-                  {item.label}
+                  {item.title}
                 </span>
               ) : (
                 <Link
-                  href={item.url}
-                  className="shrink-0 hover:text-primary"
+                  href={item.href}
+                  className={`transition-colors duration-200 ${isDark
+                    ? "text-zinc-400 hover:text-orange-400"
+                    : "text-zinc-500 hover:text-orange-500"
+                    }`}
                 >
-                  {item.label}
+                  {item.title}
                 </Link>
               )}
             </li>

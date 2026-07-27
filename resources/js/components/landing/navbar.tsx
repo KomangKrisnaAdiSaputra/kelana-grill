@@ -29,6 +29,7 @@ type PageProps = {
 
 export default function Navbar({ theme, scrolled, onToggleTheme }: Props) {
     const props = usePage<PageProps>().props;
+    const { url } = usePage();
 
     const locale = props.params.locale;
 
@@ -122,18 +123,30 @@ export default function Navbar({ theme, scrolled, onToggleTheme }: Props) {
                     {/* DESKTOP NAV */}
 
                     <nav className="hidden items-center gap-8 xl:flex">
-                        {navItems.map((item) => (
-                            <a
-                                key={item.href}
-                                href={item.href}
-                                className={`relative text-sm font-medium transition duration-300 ${theme === 'dark'
-                                    ? 'text-zinc-300 hover:text-white'
-                                    : 'text-zinc-700 hover:text-orange-500'
-                                    } `}
-                            >
-                                {item.name}
-                            </a>
-                        ))}
+                        {navItems.map((item) => {
+                            const isActive =
+                                url === item.href || url.startsWith(`${item.href}/`);
+
+                            return (
+                                <a
+                                    key={item.href}
+                                    href={item.href}
+                                    className={`relative px-1 py-2 text-sm font-semibold transition-all duration-300
+                                        ${isActive
+                                            ? "text-orange-500"
+                                            : theme === "dark"
+                                                ? "text-zinc-300 hover:text-white"
+                                                : "text-zinc-700 hover:text-orange-500"
+                                        }`}
+                                >
+                                    {item.name}
+
+                                    {isActive && (
+                                        <span className="absolute -bottom-1 left-0 h-0.5 w-full rounded-full bg-orange-500" />
+                                    )}
+                                </a>
+                            );
+                        })}
                     </nav>
 
                     {/* DESKTOP ACTION */}

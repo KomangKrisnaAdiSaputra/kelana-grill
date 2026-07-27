@@ -30,14 +30,12 @@ import { useTheme } from '@/contexts/theme-context';
 
 import { useTranslation } from '@/helpers/global';
 
+import type { BreadcrumbItem } from '@/types';
 import type { Product, ProductVariant } from '@/types/product';
 
 type ProductCatalogPageProps = {
     products: Product[];
-    breadcrumbs: {
-        label: string;
-        url: string;
-    }[];
+    breadcrumbs: BreadcrumbItem[];
 };
 
 type SelectedDetail = {

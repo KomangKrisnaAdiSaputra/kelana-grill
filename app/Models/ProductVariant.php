@@ -47,6 +47,7 @@ class ProductVariant extends Model
 
         return collect([
             "id" => $this->id,
+            "slug" => $translation->slug,
             "rate" => $this->rate,
             "minPerson" => $this->min_person,
             "maxPerson" => $this->max_person,

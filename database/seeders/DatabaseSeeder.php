@@ -67,6 +67,10 @@ class DatabaseSeeder extends Seeder
             [
                 'code' => 'cup',
                 'name' => 'Cup'
+            ],
+            [
+                'code' => 'pkg',
+                'name' => 'Package'
             ]
         ];
         foreach ($units as $unit) {
