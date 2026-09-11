@@ -119,222 +119,15 @@ class LandingPageController extends Controller
             'sewa grill uluwatu',
         ];
 
-        $seoKeyword = implode(', ', array_map(fn($keyword) => translate($keyword), $keywords));
-
-        $locale = app()->getLocale();
-
-        $ogLocale = match ($locale) {
-            'id' => 'id_ID',
-            'en' => 'en_US',
-            default => 'id_ID',
-        };
-
-        MetaHelper::setTitle($seoTitle);
-
-        MetaHelper::addMeta('description', $metaDescription);
-        MetaHelper::addMeta('keywords', $seoKeyword); // Optional (Google hampir tidak menggunakannya)
-        MetaHelper::addMeta('author', config('app.name'));
-        MetaHelper::addMeta('robots', 'index,follow');
-        MetaHelper::addMeta('revisit-after', '7 days');
-
-        MetaHelper::setCanonical(url()->current());
-
-        /*
-        |--------------------------------------------------------------------------
-        | Open Graph
-        |--------------------------------------------------------------------------
-        */
-
-        MetaHelper::addOpenGraph('type', 'website');
-        MetaHelper::addOpenGraph('site_name', config('app.name'));
-        MetaHelper::addOpenGraph('locale', $ogLocale);
-        MetaHelper::addOpenGraph('title', $seoTitle);
-        MetaHelper::addOpenGraph('description', $metaDescription);
-        MetaHelper::addOpenGraph('url', url()->current());
-        MetaHelper::addOpenGraph('image', $image);
-        MetaHelper::addOpenGraph('image:alt', config('app.name'));
-
-        /*
-        |--------------------------------------------------------------------------
-        | Twitter
-        |--------------------------------------------------------------------------
-        */
-
-        MetaHelper::addTwitter('card', 'summary_large_image');
-        MetaHelper::addTwitter('title', $seoTitle);
-        MetaHelper::addTwitter('description', $metaDescription);
-        MetaHelper::addTwitter('image', $image);
-        MetaHelper::addTwitter('url', url()->current());
-
-        MetaHelper::setCanonical(url()->current());
-
-        /*
-        |--------------------------------------------------------------------------
-        | Breadcrumb
-        |--------------------------------------------------------------------------
-        */
-
-        MetaHelper::addBreadcrumbLists(
-            collect($this->breadcrumbs)->toArray()
-        );
-
-        /*
-        |--------------------------------------------------------------------------
-        | Organization Schema
-        |--------------------------------------------------------------------------
-        */
-
-        MetaHelper::addSchema([
-            '@context' => 'https://schema.org',
-            '@type' => 'Organization',
-
-            'name' => config('app.name'),
-            'url' => url('/'),
-            'logo' => $image,
-            'image' => $image,
+        setupSeo([
+            'title' => $seoTitle,
             'description' => $metaDescription,
-            'inLanguage' => $locale,
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Local Business Schema
-        |--------------------------------------------------------------------------
-        */
-
-        MetaHelper::addSchema([
-            '@context' => 'https://schema.org',
-            '@type' => 'LocalBusiness',
-
-            'name' => config('app.name'),
-            'url' => url('/'),
             'image' => $image,
-            'description' => $metaDescription,
-            'inLanguage' => $locale,
+            'keywords' => $keywords,
+            'type' => 'website',
+        ], $this->breadcrumbs);
 
-            'telephone' => config('app.landing.contact.whatsapp_number'),
-            'email' => config('app.landing.contact.email'),
-
-            'priceRange' => '$$',
-
-            'address' => [
-                '@type' => 'PostalAddress',
-                'streetAddress' => 'Jl. Antasura',
-                'addressLocality' => 'Denpasar',
-                'addressRegion' => 'Bali',
-                'postalCode' => '80111',
-                'addressCountry' => 'ID',
-            ],
-
-            'areaServed' => [
-                [
-                    '@type' => 'AdministrativeArea',
-                    'name' => 'Bali',
-                ],
-            ],
-
-            'openingHoursSpecification' => [
-                [
-                    '@type' => 'OpeningHoursSpecification',
-                    'dayOfWeek' => [
-                        'Monday',
-                        'Tuesday',
-                        'Wednesday',
-                        'Thursday',
-                        'Friday',
-                        'Saturday',
-                        'Sunday',
-                    ],
-                    'opens' => '08:00',
-                    'closes' => '22:00',
-                ],
-            ],
-
-            'sameAs' => array_filter([
-                "https://www.instagram.com/kelanagrill",
-                "https://www.facebook.com/kelana.grill",
-                "https://www.tiktok.com/@kelana.grill",
-            ]),
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | WebSite Schema
-        |--------------------------------------------------------------------------
-        */
-
-        MetaHelper::addSchema([
-            '@context' => 'https://schema.org',
-            '@type' => 'WebSite',
-
-            'name' => config('app.name'),
-            'url' => url('/'),
-            'inLanguage' => $locale,
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Service Schema
-        |--------------------------------------------------------------------------
-        */
-
-        MetaHelper::addSchema([
-            '@context' => 'https://schema.org',
-            '@type' => 'Service',
-
-            'name' => $seoTitle,
-            'description' => $metaDescription,
-            'url' => url()->current(),
-            'image' => $image,
-            'inLanguage' => $locale,
-
-            'serviceType' => 'BBQ Grill Rental',
-
-            'provider' => [
-                '@type' => 'LocalBusiness',
-                'name' => config('app.name'),
-            ],
-
-            'areaServed' => [
-                [
-                    '@type' => 'AdministrativeArea',
-                    'name' => 'Bali',
-                ],
-            ],
-        ]);
-
-        MetaHelper::addSchema([
-            '@context' => 'https://schema.org',
-            '@type' => 'FAQPage',
-
-            'mainEntity' => [
-                [
-                    '@type' => 'Question',
-                    'name' => translate('Apakah tersedia layanan antar?'),
-                    'acceptedAnswer' => [
-                        '@type' => 'Answer',
-                        'text' => translate('Ya, kami melayani pengantaran grill BBQ ke seluruh area Bali.'),
-                    ],
-                ],
-                [
-                    '@type' => 'Question',
-                    'name' => translate('Apakah sudah termasuk arang?'),
-                    'acceptedAnswer' => [
-                        '@type' => 'Answer',
-                        'text' => translate('Kami menyediakan paket dengan maupun tanpa arang sesuai kebutuhan Anda.'),
-                    ],
-                ],
-                [
-                    '@type' => 'Question',
-                    'name' => translate('Apakah bisa sewa harian?'),
-                    'acceptedAnswer' => [
-                        '@type' => 'Answer',
-                        'text' => translate('Ya, tersedia paket sewa harian maupun beberapa hari.'),
-                    ],
-                ],
-            ],
-        ]);
-
+        addFaqSchema();
 
         return Inertia::render('landing/index', [
             'featuredProduct' => $featuredProduct,
@@ -359,6 +152,28 @@ class LandingPageController extends Controller
         if (!$product) return abort(404);
 
         $products = Product::notShow()->active()->whereNot("id", $product['id'])->get()->map->generateDataLanding();
+
+        setupSeo([
+            'title' => "{$product['name']}",
+
+            'description' => $product['description'],
+
+            'image' => $product['image'] ?? config('app.logo'),
+
+            'type' => 'product',
+
+            'keywords' => [
+                $product['name'],
+                "Sewa {$product['name']}",
+                "Rental {$product['name']}",
+                "BBQ Bali",
+                "Grill Bali"
+            ]
+        ], $this->breadcrumbs);
+
+        addProductSchema($product->toArray());
+
+        addFaqSchema();
 
         return Inertia::render('landing/product/detail', [
             'products' => $products,
@@ -402,7 +217,6 @@ class LandingPageController extends Controller
                 'date',
                 'after_or_equal:pickupdate'
             ],
-            'pickuplocation' => ['required', 'string'],
             'guarantee' => ['required', 'string'],
             'payment' => ['required', 'in:Cash,Transfer'],
             'carts' => ['required', 'array', 'min:1'],
@@ -462,7 +276,6 @@ class LandingPageController extends Controller
         DB::beginTransaction();
         try {
             $carts = collect($request->carts);
-            dd($request->all());
             $productIds = $carts->flatMap(fn($cart) => explode(';', $cart['id']))->filter()->unique()->values();
             $products = Product::with('variants')->whereIn('id', $productIds)->get();
 
@@ -475,7 +288,7 @@ class LandingPageController extends Controller
                 'address' => $request->address,
                 'pickup_date' => $request->pickupdate,
                 'return_date' => $request->returndate,
-                'pickup_location' => $request->pickuplocation,
+                'warehouse_id' => $request->warehouseId,
                 'guarantee' => $request->guarantee,
                 'payment_method' => strtoupper($request->payment),
                 'note' => $request->note,
@@ -505,6 +318,7 @@ class LandingPageController extends Controller
                 }
 
                 $qty = (int) $cart['qty'];
+                $qtyItem = $product->qty;
                 $rate = $variant?->rate  ?? $product->rate;
                 $detailSubTotal = $rate * $qty;
                 $detailTotal = $detailSubTotal;
@@ -524,6 +338,8 @@ class LandingPageController extends Controller
 
                     'marinade' => ($cart['marinade'] ?? false),
                     'qty' => $qty,
+                    'qty_item' => $qtyItem,
+                    'unit' => $product?->unit?->code ?? null,
 
                     'rate' => $rate,
                     'sub_total' => $detailSubTotal,
@@ -553,8 +369,9 @@ class LandingPageController extends Controller
                                 'name' => $item['name'],
                                 'description' => $item['description'],
 
-                                'qty' => $item['qty'],
-                                'unit' => $item['unit'],
+                                'qty_item' => $item['qty'],
+                                'qty' => $item['qtyItem'],
+                                'unit' => $item['unit']['code'],
 
                                 'marinade' =>  $item['marinade'] ?? false,
                             ]);

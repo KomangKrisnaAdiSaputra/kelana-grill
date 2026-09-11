@@ -37,7 +37,7 @@ export default function ProductMarinadeSection({
         <div className="mb-4 flex items-start justify-between">
           <div>
             <p className="font-medium">
-              {product?.name}
+              {product?.name ?? ""}
             </p>
 
             {product?.description && (
@@ -47,8 +47,20 @@ export default function ProductMarinadeSection({
             )}
           </div>
 
-          <div className="rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
-            Qty 1
+          <div className="relative flex min-w-[88px] flex-col items-center rounded-2xl border border-primary/20 bg-gradient-to-b from-primary/10 to-primary/5 px-3 py-3 shadow-sm">
+            {/* Badge */}
+            <span className="absolute right-2 top-2 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold leading-none text-primary-foreground">
+              ×1
+            </span>
+
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Qty
+            </span>
+
+            <span className="mt-1 text-lg font-bold leading-none text-primary">
+              {Number(product?.qty ?? 0)}
+              {product?.unit?.code}
+            </span>
           </div>
         </div>
 

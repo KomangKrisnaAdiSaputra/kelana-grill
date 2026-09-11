@@ -277,8 +277,8 @@ export default function CartDrawer({ open, onClose }: Props) {
                                                                                                         className="rounded-lg bg-background/50 p-2 text-xs"
                                                                                                     >
                                                                                                         <div className="font-medium">
-                                                                                                            {subItem.qty}x{' '}
-                                                                                                            {subItem.name}
+                                                                                                            {subItem.qtyItem}x{' '}
+                                                                                                            {subItem.name}({subItem.qty}{subItem.unit?.code})
                                                                                                         </div>
 
                                                                                                         {subItem.marinadeItems?.length > 0 && (

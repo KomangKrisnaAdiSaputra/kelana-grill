@@ -24,7 +24,6 @@ export default function MarinadeSection({
   setSelectedMarinades,
 }: Props) {
   const { __ } = useTranslation();
-  console.log(items);
 
   return (
     <section className="space-y-4">
@@ -57,13 +56,19 @@ export default function MarinadeSection({
                 )}
               </div>
 
-              <div className="flex min-w-[74px] flex-col items-center rounded-2xl border border-primary/15 bg-primary/5 px-3 py-2">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+              <div className="relative flex min-w-[88px] flex-col items-center rounded-2xl border border-primary/20 bg-gradient-to-b from-primary/10 to-primary/5 px-3 py-3 shadow-sm">
+                {/* Badge */}
+                <span className="absolute right-2 top-2 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold leading-none text-primary-foreground">
+                  ×{Number(item?.qtyItem ?? 0)}
+                </span>
+
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                   Qty
                 </span>
 
-                <span className="mt-0.5 text-sm font-bold text-primary">
-                  {Number(item?.qty ?? 0) * Number(item?.qtyItem ?? 0)} {item.unit?.code}
+                <span className="mt-1 text-lg font-bold leading-none text-primary">
+                  {Number(item?.qty ?? 0)}
+                  {item.unit?.code}
                 </span>
               </div>
             </div>

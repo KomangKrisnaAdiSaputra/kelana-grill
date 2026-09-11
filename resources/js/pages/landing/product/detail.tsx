@@ -1,5 +1,5 @@
 import { usePage } from "@inertiajs/react";
-import { CheckCircle2, FileText, MessageCircle, ShieldCheck, ShoppingBag, Star, X } from "lucide-react";
+import { CheckCircle2, FileText, MessageCircle, ShieldCheck, ShoppingBag, Star } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import AmbientBackground from "@/components/landing/ambient-background";
@@ -8,6 +8,7 @@ import Footer from "@/components/landing/footer";
 import MobileNavbar from "@/components/landing/mobile-navbar";
 import Navbar from "@/components/landing/navbar";
 
+import TermsConditionModal from "@/components/landing/terms-condition-modal";
 import ProductImagePlaceholder from "@/components/product-image-placeholder";
 import AppProvider from "@/contexts/app-provider";
 import { useCart } from "@/contexts/cart-context";
@@ -46,11 +47,7 @@ function DetailContent() {
   });
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(() => {
     if (product?.variants && product.variants.length > 0) {
-      if (params?.pv) {
-        return product?.variants.find((v) => v.slug == params.pv) ?? null;
-      }
-
-      return product.variants[0] ?? null;
+      return product?.variants.find((v) => v.slug == params.pv) ?? product.variants[0] ?? null;
     }
 
     return null;
@@ -61,7 +58,7 @@ function DetailContent() {
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
-  const termsContentRef = useRef<HTMLDivElement>(null);
+  const termsContentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,14 +85,13 @@ function DetailContent() {
   }, [isTermsModalOpen]);
 
   // Handle scroll di dalam modal S&K
-  const handleTermsScroll = () => {
-    if (termsContentRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = termsContentRef.current;
-      // Toleransi 10px untuk penentuan jika user sudah mencapai paling bawah
+  const handleTermsScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
 
-      if (scrollTop + clientHeight >= scrollHeight - 10) {
-        setHasScrolledToBottom(true);
-      }
+    const reachedBottom = scrollTop + clientHeight >= scrollHeight - 2;
+
+    if (reachedBottom) {
+      setHasScrolledToBottom(true);
     }
   };
 
@@ -262,10 +258,10 @@ function DetailContent() {
                       <span className="text-3xl sm:text-4xl font-black text-orange-500">
                         {formatPrice(displayPrice)}
                       </span>
+                      <p className={`mt-1 text-xs ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>
+                        / {product?.qty ?? 1} {product?.unit?.code ?? "Hari"}
+                      </p>
                     </div>
-                    <p className={`mt-1 text-xs ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>
-                      Harga / {product?.qty ?? 1} {product?.unit?.code ?? "Hari"}
-                    </p>
                   </div>
 
                   <p className={`mt-5 text-sm leading-relaxed ${isDark ? "text-zinc-300" : "text-zinc-600"}`}>
@@ -279,7 +275,7 @@ function DetailContent() {
                         }`}
                     >
                       <ShieldCheck size={18} className="text-orange-500 shrink-0" />
-                      <span>Produk premium berkualitas & terjamin</span>
+                      <span>{__("Produk premium berkualitas & terjamin")}</span>
                     </div>
 
                     <div
@@ -287,7 +283,7 @@ function DetailContent() {
                         }`}
                     >
                       <CheckCircle2 size={18} className="text-orange-500 shrink-0" />
-                      <span>Dibersihkan & disterilkan sebelum dikirim</span>
+                      <span>{__("Dibersihkan & disterilkan sebelum dikirim")}</span>
                     </div>
                   </div>
 
@@ -304,13 +300,13 @@ function DetailContent() {
                     <button
                       ref={addButtonRef}
                       onClick={() => {
-                        if (!addButtonRef.current || !product || !selectedVariant) {
+                        if (!addButtonRef.current || !product || ((product?.variants ?? []).length > 0 && !selectedVariant)) {
                           return;
                         }
 
                         addToCart?.(
                           product,
-                          selectedVariant,
+                          selectedVariant!,
                           addButtonRef.current
                         );
                       }}
@@ -346,7 +342,7 @@ function DetailContent() {
                   >
                     <FileText size={16} className={isAgreed ? "text-emerald-500" : "text-orange-500"} />
                     <span>
-                      {isAgreed ? "Syarat & Ketentuan Disetujui" : "Lihat Syarat & Ketentuan Sewa"}
+                      {__(isAgreed ? "Syarat & Ketentuan Disetujui" : "Lihat Syarat & Ketentuan Sewa")}
                     </span>
                     {isAgreed && <CheckCircle2 size={14} className="ml-auto text-emerald-500" />}
                   </button>
@@ -365,13 +361,13 @@ function DetailContent() {
                 >
                   <div className="mb-6">
                     <span className="text-xs font-bold uppercase tracking-widest text-orange-500">
-                      Choose Package
+                      {__("Pilih Paket")}
                     </span>
                     <h2 className="mt-1 text-2xl sm:text-3xl font-extrabold">
-                      Pilihan Paket / Variansi
+                      {__("Pilihan Paket / Variansi")}
                     </h2>
                     <p className={`mt-1 text-sm ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>
-                      Pilih paket yang paling sesuai dengan skala dan kebutuhan acara Anda.
+                      {__("Pilih paket yang paling sesuai dengan skala dan kebutuhan acara Anda.")}
                     </p>
                   </div>
 
@@ -401,7 +397,7 @@ function DetailContent() {
                         </p>
                         {(selectedVariant.minPerson || selectedVariant.maxPerson) && (
                           <p className={`mt-0.5 text-xs font-medium ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>
-                            Kapasitas: {selectedVariant.minPerson ?? 0} - {selectedVariant.maxPerson ?? 0} orang
+                            {__("Kapasitas")}: {selectedVariant.minPerson ?? 0} - {selectedVariant.maxPerson ?? 0} orang
                           </p>
                         )}
                       </div>
@@ -441,7 +437,7 @@ function DetailContent() {
 
                             {isSelected && (
                               <span className="rounded-full bg-orange-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
-                                Aktif
+                                {__("Aktif")}
                               </span>
                             )}
                           </div>
@@ -459,7 +455,7 @@ function DetailContent() {
                             className={`mt-4 flex items-end justify-between border-t pt-3 ${isDark ? "border-zinc-800/60" : "border-zinc-100"
                               }`}
                           >
-                            <span className="text-xs text-zinc-400">Tarif</span>
+                            <span className="text-xs text-zinc-400">{__("Tarif")}</span>
 
                             <span className="text-lg font-black text-orange-500">
                               {formatPrice(variant.rate)}
@@ -485,18 +481,18 @@ function DetailContent() {
                   {/* Header */}
                   <div className="mb-6">
                     <span className="text-xs font-bold uppercase tracking-widest text-orange-500">
-                      What's Included
+                      {__("Termasuk Apa Saja")}
                     </span>
 
                     <h2 className="mt-1 text-2xl font-extrabold sm:text-3xl">
-                      Yang Akan Anda Dapatkan
+                      {__("Yang Akan Anda Dapatkan")}
                     </h2>
 
                     <p
                       className={`mt-1 text-sm ${isDark ? "text-zinc-400" : "text-zinc-500"
                         }`}
                     >
-                      Seluruh perlengkapan yang termasuk dalam paket yang Anda pilih.
+                      {__("Seluruh perlengkapan yang termasuk dalam paket yang Anda pilih.")}
                     </p>
                   </div>
 
@@ -509,7 +505,7 @@ function DetailContent() {
                   >
                     <div>
                       <p className="text-xs font-bold uppercase tracking-wider text-orange-500">
-                        Total Kelengkapan
+                        {__("Total Kelengkapan")}
                       </p>
 
                       <h3 className="mt-0.5 text-lg font-bold">
@@ -520,7 +516,7 @@ function DetailContent() {
                         className={`mt-1 text-xs ${isDark ? "text-zinc-400" : "text-zinc-500"
                           }`}
                       >
-                        Semua item sudah termasuk dalam paket.
+                        {__("Semua item sudah termasuk dalam paket.")}
                       </p>
                     </div>
                   </div>
@@ -567,7 +563,7 @@ function DetailContent() {
                               }`}
                           >
                             <span className="text-xs text-zinc-400">
-                              Jumlah
+                              {__("Jumlah")}
                             </span>
 
                             <span className="text-lg font-black text-orange-500">
@@ -600,141 +596,21 @@ function DetailContent() {
         <Footer theme={theme} />
       </div>
 
-      {/* Modal Syarat & Ketentuan */}
-      {isTermsModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-          <div
-            className={`relative w-full max-w-2xl rounded-3xl border shadow-2xl flex flex-col max-h-[90vh] overflow-hidden ${isDark ? "bg-zinc-900 border-zinc-800 text-zinc-100" : "bg-white border-zinc-200 text-zinc-900"
-              }`}
-          >
-            {/* Modal Header */}
-            <div className="flex items-center justify-between border-b p-5 sm:px-6 dark:border-zinc-800">
-              <div className="flex items-center gap-2.5">
-                <div className="rounded-xl bg-orange-500/10 p-2 text-orange-500">
-                  <FileText size={20} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold">Syarat & Ketentuan Sewa</h3>
-                  <p className={`text-xs ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>
-                    Harap baca seluruh poin syarat dan ketentuan sampai bawah.
-                  </p>
-                </div>
-              </div>
 
-              <button
-                type="button"
-                onClick={() => setIsTermsModalOpen(false)}
-                className={`rounded-full p-2 transition-colors cursor-pointer ${isDark ? "hover:bg-zinc-800 text-zinc-400" : "hover:bg-zinc-100 text-zinc-500"
-                  }`}
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Modal Body (Scrollable tanpa tampilan scrollbar) */}
-            <div
-              ref={termsContentRef}
-              onScroll={handleTermsScroll}
-              className="p-5 sm:p-6 overflow-y-auto space-y-4 text-sm leading-relaxed flex-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-            >
-              {!hasScrolledToBottom && (
-                <div
-                  className={`p-4 rounded-xl border text-xs ${isDark ? "bg-orange-500/10 border-orange-500/20 text-orange-300" : "bg-orange-50 border-orange-200 text-orange-800"
-                    }`}
-                >
-                  💡 <strong>Catatan:</strong> Gulir (scroll) hingga akhir teks untuk membuka opsi persetujuan.
-                </div>
-              )}
-
-              <div className="space-y-3">
-                <h4 className="font-bold text-orange-500">1. Persyaratan Identitas & Penyewaan</h4>
-                <p className={isDark ? "text-zinc-300" : "text-zinc-600"}>
-                  Penyewa wajib memberikan identitas asli berupa KTP/SIM/Paspor yang masih berlaku sebagai jaminan selama masa penyewaan berlangsung.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="font-bold text-orange-500">2. Durasi & Pengembalian</h4>
-                <p className={isDark ? "text-zinc-300" : "text-zinc-600"}>
-                  Masa sewa dihitung 24 jam sejak barang diterima. Keterlambatan pengembalian akan dikenakan denda sesuai dengan tarif harian yang berlaku.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="font-bold text-orange-500">3. Kondisi & Kerusakan Barang</h4>
-                <p className={isDark ? "text-zinc-300" : "text-zinc-600"}>
-                  Penyewa bertanggung jawab penuh atas keutuhan dan kebersihan produk selama masa sewa. Kerusakan atau kehilangan unit/aksesoris akan dikenakan biaya penggantian/perbaikan.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="font-bold text-orange-500">4. Pembatalan & Deposit</h4>
-                <p className={isDark ? "text-zinc-300" : "text-zinc-600"}>
-                  Pembatalan pesanan kurang dari H-1 dari tanggal pengiriman akan dikenakan pemotongan deposit sebesar 50%.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="font-bold text-orange-500">5. Pengiriman & Pengambilan</h4>
-                <p className={isDark ? "text-zinc-300" : "text-zinc-600"}>
-                  Pengiriman dilakukan sesuai jadwal yang disepakati. Penyewa wajib memeriksa kondisi kelengkapan barang saat serah terima.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="font-bold text-orange-500">6. Ketentuan Pembayaran</h4>
-                <p className={isDark ? "text-zinc-300" : "text-zinc-600"}>
-                  Pembayaran wajib dilunasi sebelum unit dikirimkan atau pada saat serah terima barang di lokasi yang telah ditentukan.
-                </p>
-              </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div className={`p-5 sm:px-6 border-t space-y-4 ${isDark ? "border-zinc-800 bg-zinc-900/50" : "border-zinc-200 bg-zinc-50"}`}>
-              {/* Checkbox Persetujuan (Hanya Aktif Ketika Selesai Scroll) */}
-              <label
-                className={`flex items-center gap-3 transition-opacity select-none ${hasScrolledToBottom ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-40"
-                  }`}
-              >
-                <input
-                  type="checkbox"
-                  disabled={!hasScrolledToBottom}
-                  checked={isAgreed}
-                  onChange={(e) => setIsAgreed(e.target.checked)}
-                  className="h-4 w-4 rounded border-zinc-300 text-orange-500 focus:ring-orange-500 dark:border-zinc-700 dark:bg-zinc-800 disabled:cursor-not-allowed"
-                />
-                <span className={`text-xs font-semibold ${isDark ? "text-zinc-300" : "text-zinc-700"}`}>
-                  Saya telah membaca dan menyetujui seluruh Syarat & Ketentuan di atas
-                </span>
-              </label>
-
-              <div className="flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsTermsModalOpen(false)}
-                  className={`rounded-xl px-5 py-2.5 text-xs font-bold transition-all cursor-pointer ${isDark
-                    ? "border border-zinc-700 hover:bg-zinc-800 text-zinc-300"
-                    : "border border-zinc-300 hover:bg-zinc-100 text-zinc-700"
-                    }`}
-                >
-                  Tutup
-                </button>
-                <button
-                  type="button"
-                  disabled={!isAgreed}
-                  onClick={() => setIsTermsModalOpen(false)}
-                  className={`rounded-xl px-6 py-2.5 text-xs font-bold text-white transition-all shadow-md ${isAgreed
-                    ? "bg-orange-500 hover:bg-orange-600 shadow-orange-500/20 cursor-pointer"
-                    : "bg-zinc-400 dark:bg-zinc-700 cursor-not-allowed opacity-60"
-                    }`}
-                >
-                  Setujui & Lanjutkan
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <TermsConditionModal
+        open={isTermsModalOpen}
+        isDark={isDark}
+        isAgreed={isAgreed}
+        hasScrolledToBottom={hasScrolledToBottom}
+        termsContentRef={termsContentRef as React.RefObject<HTMLDivElement>}
+        onClose={() => {
+          setIsTermsModalOpen(false);
+          setHasScrolledToBottom(false);
+        }}
+        onAgreeChange={setIsAgreed}
+        onScroll={handleTermsScroll}
+        onContinue={() => setIsTermsModalOpen(false)}
+      />
     </>
   );
 }

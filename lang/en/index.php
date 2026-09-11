@@ -406,4 +406,58 @@ return [
   "sewa grill nusa dua" => "grill rental nusa dua",
   "sewa grill uluwatu" => "grill rental uluwatu",
   // END SEO
+
+  // Detail
+  'Durasi Penyewaan' => 'Rental Duration',
+  'Penyewaan berlaku untuk 1 hari.' => 'The rental period is valid for one day.',
+
+  'Jam Pengambilan' => 'Pickup Hours',
+  'Barang dapat diambil pukul 09:00 - 18:00. Untuk pengambilan di luar jam tersebut dapat dibuat janji terlebih dahulu.' => 'Items can be picked up between 09:00 AM and 06:00 PM. Pickup outside these hours can be arranged by appointment.',
+
+  'Keterlambatan Pengembalian' => 'Late Return',
+  'Batas keterlambatan pengembalian adalah 2 jam. Apabila melebihi batas tersebut akan dikenakan biaya tambahan sebesar 1 hari sewa.' => 'A maximum delay of 2 hours is allowed. Returns exceeding this limit will incur an additional one-day rental fee.',
+
+  'Jaminan Identitas' => 'Identification Deposit',
+  'Mohon membawa KTP, SIM, atau Kartu Pelajar saat pengambilan sebagai jaminan.' => 'Please bring a valid National ID, Driver’s License, or Student Card as a security deposit during pickup.',
+
+  'Pengembalian Barang' => 'Returning Items',
+  'Seluruh barang wajib dikembalikan sesuai paket yang disewa, termasuk tabung gas apabila disertakan.' => 'All rented items must be returned complete as received, including the gas cylinder if provided.',
+
+  'Kerusakan & Kehilangan' => 'Damage & Loss',
+  'Kerusakan maupun kehilangan barang akan dikenakan biaya sesuai kondisi barang.' => 'Any damaged or lost items will be charged according to their condition.',
+
+  'Booking' => 'Reservation',
+  'Dimohon melakukan booking dari jauh hari untuk menghindari full booked.' => 'Please make your reservation in advance to avoid fully booked schedules.',
+
+  'Penyewaan dengan Daging' => 'Rental with Meat Package',
+  'Penyewaan yang disertai pemesanan daging wajib dilakukan minimal H-1 sebelum tanggal penyewaan.' => 'Rentals including meat orders must be booked at least one day before the rental date.',
+
+  'Promo' => 'Promotion',
+  'Promo yang dipilih tidak dapat digabungkan dengan promo lainnya.' => 'The selected promotion cannot be combined with any other promotions.',
+
+  'Pengiriman' => 'Delivery',
+  'Apabila pengiriman menggunakan jasa pengiriman online, ongkos kirim menjadi tanggung jawab pemesan.' => 'If online delivery services are used, the shipping cost is the customer’s responsibility.',
+  "Produk premium berkualitas & terjamin" => "Premium quality & guaranteed products",
+  "Dibersihkan & disterilkan sebelum dikirim" => "Cleaned & sterilized before delivery",
+  "Syarat & Ketentuan Disetujui" => "Terms & Conditions Approved",
+  "Lihat Syarat & Ketentuan Sewa" => "View Rental Terms & Conditions",
+  "Pilih Paket" => "Choose Package",
+  "Pilihan Paket / Variansi" => "Package / Variant Selection",
+  "Pilih paket yang paling sesuai dengan skala dan kebutuhan acara Anda." => "Choose the package that best suits the scale and needs of your event.",
+  "Pilihan Saat Ini" => "Current Selection",
+  "Kapasitas" => "Capacity",
+  "Aktif" => "Active",
+  "Tarif" => "Rate",
+  "Termasuk Apa Saja" => "What's Included",
+  "Yang Akan Anda Dapatkan" => "What You Will Get",
+  "Seluruh perlengkapan yang termasuk dalam paket yang Anda pilih." => "All equipment included in your selected package.",
+  "Total Kelengkapan" => "Total Included Items",
+  "Semua item sudah termasuk dalam paket." => "All items are included in the package.",
+  "Jumlah" => "Quantity",
+  "Syarat & Ketentuan" => "Terms & Conditions",
+  "Harap membaca seluruh syarat hingga selesai." => "Please read all terms and conditions carefully.",
+  "Silakan scroll hingga bagian paling bawah untuk mengaktifkan persetujuan." => "Please scroll to the bottom to enable the agreement.",
+  "Saya telah membaca dan menyetujui seluruh syarat & ketentuan di atas." => "I have read and agree to all the terms & conditions above.",
+  "Setujui & Lanjutkan" => "Agree & Continue",
+  // End Detail
 ];

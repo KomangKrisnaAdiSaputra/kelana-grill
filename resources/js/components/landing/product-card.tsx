@@ -1,4 +1,4 @@
-import { router } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import { TooltipArrow } from '@radix-ui/react-tooltip';
 import { ShoppingBag } from 'lucide-react';
 import { useRef, useState } from 'react';
@@ -42,6 +42,7 @@ export default function ProductCard({
     cartQtyVariant = {}
 }: ProductCardProps) {
     const selectedVariant = getDefaultVariant(product, selectedVariantId);
+    const locale = usePage<{ params: { locale: string } }>().props.params.locale;
 
     const category = product.categories?.[0];
     const { __ } = useTranslation();
@@ -66,7 +67,7 @@ export default function ProductCard({
             {/* IMAGE */}
 
             <div
-                onClick={() => router.visit(detail({ locale: 'id', slug: String(product.slug) }, { query: { pv: selectedVariant?.slug } }).url)}
+                onClick={() => window.location.href = detail({ locale, slug: String(product.slug) }, { query: { pv: selectedVariant?.slug } }).url}
                 className="relative h-48 overflow-hidden sm:h-56 cursor-pointer">
                 {product.new && (
                     <div className="absolute top-3 right-3 z-20">

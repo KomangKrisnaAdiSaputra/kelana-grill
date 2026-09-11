@@ -2,6 +2,8 @@ import { Head, router, usePage } from '@inertiajs/react';
 
 import {
     ArrowRight,
+    CheckCircle2,
+    FileText,
     Flame,
     Instagram,
     MapPin,
@@ -12,7 +14,7 @@ import {
     UtensilsCrossed,
 } from 'lucide-react';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import AmbientBackground from '@/components/landing/ambient-background';
 
@@ -23,6 +25,7 @@ import MobileNavbar from '@/components/landing/mobile-navbar';
 
 import Navbar from '@/components/landing/navbar';
 
+import TermsConditionModal from '@/components/landing/terms-condition-modal';
 import AppProvider from '@/contexts/app-provider';
 
 import { useTheme } from '@/contexts/theme-context';
@@ -49,8 +52,50 @@ function AboutMeContent() {
     const breadcrumbs = usePage<any>().props.breadcrumbs;
 
     const { __ } = useTranslation();
-
     const [scrolled, setScrolled] = useState(false);
+    const isDark = theme === "dark";
+
+    // State & Ref untuk Modal Syarat & Ketentuan
+    const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+    const [isAgreed, setIsAgreed] = useState(false);
+    const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
+    const termsContentRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 30);
+        };
+
+        handleScroll();
+        window.addEventListener("scroll", handleScroll);
+
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    // Mencegah scroll pada background/body ketika modal terbuka
+    useEffect(() => {
+        if (isTermsModalOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+
+        return () => {
+            document.body.style.overflow = "unset";
+        };
+    }, [isTermsModalOpen]);
+
+    // Handle scroll di dalam modal S&K
+    const handleTermsScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+
+        const reachedBottom = scrollTop + clientHeight >= scrollHeight - 2;
+
+        if (reachedBottom) {
+            setHasScrolledToBottom(true);
+        }
+    };
+
 
     useEffect(() => {
         const handleScroll = () => {
@@ -168,8 +213,8 @@ function AboutMeContent() {
                                     }
                                     className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 hover:bg-orange-600 sm:px-6 sm:py-4"
                                 >
-                                    {' '}
                                     {__('Booking Sekarang')}
+
                                     <ArrowRight
                                         size={16}
                                         className="transition-transform duration-300 group-hover:translate-x-1"
@@ -189,8 +234,39 @@ function AboutMeContent() {
                                 </button>
                             </div>
 
-                            {/* STATS */}
+                            {/* SYARAT & KETENTUAN */}
+                            <button
+                                type="button"
+                                onClick={() => setIsTermsModalOpen(true)}
+                                className={`mt-4 flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-xs font-semibold transition-all duration-300 ${isAgreed
+                                    ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-500'
+                                    : theme === 'dark'
+                                        ? 'border-zinc-800 bg-zinc-800/40 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200'
+                                        : 'border-zinc-200 bg-zinc-50 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900'
+                                    }`}
+                            >
+                                <FileText
+                                    size={16}
+                                    className={isAgreed ? 'text-emerald-500' : 'text-orange-500'}
+                                />
 
+                                <span className="flex-1 text-left">
+                                    {__(
+                                        isAgreed
+                                            ? 'Syarat & Ketentuan Disetujui'
+                                            : 'Lihat Syarat & Ketentuan Sewa'
+                                    )}
+                                </span>
+
+                                {isAgreed && (
+                                    <CheckCircle2
+                                        size={15}
+                                        className="text-emerald-500"
+                                    />
+                                )}
+                            </button>
+
+                            {/* STATS */}
                             <div className="mt-8 grid grid-cols-3 gap-3 md:gap-4">
                                 {[
                                     {
@@ -643,6 +719,21 @@ function AboutMeContent() {
             <div className="h-24 xl:hidden" />
 
             <Footer theme={theme} />
+
+            <TermsConditionModal
+                open={isTermsModalOpen}
+                isDark={isDark}
+                isAgreed={isAgreed}
+                hasScrolledToBottom={hasScrolledToBottom}
+                termsContentRef={termsContentRef as React.RefObject<HTMLDivElement>}
+                onClose={() => {
+                    setIsTermsModalOpen(false);
+                    setHasScrolledToBottom(false);
+                }}
+                onAgreeChange={setIsAgreed}
+                onScroll={handleTermsScroll}
+                onContinue={() => setIsTermsModalOpen(false)}
+            />
         </div>
     );
 }

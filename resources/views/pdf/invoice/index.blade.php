@@ -62,7 +62,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="label">{{ translate('Lokasi Pengambilan') }}/td>
+                    <td class="label">{{ translate('Lokasi Pengambilan') }} </td>
                     <td class="value">
                         : {{ $order['pickupLocation'] }}
                     </td>

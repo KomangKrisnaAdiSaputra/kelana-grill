@@ -1,6 +1,9 @@
 <?php
 
+use App\Helpers\MetaHelper;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 
 function translations()
 {
@@ -64,4 +67,240 @@ function accountBankLists(): array
       'no' => '901414714730',
     ],
   ];
+}
+
+function setupSeo(array $data = [], $breadcrumbs = []): void
+{
+  $locale = app()->getLocale();
+
+  $title = $data['title'] ?? config('app.name');
+
+  $description = Str::limit(
+    strip_tags(
+      $data['description'] ??
+        'Sewa Grill BBQ Bali dengan harga terbaik. Tersedia grill portable, paket BBQ, alat barbeque lengkap, dan layanan antar ke seluruh Bali.'
+    ),
+    160
+  );
+
+  $image = $data['image'] ?? config('app.logo');
+
+  $url = $data['url'] ?? url()->current();
+
+  $type = $data['type'] ?? 'website';
+
+  $keywords = implode(', ', $data['keywords'] ?? [
+    'sewa grill bali',
+    'rental grill bali',
+    'bbq bali',
+    'bbq grill rental bali',
+    'sewa alat bbq bali',
+  ]);
+
+  $ogLocale = match ($locale) {
+    'id' => 'id_ID',
+    'en' => 'en_US',
+    default => 'id_ID',
+  };
+
+  MetaHelper::setTitle($title);
+
+  MetaHelper::setCanonical($url);
+
+  MetaHelper::addMeta('description', $description);
+  MetaHelper::addMeta('keywords', $keywords);
+  MetaHelper::addMeta('robots', 'index,follow');
+  MetaHelper::addMeta('author', config('app.name'));
+
+  /*
+    |--------------------------------------------------------------------------
+    | Open Graph
+    |--------------------------------------------------------------------------
+    */
+
+  MetaHelper::addOpenGraph('type', $type);
+  MetaHelper::addOpenGraph('site_name', config('app.name'));
+  MetaHelper::addOpenGraph('locale', $ogLocale);
+  MetaHelper::addOpenGraph('title', $title);
+  MetaHelper::addOpenGraph('description', $description);
+  MetaHelper::addOpenGraph('url', $url);
+  MetaHelper::addOpenGraph('image', $image);
+
+  /*
+    |--------------------------------------------------------------------------
+    | Twitter
+    |--------------------------------------------------------------------------
+    */
+
+  MetaHelper::addTwitter('card', 'summary_large_image');
+  MetaHelper::addTwitter('title', $title);
+  MetaHelper::addTwitter('description', $description);
+  MetaHelper::addTwitter('image', $image);
+
+  /*
+    |--------------------------------------------------------------------------
+    | Breadcrumb
+    |--------------------------------------------------------------------------
+    */
+
+  MetaHelper::addBreadcrumbLists(
+    collect($breadcrumbs)->toArray()
+  );
+
+  /*
+    |--------------------------------------------------------------------------
+    | Organization
+    |--------------------------------------------------------------------------
+    */
+
+  MetaHelper::addSchema([
+    '@context' => 'https://schema.org',
+    '@type' => 'Organization',
+
+    'name' => config('app.name'),
+    'url' => url('/'),
+    'logo' => config('app.logo'),
+    'image' => config('app.logo'),
+    'description' => $description,
+  ]);
+
+  /*
+    |--------------------------------------------------------------------------
+    | Local Business
+    |--------------------------------------------------------------------------
+    */
+
+  MetaHelper::addSchema([
+    '@context' => 'https://schema.org',
+    '@type' => 'LocalBusiness',
+
+    'name' => config('app.name'),
+    'url' => url('/'),
+    'image' => config('app.logo'),
+
+    'telephone' => config('app.landing.contact.whatsapp_number'),
+    'email' => config('app.landing.contact.email'),
+
+    'priceRange' => '$$',
+
+    'areaServed' => [
+      [
+        '@type' => 'AdministrativeArea',
+        'name' => 'Bali'
+      ]
+    ]
+  ]);
+
+  /*
+    |--------------------------------------------------------------------------
+    | Website
+    |--------------------------------------------------------------------------
+    */
+
+  MetaHelper::addSchema([
+    '@context' => 'https://schema.org',
+    '@type' => 'WebSite',
+
+    'name' => config('app.name'),
+    'url' => url('/')
+  ]);
+
+  /*
+    |--------------------------------------------------------------------------
+    | Service
+    |--------------------------------------------------------------------------
+    */
+
+  MetaHelper::addSchema([
+    '@context' => 'https://schema.org',
+    '@type' => 'Service',
+
+    'name' => $title,
+    'description' => $description,
+    'url' => $url,
+    'image' => $image,
+
+    'provider' => [
+      '@type' => 'Organization',
+      'name' => config('app.name')
+    ]
+  ]);
+}
+
+function addProductSchema(array $product): void
+{
+  MetaHelper::addSchema([
+    '@context' => 'https://schema.org',
+    '@type' => 'Product',
+
+    'name' => $product['name'],
+
+    'image' => [
+      $product['image'] ?? config('app.logo')
+    ],
+
+    'description' => strip_tags(
+      $product['description'] ?? ''
+    ),
+
+    'brand' => [
+      '@type' => 'Brand',
+      'name' => config('app.name')
+    ],
+
+    'offers' => [
+      '@type' => 'Offer',
+
+      'url' => url()->current(),
+
+      'priceCurrency' => 'IDR',
+
+      'availability' => 'https://schema.org/InStock'
+    ]
+  ]);
+}
+
+function addFaqSchema(): void
+{
+  MetaHelper::addSchema([
+    '@context' => 'https://schema.org',
+    '@type' => 'FAQPage',
+
+    'mainEntity' => [
+
+      [
+        '@type' => 'Question',
+
+        'name' => 'Apakah tersedia layanan antar?',
+
+        'acceptedAnswer' => [
+          '@type' => 'Answer',
+          'text' => 'Ya, kami melayani pengiriman ke seluruh Bali.'
+        ]
+      ],
+
+      [
+        '@type' => 'Question',
+
+        'name' => 'Apakah bisa sewa harian?',
+
+        'acceptedAnswer' => [
+          '@type' => 'Answer',
+          'text' => 'Ya, tersedia paket sewa harian maupun beberapa hari.'
+        ]
+      ],
+
+      [
+        '@type' => 'Question',
+
+        'name' => 'Apakah tersedia paket lengkap?',
+
+        'acceptedAnswer' => [
+          '@type' => 'Answer',
+          'text' => 'Ya, tersedia paket grill, alat BBQ, dan perlengkapannya.'
+        ]
+      ]
+
+    ]
+  ]);
 }

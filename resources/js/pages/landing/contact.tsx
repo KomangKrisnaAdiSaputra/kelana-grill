@@ -1,7 +1,6 @@
 import { Head, useForm, usePage } from '@inertiajs/react';
 
 import {
-    ChevronDown,
     CreditCard,
     Mail,
     MapPin,
@@ -739,7 +738,7 @@ function ContactContent() {
 
                                                 clearErrors('warehouseId');
                                             }}
-                                            className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none h-15 ${theme === 'dark'
+                                            className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none h-13 ${theme === 'dark'
                                                 ? 'border-white/10 bg-white/[0.04] text-zinc-200'
                                                 : 'border-orange-100 bg-orange-50/50 text-zinc-800'
                                                 } ${errors.warehouseId
@@ -774,7 +773,7 @@ function ContactContent() {
 
                                                 clearErrors('guarantee');
                                             }}
-                                            className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none h-15 ${theme === 'dark'
+                                            className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none h-13 ${theme === 'dark'
                                                 ? 'border-white/10 bg-white/[0.04] text-zinc-200'
                                                 : 'border-orange-100 bg-orange-50/50 text-zinc-800'
                                                 } ${errors.guarantee
@@ -803,56 +802,27 @@ function ContactContent() {
                                 </h3>
 
                                 <div className="relative">
-                                    <CreditCard
-                                        size={18}
-                                        className={`pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 ${theme === 'dark'
-                                            ? 'text-zinc-200'
-                                            : 'text-zinc-500'
-                                            }`}
-                                    />
 
-                                    <select
+
+                                    <DynamicSelect
+                                        prefix={<CreditCard size={18} />}
+                                        options={['Cash', 'Transfer']}
                                         value={data.payment}
-                                        onChange={(e) => {
-                                            setData('payment', e.target.value);
+                                        onChange={(value) => {
+                                            setData('payment', String(value));
 
                                             clearErrors('payment');
                                         }}
-                                        className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none ${theme === 'dark'
+                                        className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none h-13 ${theme === 'dark'
                                             ? 'border-white/10 bg-white/[0.04] text-zinc-200'
                                             : 'border-orange-100 bg-orange-50/50 text-zinc-800'
                                             } ${errors.payment
                                                 ? 'border-red-500 focus:border-red-500'
                                                 : ''
                                             }`}
-                                        style={{
-                                            colorScheme:
-                                                theme === 'dark'
-                                                    ? 'dark'
-                                                    : 'light',
-                                        }}
-                                    >
-                                        {['Cash', 'Transfer'].map((method) => (
-                                            <option
-                                                key={method}
-                                                value={method}
-                                                className={
-                                                    theme === 'dark'
-                                                        ? 'bg-[#1a1a1a] text-white'
-                                                        : 'bg-white text-zinc-800'
-                                                }
-                                            >
-                                                {__(method)}
-                                            </option>
-                                        ))}
-                                    </select>
-
-                                    <ChevronDown
-                                        size={18}
-                                        className={`pointer-events-none absolute top-1/2 right-5 -translate-y-1/2 ${theme === 'dark'
-                                            ? 'text-zinc-400'
-                                            : 'text-zinc-500'
-                                            }`}
+                                        getValue={(item) => String(item)}
+                                        getLabel={(item) => String(item)}
+                                        placeholder={__('Pilih Pembayaran')}
                                     />
                                 </div>
 

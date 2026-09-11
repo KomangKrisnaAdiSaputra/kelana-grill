@@ -507,9 +507,16 @@ function StatusPageContent() {
                         <div className="pr-6">
                           <div className="flex flex-wrap items-center gap-2">
                             <h3
-                              className={`text-base font-semibold md:text-lg ${theme === 'dark' ? 'text-white' : 'text-zinc-900'} `}
+                              className={`text-base font-semibold md:text-lg ${theme === "dark" ? "text-white" : "text-zinc-900"
+                                }`}
                             >
                               {item.name}
+                              <span
+                                className={`ml-2 text-sm font-normal italic ${theme === "dark" ? "text-zinc-400" : "text-zinc-500"
+                                  }`}
+                              >
+                                ({item.qtyItem} {item.unit})
+                              </span>
                             </h3>
 
                             {item.variant?.name && (
@@ -630,13 +637,16 @@ function StatusPageContent() {
                                             <div className="flex items-start justify-between">
                                               <div>
                                                 <p
-                                                  className={
-                                                    theme === "dark"
-                                                      ? "text-sm text-white"
-                                                      : "text-sm text-zinc-900"
-                                                  }
+                                                  className={`text-sm ${theme === "dark" ? "text-white" : "text-zinc-900"
+                                                    }`}
                                                 >
-                                                  {detail.name}
+                                                  <span>{detail.name}</span>
+                                                  <span
+                                                    className={`ml-1 text-xs italic ${theme === "dark" ? "text-zinc-400" : "text-zinc-500"
+                                                      }`}
+                                                  >
+                                                    ({detail.qtyItem}{detail.unit})
+                                                  </span>
                                                 </p>
 
                                                 {/* Jika item juga punya options */}

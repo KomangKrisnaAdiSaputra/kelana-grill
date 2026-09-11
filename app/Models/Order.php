@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
     "address",
     "pickup_date",
     "return_date",
-    "pickup_location",
+    "warehouse_id",
     "guarantee",
     "payment_method",
     "note",
@@ -75,6 +75,11 @@ class Order extends Model
         return $this->hasMany(Payment::class);
     }
 
+    public function warehouse()
+    {
+        return $this->belongsTo(WareHouse::class, 'warehouse_id', 'id');
+    }
+
     function generateData(?array $request = []): Collection
     {
         return collect([
@@ -88,7 +93,7 @@ class Order extends Model
             "address" => $this->address,
             "pickupDate" => Carbon::parse($this->pickup_date)->locale(app()->getLocale())->translatedFormat('d M Y H:i'),
             "returnDate" => Carbon::parse($this->return_date)->locale(app()->getLocale())->translatedFormat('d M Y H:i'),
-            "pickupLocation" => $this->pickup_location,
+            "pickupLocation" => $this->warehouse->address ?? $this->pickup_location,
             "guarantee" => $this->guarantee,
             "payment" => $this->payment_method,
             "note" => $this->note,

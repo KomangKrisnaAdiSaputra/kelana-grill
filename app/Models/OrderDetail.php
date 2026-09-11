@@ -18,6 +18,8 @@ use Illuminate\Support\Collection;
     "variant_description",
     "marinade",
     "qty",
+    "qty_item",
+    "unit",
     "rate",
     "sub_total",
     "total"
@@ -52,6 +54,8 @@ class OrderDetail extends Model
             ],
             "marinade" => $this->marinade,
             "qty" => $this->qty,
+            "qtyItem" => $this->qty_item,
+            "unit" => $this->unit,
             "subTotal" => $this->sub_total,
             "total" => $this->total,
 

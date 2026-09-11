@@ -27,6 +27,8 @@ return new class extends Migration
 
             $table->boolean('marinade')->default(false);
             $table->integer('qty')->default(1);
+            $table->integer('qty_item')->nullable();
+            $table->string('unit')->nullable();
 
             $table->double('rate');
             $table->double('sub_total');

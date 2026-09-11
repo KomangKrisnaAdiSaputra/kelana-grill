@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('description')->nullable();
 
             $table->integer('qty')->default(1);
+            $table->integer('qty_item')->nullable();
 
             $table->string('unit')->nullable();
 

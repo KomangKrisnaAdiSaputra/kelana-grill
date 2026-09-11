@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
     "name",
     "description",
     "qty",
+    "qty_item",
     "unit",
     "marinade",
 ])]
@@ -41,6 +42,7 @@ class OrderDetailPackageItem extends Model
             "name" => $this->name,
             "description" => $this->description,
             "qty" => $this->qty,
+            "qtyItem" => $this->qty_item,
             "unit" => $this->unit,
             "marinade" => $this->marinade,
 
