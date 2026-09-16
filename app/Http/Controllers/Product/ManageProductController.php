@@ -178,6 +178,7 @@ class ManageProductController extends Controller
             $product->new = $request->new;
             $product->active = $request->active;
             $product->marinade = $request->marinade;
+            $product->return = $request->return;
 
             $product->save();
 
@@ -241,6 +242,7 @@ class ManageProductController extends Controller
                 $variant->max_person = $variantData['maxPerson'] ?? null;
                 $variant->active = $variantData['active'];
                 $variant->marinade = $variantData['marinade'];
+                $variant->return = $variantData['return'];
                 $variant->save();
 
                 $submittedVariantIds[] = $variant->id;
@@ -277,7 +279,6 @@ class ManageProductController extends Controller
         } catch (\Throwable $e) {
 
             DB::rollBack();
-            dd($e->getMessage());
             return back()->withErrors([
                 'error' => $e->getMessage(),
             ]);
@@ -345,6 +346,13 @@ class ManageProductController extends Controller
                     'slug' => $translation->slug,
                     'description' => $translation->description,
                     'featuredLabel' => $translation->featured_label,
+                ]
+            ]),
+            'metaSeo' => $product->metaSeoTranslations->mapWithKeys(fn($translation) => [
+                $translation->language => [
+                    'title' => $translation->title,
+                    'description' => $translation->description,
+                    'keyword' => $translation->keyword,
                 ]
             ]),
             'categories' => $product->categories->pluck('id')->values(),

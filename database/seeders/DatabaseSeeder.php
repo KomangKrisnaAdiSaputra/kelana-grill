@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Badge;
+use App\Models\BadgeTranslation;
+use App\Models\Category;
+use App\Models\CategoryTranslation;
 use App\Models\Type;
 use App\Models\Unit;
 use App\Models\User;
@@ -118,6 +122,64 @@ class DatabaseSeeder extends Seeder
                 ...$type,
                 'slug' => Str::slug($type['name'])
             ]);
+        }
+
+        $categories = [
+            "Paket BBQ|BBQ Package",
+            "Sewa Alat Grill|Grill Equipment Rental",
+            "Daging & BBQ|Meat & BBQ",
+            "Frozen Food|Frozen Food",
+            "Saus & Marinasi|Sauce & Marinade",
+            "Makanan|Food",
+            "Dessert|Dessert",
+            "Minuman|Drinks",
+        ];
+        foreach ($categories as $category) {
+            $categoryDatas = explode("|", $category);
+            $categoryDB =  Category::create([
+                'active' => 1
+            ]);
+
+            $loop = 0;
+            foreach ($categoryDatas as $categoryData) {
+                CategoryTranslation::create([
+                    "category_id" => $categoryDB->id,
+                    "language" => $loop == 0 ? "id" : "en",
+                    "name" => $categoryData,
+                    "slug" => Str::slug($categoryData)
+                ]);
+                $loop++;
+            }
+        }
+
+        $badges = [
+            "Baru|New",
+            "Terlaris|Best Seller",
+            "Promo|Promo",
+            "Rekomendasi|Recommended",
+            "Favorit|Favorite",
+            "Hemat|Best Value",
+            "Stok Terbatas|Limited Stock",
+            "Spesial|Special",
+            "Pedas|Spicy",
+            "Pre-Order|Pre-Order",
+        ];
+        foreach ($badges as $badge) {
+            $badgeDatas = explode("|", $badge);
+            $badgeDB =  Badge::create([
+                'active' => 1
+            ]);
+
+            $loop = 0;
+            foreach ($badgeDatas as $badgeData) {
+                BadgeTranslation::create([
+                    "badge_id" => $badgeDB->id,
+                    "language" => $loop == 0 ? "id" : "en",
+                    "name" => $badgeData,
+                    "slug" => Str::slug($badgeData)
+                ]);
+                $loop++;
+            }
         }
     }
 }

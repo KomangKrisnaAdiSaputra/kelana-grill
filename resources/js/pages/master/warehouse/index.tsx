@@ -54,6 +54,7 @@ interface PaginationLink {
 interface WareHouse {
     id: string | null;
     name: string;
+    previewAddress: string;
     address: string;
     active: boolean;
     error: string | null;
@@ -89,12 +90,12 @@ export default function Index({ warehouses, filters, stats }: Props) {
 
     const [openForm, setOpenForm] = useState(false);
 
-    const [selectedWarehouse, setSelectedWarehouse] =
-        useState<WareHouse | null>(null);
+    const [selectedWarehouse, setSelectedWarehouse] = useState<WareHouse | null>(null);
     const { data, setData, post, processing, reset, errors } =
         useForm<WareHouse>({
             id: null,
             name: '',
+            previewAddress: '',
             address: '',
             active: true,
             error: null,
@@ -333,9 +334,18 @@ export default function Index({ warehouses, filters, stats }: Props) {
                                         </TableCell>
 
                                         <TableCell>
-                                            <div className="max-w-xs truncate text-muted-foreground">
-                                                {warehouse.address}
+                                            <div className="flex flex-col">
+                                                <span className="font-medium text-foreground">
+                                                    {warehouse.previewAddress}
+                                                </span>
+
+                                                <span className="text-sm text-muted-foreground">
+                                                    {warehouse.address}
+                                                </span>
                                             </div>
+                                            {/* <div className="max-w-xs truncate text-muted-foreground">
+                                                {warehouse.address}
+                                            </div> */}
                                         </TableCell>
 
                                         <TableCell>
@@ -371,8 +381,8 @@ export default function Index({ warehouses, filters, stats }: Props) {
                                                             setData({
                                                                 id: warehouse.id,
                                                                 name: warehouse.name,
-                                                                address:
-                                                                    warehouse.address,
+                                                                address: warehouse.address,
+                                                                previewAddress: warehouse.previewAddress,
                                                                 active: warehouse.active,
                                                             });
 
@@ -505,6 +515,26 @@ export default function Index({ warehouses, filters, stats }: Props) {
                                 {errors.name && (
                                     <p className="text-sm text-destructive">
                                         {errors.name}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="address">Preview Address</Label>
+
+                                <textarea
+                                    id="previewAddress"
+                                    value={data.previewAddress}
+                                    onChange={(e) =>
+                                        setData('previewAddress', e.target.value)
+                                    }
+                                    rows={4}
+                                    className="w-full rounded-xl border bg-background px-3 py-2 text-sm"
+                                />
+
+                                {errors.previewAddress && (
+                                    <p className="text-sm text-destructive">
+                                        {errors.previewAddress}
                                     </p>
                                 )}
                             </div>

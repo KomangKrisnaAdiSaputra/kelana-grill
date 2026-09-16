@@ -22,10 +22,7 @@ class WareHouseController extends Controller
             $query->where('active', $request->status);
         }
 
-        $warehouses = $query
-            ->latest()
-            ->paginate()
-            ->withQueryString();
+        $warehouses = $query->latest()->paginate()->withQueryString()->through(fn($warehouse) => $warehouse->generateData());
 
         return Inertia::render('master/warehouse/index', [
             'warehouses' => $warehouses,
@@ -48,8 +45,12 @@ class WareHouseController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'address' => ['nullable', 'string'],
+            'previewAddress' => ['nullable', 'string'],
             'active' => ['required', 'boolean'],
         ]);
+        $validated['preview_address'] = $validated['previewAddress'];
+        unset($validated['previewAddress']);
+
 
         DB::beginTransaction();
 

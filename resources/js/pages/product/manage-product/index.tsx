@@ -70,6 +70,7 @@ export default function Index({
         new: true,
         active: true,
         marinade: false,
+        return: false,
         translations: {
             id: {
                 name: '',
@@ -80,6 +81,18 @@ export default function Index({
                 name: '',
                 description: '',
                 featuredLabel: '',
+            },
+        },
+        metaSeo: {
+            id: {
+                title: '',
+                description: '',
+                keyword: '',
+            },
+            en: {
+                title: '',
+                description: '',
+                keyword: '',
             },
         },
         categories: [],
@@ -125,6 +138,8 @@ export default function Index({
     };
 
     const handleEdit = (product: Product) => {
+        console.log(product);
+
         setSelectedProduct(product);
         clearErrors();
         setData(product);
@@ -167,6 +182,7 @@ export default function Index({
                             new: true,
                             active: true,
                             marinade: false,
+                            return: false,
                             translations: {
                                 id: {
                                     name: '',
@@ -177,6 +193,18 @@ export default function Index({
                                     name: '',
                                     description: '',
                                     featuredLabel: '',
+                                },
+                            },
+                            metaSeo: {
+                                id: {
+                                    title: '',
+                                    description: '',
+                                    keyword: '',
+                                },
+                                en: {
+                                    title: '',
+                                    description: '',
+                                    keyword: '',
                                 },
                             },
                             categories: [],

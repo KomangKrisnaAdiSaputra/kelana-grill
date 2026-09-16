@@ -106,7 +106,7 @@ export default function ProductModalSave({
               </div>
 
               {/* FLAGS */}
-              <div className={`grid gap-3 md:${withVariant ? "grid-cols-4" : "grid-cols-3"}`}>
+              <div className={`grid gap-3 md:grid-cols-3`}>
                 <div className="flex items-center justify-between rounded-xl border p-4">
                   <div>
                     <p className="font-medium">Active</p>
@@ -158,7 +158,27 @@ export default function ProductModalSave({
                   />
                 </div>
 
-                {(withVariant) && (
+
+              </div>
+
+              {(withVariant) && (
+                <div className={`grid gap-3 md:grid-cols-2`}>
+                  <div className="flex items-center justify-between rounded-xl border p-4">
+                    <div>
+                      <p className="font-medium">Returnable</p>
+
+                      <p className="text-xs text-muted-foreground">
+                        Mark this product as returnable
+                      </p>
+                    </div>
+
+                    <Switch
+                      checked={data.return}
+                      onCheckedChange={(value) =>
+                        setData('return', value)
+                      }
+                    />
+                  </div>
                   <div className="flex items-center justify-between rounded-xl border p-4">
                     <div>
                       <p className="font-medium">Marinade</p>
@@ -175,8 +195,8 @@ export default function ProductModalSave({
                       }
                     />
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
               {/* BASIC INFO */}
               <div className="grid gap-4 md:grid-cols-2">
@@ -407,6 +427,7 @@ export default function ProductModalSave({
                       onClick={() => {
                         setData('rate', 0);
                         setData('marinade', false);
+                        setData('return', false);
                         setData('variants', [
                           ...(data.variants ?? []),
                           {
@@ -416,6 +437,7 @@ export default function ProductModalSave({
                             maxPerson: null,
                             active: true,
                             marinade: false,
+                            return: false,
                             translations: {
                               id: {
                                 name: '',
@@ -473,7 +495,7 @@ export default function ProductModalSave({
                           </Button>
                         </div>
 
-                        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
                           <div className="flex items-center justify-between rounded-lg border p-3">
                             <div>
                               <p className="font-medium">Active</p>
@@ -510,6 +532,27 @@ export default function ProductModalSave({
                                 const variants = [...data.variants];
 
                                 variants[index].marinade = value;
+
+                                setData('variants', variants);
+                              }}
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between rounded-lg border p-3">
+                            <div>
+                              <p className="font-medium">Returnable</p>
+
+                              <p className="text-xs text-muted-foreground">
+                                Mark this variant as returnable
+                              </p>
+                            </div>
+
+                            <Switch
+                              checked={variant.return}
+                              onCheckedChange={(value) => {
+                                const variants = [...data.variants];
+
+                                variants[index].return = value;
 
                                 setData('variants', variants);
                               }}
@@ -888,6 +931,130 @@ export default function ProductModalSave({
                   </div>
                 </div>
               )}
+
+              <div className="space-y-4 rounded-xl border p-4">
+                <div className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b pb-3">
+                  <div>
+                    <h3 className="font-semibold">
+                      Meta Seo
+                    </h3>
+
+                    <p className="text-sm text-muted-foreground">
+                      SEO settings for the product.
+                    </p>
+                  </div>
+                </div>
+
+                {errors.metaSeo && (
+                  <div className="rounded-md border border-red-200 bg-red-50 p-3">
+                    <p className="text-sm text-red-600">
+                      {errors.metaSeo}
+                    </p>
+                  </div>
+                )}
+
+                {/* Meta Title */}
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label>Title (Indonesia)</Label>
+
+                    <Input
+                      value={data.metaSeo.id.title}
+                      onChange={(e) => {
+
+                        setData(
+                          'metaSeo.id.title',
+                          e.target.value
+                        );
+                      }}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Title (English)</Label>
+
+                    <Input
+                      value={data.metaSeo.en.title}
+                      onChange={(e) => {
+                        setData(
+                          'metaSeo.en.title',
+                          e.target.value
+                        );
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Meta Keyword */}
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label>Keyword (Indonesia)</Label>
+
+                    <Input
+                      value={data.metaSeo.id.keyword}
+                      onChange={(e) => {
+                        setData(
+                          'metaSeo.id.keyword',
+                          e.target.value
+                        );
+                      }}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Keyword (English)</Label>
+
+                    <Input
+                      value={data.metaSeo.en.keyword}
+                      onChange={(e) => {
+                        setData(
+                          'metaSeo.en.keyword',
+                          e.target.value
+                        );
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Meta Description */}
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label>
+                      Description (Indonesia)
+                    </Label>
+
+                    <textarea
+                      rows={3}
+                      value={data.metaSeo.id.description}
+                      onChange={(e) => {
+                        setData(
+                          'metaSeo.id.description',
+                          e.target.value
+                        );
+                      }}
+                      className="w-full rounded-xl border px-3 py-2"
+                    />
+                  </div>
+
+                  <div>
+                    <Label>
+                      Description (English)
+                    </Label>
+
+                    <textarea
+                      rows={3}
+                      value={data.metaSeo.en.description}
+                      onChange={(e) => {
+                        setData(
+                          'metaSeo.en.description',
+                          e.target.value
+                        );
+                      }}
+                      className="w-full rounded-xl border px-3 py-2"
+                    />
+                  </div>
+                </div>
+              </div>
 
             </div>
           </div>

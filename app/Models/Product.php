@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Support\Collection;
 
-#[Fillable(["type_id", "code", "unit_id", "qty", "rate", "featured", "new", "active", "marinade"])]
+#[Fillable(["type_id", "code", "unit_id", "qty", "rate", "featured", "new", "active", "marinade", "return"])]
 class Product extends Model
 {
     use HasUuids;
@@ -18,7 +18,8 @@ class Product extends Model
         "featured" => "boolean",
         "new" => "boolean",
         "active" => "boolean",
-        "marinade" => "boolean"
+        "marinade" => "boolean",
+        "return" => "boolean",
     ];
 
     protected static function booted(): void
@@ -58,6 +59,16 @@ class Product extends Model
     public function translation()
     {
         return $this->hasOne(ProductTranslation::class)->where("language", app()->getLocale());
+    }
+
+    public function metaSeoTranslations()
+    {
+        return $this->hasMany(ProductSeoTranslation::class);
+    }
+
+    public function metaSeoTranslation()
+    {
+        return $this->hasOne(ProductSeoTranslation::class)->where("language", app()->getLocale());
     }
 
     public function image()
@@ -132,6 +143,7 @@ class Product extends Model
             "unit" => $this->unit,
             "qtyItem" => $this->pivot->qty,
             "marinade" => $this->marinade,
+            "return" => $this->return,
             "type" => $this->type->name,
             ...($this->type->name == "CHOICE" ? [
                 "choices" => $this->items->map->generateDataItem()
@@ -150,6 +162,7 @@ class Product extends Model
             "featured" => $this->featured,
             "new" => $this->new,
             "marinade" => $this->marinade,
+            "return" => $this->return,
             "image" => $this->image?->url,
             "images" => ($this->images ?? [])->map(fn($item) => $item->url),
 

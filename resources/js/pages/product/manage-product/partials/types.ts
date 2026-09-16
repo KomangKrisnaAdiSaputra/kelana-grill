@@ -22,10 +22,16 @@ export type Product = {
     new: boolean;
     active: boolean;
     marinade: boolean;
+    return: boolean;
 
     translations: {
         id: ProductTranslation;
         en: ProductTranslation;
+    };
+
+    metaSeo: {
+        id: ProductSeoTranslation;
+        en: ProductSeoTranslation;
     };
 
     error?: string | null;
@@ -43,6 +49,12 @@ export type ProductTranslation = {
     featuredLabel: string;
 };
 
+export type ProductSeoTranslation = {
+    title: string;
+    keyword: string;
+    description: string;
+};
+
 export type ProductVariant = {
     id: string | null;
 
@@ -53,6 +65,7 @@ export type ProductVariant = {
 
     active: boolean;
     marinade: boolean;
+    return: boolean;
 
     translations: {
         id: ProductVariantTranslation;
