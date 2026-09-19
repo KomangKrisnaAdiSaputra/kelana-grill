@@ -138,7 +138,7 @@ class LandingPageController extends Controller
 
     public function indexProduct()
     {
-        $products = Product::notShow()->active()->get()->map->generateDataLanding();
+        $products = Product::notShow()->active()->orderByDesc('created_at')->get()->map->generateDataLanding();
 
         return Inertia::render('landing/product', [
             'products' => $products,
@@ -208,7 +208,7 @@ class LandingPageController extends Controller
     {
         $hasReturn = collect($request->input('carts', []))
             ->contains(fn($cart) => filter_var(
-                $cart['return'] ?? false,
+                $cart['variant']['return'] ?? $cart['return'] ?? false,
                 FILTER_VALIDATE_BOOLEAN
             ));
 

@@ -103,7 +103,7 @@ class Product extends Model
             "product_items",
             "product_id",
             "item_product_id"
-        )->withPivot("qty", "unit")->withTimestamps();
+        )->withPivot("qty")->withTimestamps();
     }
 
     public function activeVariants()
@@ -140,7 +140,7 @@ class Product extends Model
             "name" => $translation->name,
             "description" => $translation->description,
             "qty" => $this->qty,
-            "unit" => $this->unit,
+            "unit" => $this->unit->generateData(),
             "qtyItem" => $this->pivot->qty,
             "marinade" => $this->marinade,
             "return" => $this->return,

@@ -30,6 +30,7 @@ export type CartItem = {
     name: string;
     description: string;
     marinade: boolean;
+    return: boolean;
   } | null;
 
   marinade: boolean;
@@ -165,7 +166,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           variant: variant ? {
             name: variant.name ?? '',
             description: variant.description ?? '',
-            marinade: variant.marinade ?? false
+            marinade: variant.marinade ?? false,
+            return: variant.return ?? false
           } : null,
 
           qty: 1,
@@ -308,6 +310,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         ? {
           ...cart.variant,
           marinade: cart.variant.marinade,
+          return: cart.variant.return,
         }
         : null,
     );

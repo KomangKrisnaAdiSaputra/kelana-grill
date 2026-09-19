@@ -892,7 +892,7 @@ export default function ProductModalSave({
                                   />
                                 </div>
 
-                                <div>
+                                {/* <div>
                                   <Label>Unit</Label>
 
                                   <Input
@@ -921,7 +921,7 @@ export default function ProductModalSave({
                                         }
                                       </p>
                                     )}
-                                </div>
+                                </div> */}
                               </>
                             )}
                           </div>

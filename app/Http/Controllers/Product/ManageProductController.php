@@ -267,7 +267,7 @@ class ManageProductController extends Controller
                 ->mapWithKeys(fn($item) => [
                     $item['itemProductId'] => [
                         'qty' => $item['qty'],
-                        'unit' => $item['unit'] ?? null,
+                        // 'unit' => $item['unit'] ?? null,
                     ],
                 ])->toArray();
 
@@ -378,6 +378,7 @@ class ManageProductController extends Controller
                 'maxPerson' => $variant->max_person,
                 'active' => $variant->active,
                 'marinade' => $variant->marinade,
+                'return' => $variant->return,
                 'translations' => $variant->translations->mapWithKeys(fn($translation) => [
                     $translation->language => [
                         'name' => $translation->name,

@@ -133,6 +133,9 @@ class DatabaseSeeder extends Seeder
             "Makanan|Food",
             "Dessert|Dessert",
             "Minuman|Drinks",
+            "Lainnya|Others",
+            "Hidangan Laut|Seafood",
+            "Sayuran|Vegetables",
         ];
         foreach ($categories as $category) {
             $categoryDatas = explode("|", $category);

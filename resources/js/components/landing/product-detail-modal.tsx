@@ -167,6 +167,8 @@ export default function ProductDetailModal({
         }, 450);
     }
 
+    console.log(product?.items ?? []);
+
 
     return (
         <div

@@ -31,6 +31,7 @@ export type ProductVariant = {
     minPerson?: number | null;
     maxPerson?: number | null;
     marinade: boolean;
+    return: boolean;
 
     slug?: string | null;
 

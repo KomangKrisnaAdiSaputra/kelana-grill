@@ -19,6 +19,7 @@ return new class extends Migration
 
             $table->boolean('active')->default(true);
             $table->boolean('marinade')->default(false);
+            $table->boolean('return')->default(false);
 
             $table->timestamps();
 

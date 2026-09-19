@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignUuid('item_product_id')->constrained('products')->cascadeOnUpdate()->restrictOnDelete();
 
             $table->integer('qty')->default(1);
-            $table->string('unit')->nullable();
+            // $table->string('unit')->nullable();
 
             $table->timestamps();
 

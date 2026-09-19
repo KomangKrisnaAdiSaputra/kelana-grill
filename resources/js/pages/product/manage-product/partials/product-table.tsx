@@ -184,6 +184,8 @@ export default function ProductTable({
                 <TableHead>Rate</TableHead>
                 <TableHead>Featured</TableHead>
                 <TableHead>New</TableHead>
+                <TableHead>Return</TableHead>
+                <TableHead>Marinade</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="w-[80px] text-right">
                   Action
@@ -239,6 +241,14 @@ export default function ProductTable({
 
                   <TableCell>
                     {product.new ? 'Yes' : 'No'}
+                  </TableCell>
+
+                  <TableCell>
+                    {product.return ? 'Yes' : 'No'}
+                  </TableCell>
+
+                  <TableCell>
+                    {product.marinade ? 'Yes' : 'No'}
                   </TableCell>
 
                   <TableCell>

@@ -158,7 +158,7 @@ function ContactContent() {
     }, [cartItems]);
 
     const isReturn = useMemo(() => {
-        return cartItems.some((item) => item.return);
+        return cartItems.some((item) => item?.variant?.return ?? item.return);
     }, [cartItems]);
 
     return (
