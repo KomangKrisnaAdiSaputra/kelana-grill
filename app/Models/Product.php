@@ -145,6 +145,11 @@ class Product extends Model
             "marinade" => $this->marinade,
             "return" => $this->return,
             "type" => $this->type->name,
+            "metaSeo" => [
+                "title" => $this->metaSeoTranslation?->title ?? "",
+                "description" => $this->metaSeoTranslation?->description ?? "",
+                "keyword" => $this->metaSeoTranslation?->keywords ?? ""
+            ],
             ...($this->type->name == "CHOICE" ? [
                 "choices" => $this->items->map->generateDataItem()
             ] : [])
@@ -180,7 +185,12 @@ class Product extends Model
             "badges" => $this->badges->map->generateData(),
             "variants" => $this->variants->map->generateData(),
 
-            "items" => $this->items->map->generateDataItem()
+            "items" => $this->items->map->generateDataItem(),
+            "metaSeo" => [
+                "title" => $this->metaSeoTranslation?->title ?? "",
+                "description" => $this->metaSeoTranslation?->description ?? "",
+                "keyword" => $this->metaSeoTranslation?->keyword ?? ""
+            ],
         ]);
     }
 

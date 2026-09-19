@@ -138,8 +138,6 @@ export default function Index({
     };
 
     const handleEdit = (product: Product) => {
-        console.log(product);
-
         setSelectedProduct(product);
         clearErrors();
         setData(product);

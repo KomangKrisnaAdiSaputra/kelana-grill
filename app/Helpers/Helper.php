@@ -89,13 +89,7 @@ function setupSeo(array $data = [], $breadcrumbs = []): void
 
   $type = $data['type'] ?? 'website';
 
-  $keywords = implode(', ', $data['keywords'] ?? [
-    'sewa grill bali',
-    'rental grill bali',
-    'bbq bali',
-    'bbq grill rental bali',
-    'sewa alat bbq bali',
-  ]);
+  $keywords = is_array($data['keywords'] ?? null) ? implode(', ', $data['keywords'] ?? []) : ($data['keywords'] ?? '');
 
   $ogLocale = match ($locale) {
     'id' => 'id_ID',

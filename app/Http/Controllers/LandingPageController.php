@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class LandingPageController extends Controller
@@ -154,21 +155,21 @@ class LandingPageController extends Controller
         $products = Product::notShow()->active()->whereNot("id", $product['id'])->get()->map->generateDataLanding();
 
         setupSeo([
-            'title' => "{$product['name']}",
-
-            'description' => $product['description'],
+            'title' => $product['metaSeo']['title'] ?? $product['name'],
+            'description' => $product['metaSeo']['description'] ?? $product['description'],
 
             'image' => $product['image'] ?? config('app.logo'),
 
             'type' => 'product',
 
-            'keywords' => [
-                $product['name'],
-                "Sewa {$product['name']}",
-                "Rental {$product['name']}",
-                "BBQ Bali",
-                "Grill Bali"
-            ]
+            // 'keywords' => [
+            //     $product['name'],
+            //     "Sewa {$product['name']}",
+            //     "Rental {$product['name']}",
+            //     "BBQ Bali",
+            //     "Grill Bali"
+            // ]
+            'keywords' => $product['metaSeo']['keyword'] ?? ""
         ], $this->breadcrumbs);
 
         addProductSchema($product->toArray());
@@ -205,6 +206,12 @@ class LandingPageController extends Controller
 
     public function booking(Request $request)
     {
+        $hasReturn = collect($request->input('carts', []))
+            ->contains(fn($cart) => filter_var(
+                $cart['return'] ?? false,
+                FILTER_VALIDATE_BOOLEAN
+            ));
+
         $validator = Validator::make($request->all(), [
             'firstname' => ['required', 'string', 'max:100'],
             'lastname' => ['required', 'string', 'max:100'],
@@ -213,11 +220,17 @@ class LandingPageController extends Controller
             'address' => ['required', 'string'],
             'pickupdate' => ['required', 'date'],
             'returndate' => [
-                'required',
+                Rule::requiredIf($hasReturn),
+                'nullable',
                 'date',
-                'after_or_equal:pickupdate'
+                'after_or_equal:pickupdate',
             ],
-            'guarantee' => ['required', 'string'],
+
+            'guarantee' => [
+                Rule::requiredIf($hasReturn),
+                'nullable',
+                'string',
+            ],
             'payment' => ['required', 'in:Cash,Transfer'],
             'carts' => ['required', 'array', 'min:1'],
         ], [
@@ -271,11 +284,12 @@ class LandingPageController extends Controller
             'carts.min' => 'Keranjang masih kosong',
         ]);
 
+        $carts = collect($request->carts);
+
         $validator->validate();
 
         DB::beginTransaction();
         try {
-            $carts = collect($request->carts);
             $productIds = $carts->flatMap(fn($cart) => explode(';', $cart['id']))->filter()->unique()->values();
             $products = Product::with('variants')->whereIn('id', $productIds)->get();
 

@@ -33,6 +33,7 @@ export type CartItem = {
   } | null;
 
   marinade: boolean;
+  return: boolean;
 
   qty: number;
   rate: number;
@@ -159,6 +160,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           name: product.name ?? '',
           description: product.description ?? '',
           marinade: product.marinade ?? false,
+          return: product.return ?? false,
 
           variant: variant ? {
             name: variant.name ?? '',

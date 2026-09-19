@@ -87,6 +87,7 @@ export type Product = {
 
     new?: boolean;
     marinade?: boolean;
+    return?: boolean;
 
     categories?: ProductCategory[];
     badges?: ProductBadge[];

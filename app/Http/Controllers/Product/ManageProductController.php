@@ -8,6 +8,7 @@ use App\Models\Badge;
 use App\Models\Image;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductSeoTranslation;
 use App\Models\ProductTranslation;
 use App\Models\ProductVariant;
 use App\Models\ProductVariantTranslation;
@@ -272,6 +273,17 @@ class ManageProductController extends Controller
 
             $product->items()->sync($syncItems);
 
+            foreach ($request->metaSeo as $keySeo => $valSeo) {
+                ProductSeoTranslation::updateOrCreate([
+                    'product_id' => $product->id,
+                    'language' => $keySeo,
+                ], [
+                    'title' => $valSeo['title'] ?? null,
+                    'description' => $valSeo['description'] ?? null,
+                    'keyword' => $valSeo['keyword'] ?? null,
+                ]);
+            }
+
             DB::commit();
             return back()->with([
                 'success' => $request->id ? 'Product updated successfully.' : 'Product created successfully.',
@@ -303,6 +315,7 @@ class ManageProductController extends Controller
 
             $product->variants()->delete();
             $product->translations()->delete();
+            $product->metaSeoTranslations()->delete();
 
             $product->delete();
             DB::commit();
@@ -340,6 +353,7 @@ class ManageProductController extends Controller
             'new' => $product->new,
             'active' => $product->active,
             'marinade' => $product->marinade,
+            'return' => $product->return,
             'translations' => $product->translations->mapWithKeys(fn($translation) => [
                 $translation->language => [
                     'name' => $translation->name,

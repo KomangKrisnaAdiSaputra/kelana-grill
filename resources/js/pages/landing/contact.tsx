@@ -138,7 +138,7 @@ function ContactContent() {
             },
 
             onError: () => {
-                toast.error('Mohon periksa kembali form booking');
+                toast.error(__('Mohon periksa kembali form booking'));
             },
         });
     };
@@ -155,6 +155,10 @@ function ContactContent() {
             (sum, item) => sum + item.qty * (item.rate ?? 0),
             0,
         );
+    }, [cartItems]);
+
+    const isReturn = useMemo(() => {
+        return cartItems.some((item) => item.return);
     }, [cartItems]);
 
     return (
@@ -699,28 +703,30 @@ function ContactContent() {
                                         error={errors.pickupdate || ''}
                                     />
 
-                                    <DateTimePicker
-                                        theme={theme}
-                                        label={__('Tanggal Pengembalian')}
-                                        value={data.returndate}
-                                        onChange={(value) => {
-                                            setData('returndate', value);
+                                    {isReturn && (
+                                        <DateTimePicker
+                                            theme={theme}
+                                            label={__('Tanggal Pengembalian')}
+                                            value={data.returndate}
+                                            onChange={(value) => {
+                                                setData('returndate', value);
 
-                                            clearErrors('returndate');
-                                        }}
-                                        blockedDates={[
-                                            '2026-05-28',
-                                            '2026-05-29',
-                                        ]}
-                                        minDate={
-                                            data.pickupdate
-                                                ? data.pickupdate.split(' ')[0]
-                                                : minPickupDate()
-                                        }
-                                        minHour={8}
-                                        maxHour={22}
-                                        error={errors.returndate || ''}
-                                    />
+                                                clearErrors('returndate');
+                                            }}
+                                            blockedDates={[
+                                                '2026-05-28',
+                                                '2026-05-29',
+                                            ]}
+                                            minDate={
+                                                data.pickupdate
+                                                    ? data.pickupdate.split(' ')[0]
+                                                    : minPickupDate()
+                                            }
+                                            minHour={8}
+                                            maxHour={22}
+                                            error={errors.returndate || ''}
+                                        />
+                                    )}
                                 </div>
 
                                 <div>
@@ -758,40 +764,42 @@ function ContactContent() {
                                     )}
                                 </div>
 
-                                <div className="mt-5">
-                                    <h3 className="mb-5 text-lg font-semibold">
-                                        {__('Jaminan')}
-                                    </h3>
+                                {isReturn && (
+                                    <div className="mt-5">
+                                        <h3 className="mb-5 text-lg font-semibold">
+                                            {__('Jaminan')}
+                                        </h3>
 
-                                    <div className='relative'>
-                                        <DynamicSelect
-                                            prefix={<Shield size={18} />}
-                                            options={guarantees}
-                                            value={data.guarantee}
-                                            onChange={(value) => {
-                                                setData('guarantee', String(value));
+                                        <div className='relative'>
+                                            <DynamicSelect
+                                                prefix={<Shield size={18} />}
+                                                options={guarantees}
+                                                value={data.guarantee}
+                                                onChange={(value) => {
+                                                    setData('guarantee', String(value));
 
-                                                clearErrors('guarantee');
-                                            }}
-                                            className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none h-13 ${theme === 'dark'
-                                                ? 'border-white/10 bg-white/[0.04] text-zinc-200'
-                                                : 'border-orange-100 bg-orange-50/50 text-zinc-800'
-                                                } ${errors.guarantee
-                                                    ? 'border-red-500 focus:border-red-500'
-                                                    : ''
-                                                }`}
-                                            getValue={(item) => String(item)}
-                                            getLabel={(item) => String(item)}
-                                            placeholder={__('Pilih Jaminan')}
-                                        />
+                                                    clearErrors('guarantee');
+                                                }}
+                                                className={`w-full appearance-none rounded-3xl border py-4 pr-12 pl-14 text-sm transition-all outline-none h-13 ${theme === 'dark'
+                                                    ? 'border-white/10 bg-white/[0.04] text-zinc-200'
+                                                    : 'border-orange-100 bg-orange-50/50 text-zinc-800'
+                                                    } ${errors.guarantee
+                                                        ? 'border-red-500 focus:border-red-500'
+                                                        : ''
+                                                    }`}
+                                                getValue={(item) => String(item)}
+                                                getLabel={(item) => String(item)}
+                                                placeholder={__('Pilih Jaminan')}
+                                            />
+                                        </div>
+
+                                        {errors.guarantee && (
+                                            <p className="mt-2 text-sm text-red-500">
+                                                {__(errors.guarantee)}
+                                            </p>
+                                        )}
                                     </div>
-
-                                    {errors.guarantee && (
-                                        <p className="mt-2 text-sm text-red-500">
-                                            {__(errors.guarantee)}
-                                        </p>
-                                    )}
-                                </div>
+                                )}
                             </div>
 
                             {/* PAYMENT */}
